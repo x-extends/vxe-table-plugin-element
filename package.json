@@ -1,0 +1,54 @@
+{
+  "name": "vxe-table-plugin-element",
+  "version": "0.0.2",
+  "description": "vxe-table renderer plugins for element-ui.",
+  "scripts": {
+    "lib": "gulp build"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.common.js",
+  "unpkg": "dist/index.js",
+  "jsdelivr": "dist/index.js",
+  "typings": "index.d.ts",
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/runtime": "^7.4.4",
+    "eslint": "^5.15.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "gulp": "^4.0.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.2",
+    "markdown-doctest": "^0.9.1",
+    "xe-utils": "^1.8.20"
+  },
+  "peerDependencies": {
+    "xe-utils": "^1.8.20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuliangzhan/vxe-table-plugin-element.git"
+  },
+  "keywords": [
+    "vxe-table-plugin-element"
+  ],
+  "author": {
+    "name": "Xu Liangzhan",
+    "email": "xu_liangzhan@163.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xuliangzhan/vxe-table-plugin-element/issues"
+  },
+  "homepage": "https://github.com/xuliangzhan/vxe-table-plugin-element#readme"
+}
