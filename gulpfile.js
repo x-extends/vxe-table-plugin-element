@@ -1,9 +1,28 @@
-var gulp = require('gulp')
-var uglify = require('gulp-uglify')
+const gulp = require('gulp')
+const uglify = require('gulp-uglify')
 const babel = require('gulp-babel')
-var rename = require('gulp-rename')
+const rename = require('gulp-rename')
+const sass = require('gulp-sass')
+const cleanCSS = require('gulp-clean-css')
+var prefixer = require('gulp-autoprefixer')
 
-gulp.task('build.common', function () {
+gulp.task('build_style', function () {
+  return gulp.src('style.scss')
+    .pipe(sass())
+    .pipe(prefixer({
+      borwsers: ['last 1 version', '> 1%', 'not ie <= 8'],
+      cascade: true,
+      remove: true
+    }))
+    .pipe(gulp.dest('dist'))
+    .pipe(cleanCSS())
+    .pipe(rename({
+      extname: '.min.css'
+    }))
+    .pipe(gulp.dest('dist'))
+})
+
+gulp.task('build_common', function () {
   return gulp.src('index.js')
     .pipe(babel({
       presets: ['@babel/env']
@@ -15,7 +34,7 @@ gulp.task('build.common', function () {
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('build.umd', function () {
+gulp.task('build_umd', function () {
   return gulp.src('index.js')
     .pipe(babel({
       presets: ['@babel/env'],
@@ -33,4 +52,4 @@ gulp.task('build.umd', function () {
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('build', gulp.parallel('build.common', 'build.umd'))
+gulp.task('build', gulp.parallel('build_style', 'build_common', 'build_umd'))

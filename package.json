@@ -9,6 +9,7 @@
     "dist"
   ],
   "main": "dist/index.common.js",
+  "style": "dist/style.css",
   "unpkg": "dist/index.js",
   "jsdelivr": "dist/index.js",
   "typings": "index.d.ts",
@@ -25,9 +26,12 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "gulp": "^4.0.1",
+    "gulp-autoprefixer": "^6.1.0",
     "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
     "xe-utils": "^1.8.20"

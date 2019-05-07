@@ -1,0 +1,11 @@
+.vxe-table-element {
+  .vxe-cell {
+    > .el-input,
+    > .el-input-number, 
+    > .el-select,
+    > .el-cascader,
+    > .el-date-editor {
+      width: 100%;
+    }
+  }
+}
