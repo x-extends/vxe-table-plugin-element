@@ -1,12 +1,15 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "vxe-table renderer plugins for element-ui.",
   "scripts": {
     "lib": "gulp build"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts",
+    "index.js",
+    "style.scss"
   ],
   "main": "dist/index.common.js",
   "style": "dist/style.css",
