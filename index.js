@@ -22,16 +22,43 @@ function matchCascaderData (index, list, values, labels) {
   }
 }
 
+function defaultRender (h, editRender, params) {
+  let { $table, row, column } = params
+  let { props } = editRender
+  if ($table.size) {
+    props = Object.assign({ size: $table.size }, props)
+  }
+  return [
+    h(editRender.name, {
+      props,
+      model: {
+        value: XEUtils.get(row, column.property),
+        callback (value) {
+          XEUtils.set(row, column.property, value)
+        }
+      }
+    })
+  ]
+}
+
+function cellText (h, cellValue) {
+  return [
+    h('span', '' + (cellValue === void 0 ? '' : cellValue))
+  ]
+}
+
 const VXETablePluginElement = {
   renderMap: {
     ElInput: {
-      autofocus: 'input.el-input__inner'
+      autofocus: 'input.el-input__inner',
+      renderEdit: defaultRender
     },
     ElInputNumber: {
-      autofocus: 'input.el-input__inner'
+      autofocus: 'input.el-input__inner',
+      renderEdit: defaultRender
     },
     ElSelect: {
-      render (h, { options, props = {}, optionProps = {} }, { $table, row, column }) {
+      renderEdit (h, { options, props = {}, optionProps = {} }, { $table, row, column }) {
         let { label = 'label', value = 'value' } = optionProps
         if ($table.size) {
           props = XEUtils.assign({ size: $table.size }, props)
@@ -56,45 +83,67 @@ const VXETablePluginElement = {
           }))
         ]
       },
-      formatLabel (cellValue, { options, optionProps = {} }) {
+      renderCell (h, { options, optionProps = {} }, params) {
+        let { row, column } = params
         let { label = 'label', value = 'value' } = optionProps
+        let cellValue = XEUtils.get(row, column.property)
         var item = XEUtils.find(options, function (item) {
           return item[value] === cellValue
         })
-        return item ? item[label] : null
+        return cellText(h, item ? item[label] : null)
       }
     },
     ElCascader: {
-      formatLabel (cellValue, { props = {} }) {
+      renderEdit: defaultRender,
+      renderCell (h, { props = {} }, params) {
+        let { row, column } = params
+        let cellValue = XEUtils.get(row, column.property)
         var values = cellValue || []
         var labels = []
         matchCascaderData(0, props.options, values, labels)
-        return (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `)
+        return cellText(h, (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `))
       }
     },
     ElDatePicker: {
-      formatLabel (cellValue, { props = {} }) {
+      renderEdit: defaultRender,
+      renderCell (h, { props = {} }, params) {
+        let { row, column } = params
         let { rangeSeparator } = props
+        let cellValue = XEUtils.get(row, column.property)
         switch (props.type) {
           case 'week':
-            return getFormatDate(cellValue, props, 'yyyywWW')
+            cellValue = getFormatDate(cellValue, props, 'yyyywWW')
+            break
           case 'month':
-            return getFormatDate(cellValue, props, 'yyyy-MM')
+            cellValue = getFormatDate(cellValue, props, 'yyyy-MM')
+            break
           case 'year':
-            return getFormatDate(cellValue, props, 'yyyy')
+            cellValue = getFormatDate(cellValue, props, 'yyyy')
+            break
           case 'dates':
-            return getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd')
+            cellValue = getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd')
+            break
           case 'daterange':
-            return getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd')
+            cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd')
+            break
           case 'datetimerange':
-            return getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
+            cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
+            break
+          default:
+            cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
         }
-        return getFormatDate(cellValue, props, 'yyyy-MM-dd')
+        return cellText(h, cellValue)
       }
     },
-    ElTimePicker: {},
-    ElRate: {},
-    ElSwitch: {}
+    ElTimePicker: {
+      renderEdit: defaultRender
+    },
+    ElRate: {
+      renderEdit: defaultRender
+    },
+    ElSwitch: {
+      renderEdit: defaultRender
+    }
   }
 }
 

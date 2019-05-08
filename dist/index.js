@@ -44,16 +44,45 @@
     }
   }
 
+  function defaultRender(h, editRender, params) {
+    var $table = params.$table,
+        row = params.row,
+        column = params.column;
+    var props = editRender.props;
+
+    if ($table.size) {
+      props = Object.assign({
+        size: $table.size
+      }, props);
+    }
+
+    return [h(editRender.name, {
+      props: props,
+      model: {
+        value: _xeUtils["default"].get(row, column.property),
+        callback: function callback(value) {
+          _xeUtils["default"].set(row, column.property, value);
+        }
+      }
+    })];
+  }
+
+  function cellText(h, cellValue) {
+    return [h('span', '' + (cellValue === void 0 ? '' : cellValue))];
+  }
+
   var VXETablePluginElement = {
     renderMap: {
       ElInput: {
-        autofocus: 'input.el-input__inner'
+        autofocus: 'input.el-input__inner',
+        renderEdit: defaultRender
       },
       ElInputNumber: {
-        autofocus: 'input.el-input__inner'
+        autofocus: 'input.el-input__inner',
+        renderEdit: defaultRender
       },
       ElSelect: {
-        render: function render(h, _ref, _ref2) {
+        renderEdit: function renderEdit(h, _ref, _ref2) {
           var options = _ref.options,
               _ref$props = _ref.props,
               props = _ref$props === void 0 ? {} : _ref$props,
@@ -91,64 +120,94 @@
             });
           }))];
         },
-        formatLabel: function formatLabel(cellValue, _ref3) {
+        renderCell: function renderCell(h, _ref3, params) {
           var options = _ref3.options,
               _ref3$optionProps = _ref3.optionProps,
               optionProps = _ref3$optionProps === void 0 ? {} : _ref3$optionProps;
+          var row = params.row,
+              column = params.column;
           var _optionProps$label2 = optionProps.label,
               label = _optionProps$label2 === void 0 ? 'label' : _optionProps$label2,
               _optionProps$value2 = optionProps.value,
               value = _optionProps$value2 === void 0 ? 'value' : _optionProps$value2;
 
+          var cellValue = _xeUtils["default"].get(row, column.property);
+
           var item = _xeUtils["default"].find(options, function (item) {
             return item[value] === cellValue;
           });
 
-          return item ? item[label] : null;
+          return cellText(h, item ? item[label] : null);
         }
       },
       ElCascader: {
-        formatLabel: function formatLabel(cellValue, _ref4) {
+        renderEdit: defaultRender,
+        renderCell: function renderCell(h, _ref4, params) {
           var _ref4$props = _ref4.props,
               props = _ref4$props === void 0 ? {} : _ref4$props;
+          var row = params.row,
+              column = params.column;
+
+          var cellValue = _xeUtils["default"].get(row, column.property);
+
           var values = cellValue || [];
           var labels = [];
           matchCascaderData(0, props.options, values, labels);
-          return (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(" ".concat(props.separator || '/', " "));
+          return cellText(h, (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(" ".concat(props.separator || '/', " ")));
         }
       },
       ElDatePicker: {
-        formatLabel: function formatLabel(cellValue, _ref5) {
+        renderEdit: defaultRender,
+        renderCell: function renderCell(h, _ref5, params) {
           var _ref5$props = _ref5.props,
               props = _ref5$props === void 0 ? {} : _ref5$props;
+          var row = params.row,
+              column = params.column;
           var rangeSeparator = props.rangeSeparator;
+
+          var cellValue = _xeUtils["default"].get(row, column.property);
 
           switch (props.type) {
             case 'week':
-              return getFormatDate(cellValue, props, 'yyyywWW');
+              cellValue = getFormatDate(cellValue, props, 'yyyywWW');
+              break;
 
             case 'month':
-              return getFormatDate(cellValue, props, 'yyyy-MM');
+              cellValue = getFormatDate(cellValue, props, 'yyyy-MM');
+              break;
 
             case 'year':
-              return getFormatDate(cellValue, props, 'yyyy');
+              cellValue = getFormatDate(cellValue, props, 'yyyy');
+              break;
 
             case 'dates':
-              return getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd');
+              cellValue = getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd');
+              break;
 
             case 'daterange':
-              return getFormatDates(cellValue, props, " ".concat(rangeSeparator || '-', " "), 'yyyy-MM-dd');
+              cellValue = getFormatDates(cellValue, props, " ".concat(rangeSeparator || '-', " "), 'yyyy-MM-dd');
+              break;
 
             case 'datetimerange':
-              return getFormatDates(cellValue, props, " ".concat(rangeSeparator || '-', " "), 'yyyy-MM-dd HH:ss:mm');
+              cellValue = getFormatDates(cellValue, props, " ".concat(rangeSeparator || '-', " "), 'yyyy-MM-dd HH:ss:mm');
+              break;
+
+            default:
+              cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd');
           }
 
-          return getFormatDate(cellValue, props, 'yyyy-MM-dd');
+          return cellText(h, cellValue);
         }
       },
-      ElTimePicker: {},
-      ElRate: {},
-      ElSwitch: {}
+      ElTimePicker: {
+        renderEdit: defaultRender
+      },
+      ElRate: {
+        renderEdit: defaultRender
+      },
+      ElSwitch: {
+        renderEdit: defaultRender
+      }
     }
   };
   var _default = VXETablePluginElement;
