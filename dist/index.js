@@ -1,6 +1,6 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "xe-utils"], factory);
+    define("vxe-table-plugin-element", ["exports", "xe-utils"], factory);
   } else if (typeof exports !== "undefined") {
     factory(exports, require("xe-utils"));
   } else {
@@ -8,7 +8,7 @@
       exports: {}
     };
     factory(mod.exports, global.XEUtils);
-    global.index = mod.exports;
+    global.VXETablePluginElement = mod.exports.default;
   }
 })(this, function (_exports, _xeUtils) {
   "use strict";

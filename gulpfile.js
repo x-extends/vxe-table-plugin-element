@@ -2,9 +2,13 @@ const gulp = require('gulp')
 const uglify = require('gulp-uglify')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
+const replace = require('gulp-replace')
 const sass = require('gulp-sass')
 const cleanCSS = require('gulp-clean-css')
-var prefixer = require('gulp-autoprefixer')
+const prefixer = require('gulp-autoprefixer')
+const pack = require('./package.json')
+
+const exportModuleName = 'VXETablePluginElement'
 
 gulp.task('build_style', function () {
   return gulp.src('style.scss')
@@ -37,13 +41,17 @@ gulp.task('build_common', function () {
 gulp.task('build_umd', function () {
   return gulp.src('index.js')
     .pipe(babel({
+      moduleId: pack.name,
       presets: ['@babel/env'],
       plugins: [['@babel/transform-modules-umd', {
         globals: {
+          [pack.name]: exportModuleName,
           'xe-utils': 'XEUtils'
-        }
+        },
+        exactGlobals: true
       }]]
     }))
+    .pipe(replace(`global.${exportModuleName} = mod.exports;`, `global.${exportModuleName} = mod.exports.default;`))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
