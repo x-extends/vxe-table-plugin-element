@@ -21,6 +21,59 @@
 | optionGroups | 只对 name=ElSelect 有效，下拉组件分组选项列表 | Array | — | [] |
 | optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
 
+## Demo
+
+```html
+<vxe-table
+  border
+  class="vxe-table-element"
+  height="600"
+  :data.sync="tableData"
+  :edit-config="{trigger: 'click', mode: 'cell'}">
+  <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+  <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+  <vxe-table-column prop="name" label="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-table-column>
+  <vxe-table-column prop="age" label="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
+  <vxe-table-column prop="sex" label="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></vxe-table-column>
+  <vxe-table-column prop="region" label="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></vxe-table-column>
+  <vxe-table-column prop="date" label="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-table-column>
+  <vxe-table-column prop="date1" label="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></vxe-table-column>
+  <vxe-table-column prop="date2" label="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></vxe-table-column>
+  <vxe-table-column prop="rate" label="ElRate" width="200" :edit-render="{name: 'ElRate', type: 'visible'}"></vxe-table-column>
+  <vxe-table-column prop="flag" label="ElSwitch" width="100" fixed="right" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-table-column>
+</vxe-table>
+```
+
+```javascript
+export default {
+  data () {
+    return {
+      tableData: [],
+      sexList: [
+        {
+          'label': '男',
+          'value': '1'
+        },
+        {
+          'label': '女',
+          'value': '0'
+        }
+      ],
+      regionList: [
+        {
+          'label': '深圳',
+          'value': 'shenzhen'
+        },
+        {
+          'label': '广州',
+          'value': 'guangzhou'
+        }
+      ]
+    }
+  }
+}
+```
+
 ## License
 
 Copyright (c) 2019-present, Xu Liangzhan
