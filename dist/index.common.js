@@ -32,19 +32,8 @@ function matchCascaderData(index, list, values, labels) {
   }
 }
 
-function defaultRender(h, editRender, params) {
-  var $table = params.$table,
-      row = params.row,
-      column = params.column;
-  var props = editRender.props,
-      events = editRender.events;
-
-  if ($table.size) {
-    props = Object.assign({
-      size: $table.size
-    }, props);
-  }
-
+function getEvents(editRender, params) {
+  var events = editRender.events;
   var on = {};
 
   if (events) {
@@ -55,6 +44,21 @@ function defaultRender(h, editRender, params) {
     }));
   }
 
+  return on;
+}
+
+function defaultRender(h, editRender, params) {
+  var $table = params.$table,
+      row = params.row,
+      column = params.column;
+  var props = editRender.props;
+
+  if ($table.size) {
+    props = Object.assign({
+      size: $table.size
+    }, props);
+  }
+
   return [h(editRender.name, {
     props: props,
     model: {
@@ -63,7 +67,7 @@ function defaultRender(h, editRender, params) {
         _xeUtils["default"].set(row, column.property, value);
       }
     },
-    on: on
+    on: getEvents(editRender, params)
   })];
 }
 
@@ -82,19 +86,20 @@ var VXETablePluginElement = {
       renderEdit: defaultRender
     },
     ElSelect: {
-      renderEdit: function renderEdit(h, _ref, _ref2) {
-        var options = _ref.options,
-            _ref$props = _ref.props,
-            props = _ref$props === void 0 ? {} : _ref$props,
-            _ref$optionProps = _ref.optionProps,
-            optionProps = _ref$optionProps === void 0 ? {} : _ref$optionProps;
-        var $table = _ref2.$table,
-            row = _ref2.row,
-            column = _ref2.column;
-        var _optionProps$label = optionProps.label,
-            label = _optionProps$label === void 0 ? 'label' : _optionProps$label,
-            _optionProps$value = optionProps.value,
-            value = _optionProps$value === void 0 ? 'value' : _optionProps$value;
+      renderEdit: function renderEdit(h, editRender, params) {
+        var options = editRender.options,
+            optionGroups = editRender.optionGroups,
+            _editRender$props = editRender.props,
+            props = _editRender$props === void 0 ? {} : _editRender$props,
+            _editRender$optionPro = editRender.optionProps,
+            optionProps = _editRender$optionPro === void 0 ? {} : _editRender$optionPro,
+            _editRender$optionGro = editRender.optionGroupProps,
+            optionGroupProps = _editRender$optionGro === void 0 ? {} : _editRender$optionGro;
+        var $table = params.$table,
+            row = params.row,
+            column = params.column;
+        var labelProp = optionProps.label || 'label';
+        var valueProp = optionProps.value || 'value';
 
         if ($table.size) {
           props = _xeUtils["default"].assign({
@@ -102,49 +107,104 @@ var VXETablePluginElement = {
           }, props);
         }
 
+        if (optionGroups) {
+          var groupOptions = optionGroupProps.options || 'options';
+          var groupLabel = optionGroupProps.label || 'label';
+          return [h('el-select', {
+            props: props,
+            model: {
+              value: _xeUtils["default"].get(row, column.property),
+              callback: function callback(cellValue) {
+                _xeUtils["default"].set(row, column.property, cellValue);
+              }
+            },
+            on: getEvents(editRender, params)
+          }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
+            return h('el-option-group', {
+              props: {
+                label: group[groupLabel]
+              },
+              key: gIndex
+            }, _xeUtils["default"].map(group[groupOptions], function (item, index) {
+              return h('el-option', {
+                props: {
+                  value: item[valueProp],
+                  label: item[labelProp]
+                },
+                key: index
+              });
+            }));
+          }))];
+        }
+
         return [h('el-select', {
           props: props,
           model: {
             value: _xeUtils["default"].get(row, column.property),
-            callback: function callback(value) {
-              _xeUtils["default"].set(row, column.property, value);
+            callback: function callback(cellValue) {
+              _xeUtils["default"].set(row, column.property, cellValue);
             }
-          }
+          },
+          on: getEvents(editRender, params)
         }, _xeUtils["default"].map(options, function (item, index) {
           return h('el-option', {
             props: {
-              value: item[value],
-              label: item[label]
+              value: item[valueProp],
+              label: item[labelProp]
             },
             key: index
           });
         }))];
       },
-      renderCell: function renderCell(h, _ref3, params) {
-        var options = _ref3.options,
-            _ref3$optionProps = _ref3.optionProps,
-            optionProps = _ref3$optionProps === void 0 ? {} : _ref3$optionProps;
+      renderCell: function renderCell(h, editRender, params) {
+        var options = editRender.options,
+            optionGroups = editRender.optionGroups,
+            _editRender$props2 = editRender.props,
+            props = _editRender$props2 === void 0 ? {} : _editRender$props2,
+            _editRender$optionPro2 = editRender.optionProps,
+            optionProps = _editRender$optionPro2 === void 0 ? {} : _editRender$optionPro2,
+            _editRender$optionGro2 = editRender.optionGroupProps,
+            optionGroupProps = _editRender$optionGro2 === void 0 ? {} : _editRender$optionGro2;
         var row = params.row,
             column = params.column;
-        var _optionProps$label2 = optionProps.label,
-            label = _optionProps$label2 === void 0 ? 'label' : _optionProps$label2,
-            _optionProps$value2 = optionProps.value,
-            value = _optionProps$value2 === void 0 ? 'value' : _optionProps$value2;
+        var labelProp = optionProps.label || 'label';
+        var valueProp = optionProps.value || 'value';
+        var groupOptions = optionGroupProps.options || 'options';
 
         var cellValue = _xeUtils["default"].get(row, column.property);
 
-        var item = _xeUtils["default"].find(options, function (item) {
-          return item[value] === cellValue;
-        });
+        if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
+          return cellText(h, _xeUtils["default"].map(props.multiple ? cellValue : [cellValue], optionGroups ? function (value) {
+            var selectItem;
 
-        return cellText(h, item ? item[label] : null);
+            for (var index = 0; index < optionGroups.length; index++) {
+              selectItem = _xeUtils["default"].find(optionGroups[index][groupOptions], function (item) {
+                return item[valueProp] === value;
+              });
+
+              if (selectItem) {
+                break;
+              }
+            }
+
+            return selectItem ? selectItem[labelProp] : null;
+          } : function (value) {
+            var selectItem = _xeUtils["default"].find(options, function (item) {
+              return item[valueProp] === value;
+            });
+
+            return selectItem ? selectItem[labelProp] : null;
+          }).join(';'));
+        }
+
+        return cellText(h, '');
       }
     },
     ElCascader: {
       renderEdit: defaultRender,
-      renderCell: function renderCell(h, _ref4, params) {
-        var _ref4$props = _ref4.props,
-            props = _ref4$props === void 0 ? {} : _ref4$props;
+      renderCell: function renderCell(h, _ref, params) {
+        var _ref$props = _ref.props,
+            props = _ref$props === void 0 ? {} : _ref$props;
         var row = params.row,
             column = params.column;
 
@@ -158,9 +218,9 @@ var VXETablePluginElement = {
     },
     ElDatePicker: {
       renderEdit: defaultRender,
-      renderCell: function renderCell(h, _ref5, params) {
-        var _ref5$props = _ref5.props,
-            props = _ref5$props === void 0 ? {} : _ref5$props;
+      renderCell: function renderCell(h, _ref2, params) {
+        var _ref2$props = _ref2.props,
+            props = _ref2$props === void 0 ? {} : _ref2$props;
         var row = params.row,
             column = params.column;
         var rangeSeparator = props.rangeSeparator;

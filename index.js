@@ -22,17 +22,22 @@ function matchCascaderData (index, list, values, labels) {
   }
 }
 
-function defaultRender (h, editRender, params) {
-  let { $table, row, column } = params
-  let { props, events } = editRender
-  if ($table.size) {
-    props = Object.assign({ size: $table.size }, props)
-  }
+function getEvents (editRender, params) {
+  let { events } = editRender
   let on = { }
   if (events) {
     Object.assign(on, XEUtils.objectMap(events, cb => function () {
       cb.apply(null, [params].concat.apply(params, arguments))
     }))
+  }
+  return on
+}
+
+function defaultRender (h, editRender, params) {
+  let { $table, row, column } = params
+  let { props } = editRender
+  if ($table.size) {
+    props = Object.assign({ size: $table.size }, props)
   }
   return [
     h(editRender.name, {
@@ -43,7 +48,7 @@ function defaultRender (h, editRender, params) {
           XEUtils.set(row, column.property, value)
         }
       },
-      on
+      on: getEvents(editRender, params)
     })
   ]
 }
@@ -65,39 +70,89 @@ const VXETablePluginElement = {
       renderEdit: defaultRender
     },
     ElSelect: {
-      renderEdit (h, { options, props = {}, optionProps = {} }, { $table, row, column }) {
-        let { label = 'label', value = 'value' } = optionProps
+      renderEdit (h, editRender, params) {
+        let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
+        let { $table, row, column } = params
+        let labelProp = optionProps.label || 'label'
+        let valueProp = optionProps.value || 'value'
         if ($table.size) {
           props = XEUtils.assign({ size: $table.size }, props)
+        }
+        if (optionGroups) {
+          let groupOptions = optionGroupProps.options || 'options'
+          let groupLabel = optionGroupProps.label || 'label'
+          return [
+            h('el-select', {
+              props,
+              model: {
+                value: XEUtils.get(row, column.property),
+                callback (cellValue) {
+                  XEUtils.set(row, column.property, cellValue)
+                }
+              },
+              on: getEvents(editRender, params)
+            }, XEUtils.map(optionGroups, function (group, gIndex) {
+              return h('el-option-group', {
+                props: {
+                  label: group[groupLabel]
+                },
+                key: gIndex
+              }, XEUtils.map(group[groupOptions], function (item, index) {
+                return h('el-option', {
+                  props: {
+                    value: item[valueProp],
+                    label: item[labelProp]
+                  },
+                  key: index
+                })
+              }))
+            }))
+          ]
         }
         return [
           h('el-select', {
             props,
             model: {
               value: XEUtils.get(row, column.property),
-              callback (value) {
-                XEUtils.set(row, column.property, value)
+              callback (cellValue) {
+                XEUtils.set(row, column.property, cellValue)
               }
-            }
+            },
+            on: getEvents(editRender, params)
           }, XEUtils.map(options, function (item, index) {
             return h('el-option', {
               props: {
-                value: item[value],
-                label: item[label]
+                value: item[valueProp],
+                label: item[labelProp]
               },
               key: index
             })
           }))
         ]
       },
-      renderCell (h, { options, optionProps = {} }, params) {
+      renderCell (h, editRender, params) {
+        let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
         let { row, column } = params
-        let { label = 'label', value = 'value' } = optionProps
+        let labelProp = optionProps.label || 'label'
+        let valueProp = optionProps.value || 'value'
+        let groupOptions = optionGroupProps.options || 'options'
         let cellValue = XEUtils.get(row, column.property)
-        var item = XEUtils.find(options, function (item) {
-          return item[value] === cellValue
-        })
-        return cellText(h, item ? item[label] : null)
+        if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
+          return cellText(h, XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? value => {
+            let selectItem
+            for (let index = 0; index < optionGroups.length; index++) {
+              selectItem = XEUtils.find(optionGroups[index][groupOptions], item => item[valueProp] === value)
+              if (selectItem) {
+                break
+              }
+            }
+            return selectItem ? selectItem[labelProp] : null
+          } : value => {
+            let selectItem = XEUtils.find(options, item => item[valueProp] === value)
+            return selectItem ? selectItem[labelProp] : null
+          }).join(';'))
+        }
+        return cellText(h, '')
       }
     },
     ElCascader: {
