@@ -43,7 +43,7 @@ function defaultRender (h, editRender, params) {
 
 function cellText (h, cellValue) {
   return [
-    h('span', '' + (cellValue === void 0 ? '' : cellValue))
+    h('span', '' + (cellValue === null || cellValue === void 0 ? '' : cellValue))
   ]
 }
 
