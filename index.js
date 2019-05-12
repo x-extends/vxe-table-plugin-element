@@ -59,56 +59,27 @@ function cellText (h, cellValue) {
   ]
 }
 
-const VXETablePluginElement = {
-  renderMap: {
-    ElInput: {
-      autofocus: 'input.el-input__inner',
-      renderEdit: defaultRender
-    },
-    ElInputNumber: {
-      autofocus: 'input.el-input__inner',
-      renderEdit: defaultRender
-    },
-    ElSelect: {
-      renderEdit (h, editRender, params) {
-        let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
-        let { $table, row, column } = params
-        let labelProp = optionProps.label || 'label'
-        let valueProp = optionProps.value || 'value'
-        if ($table.size) {
-          props = XEUtils.assign({ size: $table.size }, props)
-        }
-        if (optionGroups) {
-          let groupOptions = optionGroupProps.options || 'options'
-          let groupLabel = optionGroupProps.label || 'label'
-          return [
-            h('el-select', {
-              props,
-              model: {
-                value: XEUtils.get(row, column.property),
-                callback (cellValue) {
-                  XEUtils.set(row, column.property, cellValue)
-                }
-              },
-              on: getEvents(editRender, params)
-            }, XEUtils.map(optionGroups, function (group, gIndex) {
-              return h('el-option-group', {
-                props: {
-                  label: group[groupLabel]
-                },
-                key: gIndex
-              }, XEUtils.map(group[groupOptions], function (item, index) {
-                return h('el-option', {
-                  props: {
-                    value: item[valueProp],
-                    label: item[labelProp]
-                  },
-                  key: index
-                })
-              }))
-            }))
-          ]
-        }
+const renderMap = {
+  ElInput: {
+    autofocus: 'input.el-input__inner',
+    renderEdit: defaultRender
+  },
+  ElInputNumber: {
+    autofocus: 'input.el-input__inner',
+    renderEdit: defaultRender
+  },
+  ElSelect: {
+    renderEdit (h, editRender, params) {
+      let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
+      let { $table, row, column } = params
+      let labelProp = optionProps.label || 'label'
+      let valueProp = optionProps.value || 'value'
+      if ($table.size) {
+        props = XEUtils.assign({ size: $table.size }, props)
+      }
+      if (optionGroups) {
+        let groupOptions = optionGroupProps.options || 'options'
+        let groupLabel = optionGroupProps.label || 'label'
         return [
           h('el-select', {
             props,
@@ -119,93 +90,159 @@ const VXETablePluginElement = {
               }
             },
             on: getEvents(editRender, params)
-          }, XEUtils.map(options, function (item, index) {
-            return h('el-option', {
+          }, XEUtils.map(optionGroups, function (group, gIndex) {
+            return h('el-option-group', {
               props: {
-                value: item[valueProp],
-                label: item[labelProp]
+                label: group[groupLabel]
               },
-              key: index
-            })
+              key: gIndex
+            }, XEUtils.map(group[groupOptions], function (item, index) {
+              return h('el-option', {
+                props: {
+                  value: item[valueProp],
+                  label: item[labelProp]
+                },
+                key: index
+              })
+            }))
           }))
         ]
-      },
-      renderCell (h, editRender, params) {
-        let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
-        let { row, column } = params
-        let labelProp = optionProps.label || 'label'
-        let valueProp = optionProps.value || 'value'
-        let groupOptions = optionGroupProps.options || 'options'
-        let cellValue = XEUtils.get(row, column.property)
-        if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
-          return cellText(h, XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? value => {
-            let selectItem
-            for (let index = 0; index < optionGroups.length; index++) {
-              selectItem = XEUtils.find(optionGroups[index][groupOptions], item => item[valueProp] === value)
-              if (selectItem) {
-                break
-              }
+      }
+      return [
+        h('el-select', {
+          props,
+          model: {
+            value: XEUtils.get(row, column.property),
+            callback (cellValue) {
+              XEUtils.set(row, column.property, cellValue)
             }
-            return selectItem ? selectItem[labelProp] : null
-          } : value => {
-            let selectItem = XEUtils.find(options, item => item[valueProp] === value)
-            return selectItem ? selectItem[labelProp] : null
-          }).join(';'))
-        }
-        return cellText(h, '')
+          },
+          on: getEvents(editRender, params)
+        }, XEUtils.map(options, function (item, index) {
+          return h('el-option', {
+            props: {
+              value: item[valueProp],
+              label: item[labelProp]
+            },
+            key: index
+          })
+        }))
+      ]
+    },
+    renderCell (h, editRender, params) {
+      let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = editRender
+      let { row, column } = params
+      let labelProp = optionProps.label || 'label'
+      let valueProp = optionProps.value || 'value'
+      let groupOptions = optionGroupProps.options || 'options'
+      let cellValue = XEUtils.get(row, column.property)
+      if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
+        return cellText(h, XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? value => {
+          let selectItem
+          for (let index = 0; index < optionGroups.length; index++) {
+            selectItem = XEUtils.find(optionGroups[index][groupOptions], item => item[valueProp] === value)
+            if (selectItem) {
+              break
+            }
+          }
+          return selectItem ? selectItem[labelProp] : null
+        } : value => {
+          let selectItem = XEUtils.find(options, item => item[valueProp] === value)
+          return selectItem ? selectItem[labelProp] : null
+        }).join(';'))
       }
-    },
-    ElCascader: {
-      renderEdit: defaultRender,
-      renderCell (h, { props = {} }, params) {
-        let { row, column } = params
-        let cellValue = XEUtils.get(row, column.property)
-        var values = cellValue || []
-        var labels = []
-        matchCascaderData(0, props.options, values, labels)
-        return cellText(h, (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `))
-      }
-    },
-    ElDatePicker: {
-      renderEdit: defaultRender,
-      renderCell (h, { props = {} }, params) {
-        let { row, column } = params
-        let { rangeSeparator } = props
-        let cellValue = XEUtils.get(row, column.property)
-        switch (props.type) {
-          case 'week':
-            cellValue = getFormatDate(cellValue, props, 'yyyywWW')
-            break
-          case 'month':
-            cellValue = getFormatDate(cellValue, props, 'yyyy-MM')
-            break
-          case 'year':
-            cellValue = getFormatDate(cellValue, props, 'yyyy')
-            break
-          case 'dates':
-            cellValue = getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd')
-            break
-          case 'daterange':
-            cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd')
-            break
-          case 'datetimerange':
-            cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
-            break
-          default:
-            cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
-        }
-        return cellText(h, cellValue)
-      }
-    },
-    ElTimePicker: {
-      renderEdit: defaultRender
-    },
-    ElRate: {
-      renderEdit: defaultRender
-    },
-    ElSwitch: {
-      renderEdit: defaultRender
+      return cellText(h, '')
     }
+  },
+  ElCascader: {
+    renderEdit: defaultRender,
+    renderCell (h, { props = {} }, params) {
+      let { row, column } = params
+      let cellValue = XEUtils.get(row, column.property)
+      var values = cellValue || []
+      var labels = []
+      matchCascaderData(0, props.options, values, labels)
+      return cellText(h, (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `))
+    }
+  },
+  ElDatePicker: {
+    renderEdit: defaultRender,
+    renderCell (h, { props = {} }, params) {
+      let { row, column } = params
+      let { rangeSeparator } = props
+      let cellValue = XEUtils.get(row, column.property)
+      switch (props.type) {
+        case 'week':
+          cellValue = getFormatDate(cellValue, props, 'yyyywWW')
+          break
+        case 'month':
+          cellValue = getFormatDate(cellValue, props, 'yyyy-MM')
+          break
+        case 'year':
+          cellValue = getFormatDate(cellValue, props, 'yyyy')
+          break
+        case 'dates':
+          cellValue = getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd')
+          break
+        case 'daterange':
+          cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd')
+          break
+        case 'datetimerange':
+          cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
+          break
+        default:
+          cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
+      }
+      return cellText(h, cellValue)
+    }
+  },
+  ElTimePicker: {
+    renderEdit: defaultRender
+  },
+  ElRate: {
+    renderEdit: defaultRender
+  },
+  ElSwitch: {
+    renderEdit: defaultRender
+  }
+}
+
+function hasClass (elem, cls) {
+  return elem && elem.className && elem.className.split && elem.className.split(' ').indexOf(cls) > -1
+}
+
+/**
+ * 检查触发源是否属于目标节点
+ */
+function getEventTargetNode (evnt, container, queryCls) {
+  let targetElem
+  let target = evnt.target
+  while (target && target.nodeType && target !== document) {
+    if (queryCls && hasClass(target, queryCls)) {
+      targetElem = target
+    } else if (target === container) {
+      return { flag: queryCls ? !!targetElem : true, container, targetElem: targetElem }
+    }
+    target = target.parentNode
+  }
+  return { flag: false }
+}
+
+function clearActivedEvent (params, evnt) {
+  if (
+    // 下拉框
+    getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag ||
+    // 日期
+    getEventTargetNode(evnt, document.body, ' el-picker-panel').flag
+  ) {
+    return false
+  }
+}
+
+function VXETablePluginElement (GlobalConfig, EventInterceptor) {
+  GlobalConfig.renderMap = Object.assign(GlobalConfig.renderMap, renderMap)
+  if (EventInterceptor.clearActiveds.indexOf(clearActivedEvent) === -1) {
+    EventInterceptor.clearActiveds.push(clearActivedEvent)
   }
 }
 
