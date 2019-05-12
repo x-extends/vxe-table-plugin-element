@@ -24,9 +24,15 @@ function matchCascaderData (index, list, values, labels) {
 
 function defaultRender (h, editRender, params) {
   let { $table, row, column } = params
-  let { props } = editRender
+  let { props, events } = editRender
   if ($table.size) {
     props = Object.assign({ size: $table.size }, props)
+  }
+  let on = { }
+  if (events) {
+    Object.assign(on, XEUtils.objectMap(events, cb => function () {
+      cb.apply(null, [params].concat.apply(params, arguments))
+    }))
   }
   return [
     h(editRender.name, {
@@ -36,7 +42,8 @@ function defaultRender (h, editRender, params) {
         callback (value) {
           XEUtils.set(row, column.property, value)
         }
-      }
+      },
+      on
     })
   ]
 }
@@ -58,8 +65,8 @@ const VXETablePluginElement = {
       renderEdit: defaultRender
     },
     ElSelect: {
-      renderEdit (h, { options, props = {}, optionProps = {} }, { $table, row, column }) {
-        let { label = 'label', value = 'value' } = optionProps
+      renderEdit (h, { options, props = {}, optionAttrs = {} }, { $table, row, column }) {
+        let { label = 'label', value = 'value' } = optionAttrs
         if ($table.size) {
           props = XEUtils.assign({ size: $table.size }, props)
         }
@@ -83,9 +90,9 @@ const VXETablePluginElement = {
           }))
         ]
       },
-      renderCell (h, { options, optionProps = {} }, params) {
+      renderCell (h, { options, optionAttrs = {} }, params) {
         let { row, column } = params
-        let { label = 'label', value = 'value' } = optionProps
+        let { label = 'label', value = 'value' } = optionAttrs
         let cellValue = XEUtils.get(row, column.property)
         var item = XEUtils.find(options, function (item) {
           return item[value] === cellValue

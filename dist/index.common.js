@@ -36,12 +36,23 @@ function defaultRender(h, editRender, params) {
   var $table = params.$table,
       row = params.row,
       column = params.column;
-  var props = editRender.props;
+  var props = editRender.props,
+      events = editRender.events;
 
   if ($table.size) {
     props = Object.assign({
       size: $table.size
     }, props);
+  }
+
+  var on = {};
+
+  if (events) {
+    Object.assign(on, _xeUtils["default"].objectMap(events, function (cb) {
+      return function () {
+        cb.apply(null, [params].concat.apply(params, arguments));
+      };
+    }));
   }
 
   return [h(editRender.name, {
@@ -51,7 +62,8 @@ function defaultRender(h, editRender, params) {
       callback: function callback(value) {
         _xeUtils["default"].set(row, column.property, value);
       }
-    }
+    },
+    on: on
   })];
 }
 
@@ -74,15 +86,15 @@ var VXETablePluginElement = {
         var options = _ref.options,
             _ref$props = _ref.props,
             props = _ref$props === void 0 ? {} : _ref$props,
-            _ref$optionProps = _ref.optionProps,
-            optionProps = _ref$optionProps === void 0 ? {} : _ref$optionProps;
+            _ref$optionAttrs = _ref.optionAttrs,
+            optionAttrs = _ref$optionAttrs === void 0 ? {} : _ref$optionAttrs;
         var $table = _ref2.$table,
             row = _ref2.row,
             column = _ref2.column;
-        var _optionProps$label = optionProps.label,
-            label = _optionProps$label === void 0 ? 'label' : _optionProps$label,
-            _optionProps$value = optionProps.value,
-            value = _optionProps$value === void 0 ? 'value' : _optionProps$value;
+        var _optionAttrs$label = optionAttrs.label,
+            label = _optionAttrs$label === void 0 ? 'label' : _optionAttrs$label,
+            _optionAttrs$value = optionAttrs.value,
+            value = _optionAttrs$value === void 0 ? 'value' : _optionAttrs$value;
 
         if ($table.size) {
           props = _xeUtils["default"].assign({
@@ -110,14 +122,14 @@ var VXETablePluginElement = {
       },
       renderCell: function renderCell(h, _ref3, params) {
         var options = _ref3.options,
-            _ref3$optionProps = _ref3.optionProps,
-            optionProps = _ref3$optionProps === void 0 ? {} : _ref3$optionProps;
+            _ref3$optionAttrs = _ref3.optionAttrs,
+            optionAttrs = _ref3$optionAttrs === void 0 ? {} : _ref3$optionAttrs;
         var row = params.row,
             column = params.column;
-        var _optionProps$label2 = optionProps.label,
-            label = _optionProps$label2 === void 0 ? 'label' : _optionProps$label2,
-            _optionProps$value2 = optionProps.value,
-            value = _optionProps$value2 === void 0 ? 'value' : _optionProps$value2;
+        var _optionAttrs$label2 = optionAttrs.label,
+            label = _optionAttrs$label2 === void 0 ? 'label' : _optionAttrs$label2,
+            _optionAttrs$value2 = optionAttrs.value,
+            value = _optionAttrs$value2 === void 0 ? 'value' : _optionAttrs$value2;
 
         var cellValue = _xeUtils["default"].get(row, column.property);
 
