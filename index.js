@@ -65,8 +65,8 @@ const VXETablePluginElement = {
       renderEdit: defaultRender
     },
     ElSelect: {
-      renderEdit (h, { options, props = {}, optionAttrs = {} }, { $table, row, column }) {
-        let { label = 'label', value = 'value' } = optionAttrs
+      renderEdit (h, { options, props = {}, optionProps = {} }, { $table, row, column }) {
+        let { label = 'label', value = 'value' } = optionProps
         if ($table.size) {
           props = XEUtils.assign({ size: $table.size }, props)
         }
@@ -90,9 +90,9 @@ const VXETablePluginElement = {
           }))
         ]
       },
-      renderCell (h, { options, optionAttrs = {} }, params) {
+      renderCell (h, { options, optionProps = {} }, params) {
         let { row, column } = params
-        let { label = 'label', value = 'value' } = optionAttrs
+        let { label = 'label', value = 'value' } = optionProps
         let cellValue = XEUtils.get(row, column.property)
         var item = XEUtils.find(options, function (item) {
           return item[value] === cellValue
