@@ -84,7 +84,7 @@
   }
 
   function cellText(h, cellValue) {
-    return [h('span', '' + (cellValue === null || cellValue === void 0 ? '' : cellValue))];
+    return ['' + (cellValue === null || cellValue === void 0 ? '' : cellValue)];
   }
 
   var renderMap = {
