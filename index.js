@@ -206,6 +206,9 @@ const renderMap = {
       return XEUtils.toDateString(cellValue, format)
     }
   },
+  ElTimeSelect: {
+    renderEdit: defaultRender
+  },
   ElRate: {
     renderEdit: defaultRender
   },
@@ -239,8 +242,10 @@ function clearActivedEvent (params, evnt) {
   if (
     // 下拉框
     getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag ||
+    // 级联
+    getEventTargetNode(evnt, document.body, 'el-cascader-menus').flag ||
     // 日期
-    getEventTargetNode(evnt, document.body, ' el-picker-panel').flag
+    getEventTargetNode(evnt, document.body, 'el-picker-panel').flag
   ) {
     return false
   }
