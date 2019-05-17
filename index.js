@@ -199,11 +199,11 @@ const renderMap = {
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
-      let value = this.getRowIdentity(row, column)
+      let cellValue = XEUtils.get(row, column.property)
       if (isRange) {
-        return value ? value.map(date => XEUtils.toDateString(date, format)).join(` ${rangeSeparator} `) : ''
+        return cellValue ? cellValue.map(date => XEUtils.toDateString(date, format)).join(` ${rangeSeparator} `) : ''
       }
-      return XEUtils.toDateString(value, format)
+      return XEUtils.toDateString(cellValue, format)
     }
   },
   ElRate: {

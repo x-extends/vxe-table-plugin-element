@@ -283,15 +283,16 @@
             format = _props$format === void 0 ? 'hh:mm:ss' : _props$format,
             _props$rangeSeparator2 = props.rangeSeparator,
             rangeSeparator = _props$rangeSeparator2 === void 0 ? '-' : _props$rangeSeparator2;
-        var value = this.getRowIdentity(row, column);
+
+        var cellValue = _xeUtils["default"].get(row, column.property);
 
         if (isRange) {
-          return value ? value.map(function (date) {
+          return cellValue ? cellValue.map(function (date) {
             return _xeUtils["default"].toDateString(date, format);
           }).join(" ".concat(rangeSeparator, " ")) : '';
         }
 
-        return _xeUtils["default"].toDateString(value, format);
+        return _xeUtils["default"].toDateString(cellValue, format);
       }
     },
     ElRate: {
