@@ -344,5 +344,9 @@ VXETablePluginElement.install = function (GlobalConfig, EventInterceptor) {
   }
 };
 
+if (typeof window !== 'undefined' && window.VXETable) {
+  window.VXETable.use(VXETablePluginElement);
+}
+
 var _default = VXETablePluginElement;
 exports["default"] = _default;
