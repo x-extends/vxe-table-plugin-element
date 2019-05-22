@@ -9,6 +9,8 @@ var _xeUtils = _interopRequireDefault(require("xe-utils"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function getFormatDate(value, props, defaultFormat) {
   return _xeUtils["default"].toDateString(value, props.format || defaultFormat);
 }
@@ -33,8 +35,25 @@ function matchCascaderData(index, list, values, labels) {
 }
 
 function getEvents(editRender, params) {
-  var events = editRender.events;
-  var on = {};
+  var name = editRender.name,
+      events = editRender.events;
+  var $table = params.$table;
+  var type = 'change';
+
+  switch (name) {
+    case 'ElAutocomplete':
+      type = 'select';
+      break;
+
+    case 'ElInput':
+    case 'ElInputNumber':
+      type = 'input';
+      break;
+  }
+
+  var on = _defineProperty({}, type, function () {
+    return $table.updateStatus(params);
+  });
 
   if (events) {
     Object.assign(on, _xeUtils["default"].objectMap(events, function (cb) {

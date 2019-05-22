@@ -23,8 +23,21 @@ function matchCascaderData (index, list, values, labels) {
 }
 
 function getEvents (editRender, params) {
-  let { events } = editRender
-  let on = { }
+  let { name, events } = editRender
+  let { $table } = params
+  let type = 'change'
+  switch (name) {
+    case 'ElAutocomplete':
+      type = 'select'
+      break
+    case 'ElInput':
+    case 'ElInputNumber':
+      type = 'input'
+      break
+  }
+  let on = {
+    [type]: () => $table.updateStatus(params)
+  }
   if (events) {
     Object.assign(on, XEUtils.objectMap(events, cb => function () {
       cb.apply(null, [params].concat.apply(params, arguments))
@@ -254,7 +267,7 @@ function clearActivedEvent (params, evnt) {
 function VXETablePluginElement () {}
 
 VXETablePluginElement.install = function (GlobalConfig, EventInterceptor) {
-  GlobalConfig.renderMap = Object.assign(GlobalConfig.renderMap, renderMap)
+  Object.assign(GlobalConfig.renderMap, renderMap)
   if (EventInterceptor.clearActiveds.indexOf(clearActivedEvent) === -1) {
     EventInterceptor.clearActiveds.push(clearActivedEvent)
   }

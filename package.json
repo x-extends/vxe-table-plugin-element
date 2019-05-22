@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "vxe-table renderer plugins for element-ui.",
   "scripts": {
     "lib": "gulp build"
