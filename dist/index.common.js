@@ -355,8 +355,8 @@ function clearActivedEvent(params, evnt) {
 
 function VXETablePluginElement() {}
 
-VXETablePluginElement.install = function (GlobalConfig, EventInterceptor) {
-  GlobalConfig.renderMap = Object.assign(GlobalConfig.renderMap, renderMap);
+VXETablePluginElement.install = function (GlobalConfig, EventInterceptor, options) {
+  Object.assign(GlobalConfig.renderMap, renderMap);
 
   if (EventInterceptor.clearActiveds.indexOf(clearActivedEvent) === -1) {
     EventInterceptor.clearActiveds.push(clearActivedEvent);
