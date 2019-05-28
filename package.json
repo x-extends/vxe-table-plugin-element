@@ -38,10 +38,11 @@
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
-    "xe-utils": "^1.9.0"
+    "xe-utils": "^1.9.1"
   },
   "peerDependencies": {
-    "vxe-table": "^0.9.7"
+    "vxe-table": "^0.9.9",
+    "xe-utils": "^1.9.0"
   },
   "repository": {
     "type": "git",
