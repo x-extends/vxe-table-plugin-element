@@ -344,7 +344,7 @@ function getEventTargetNode(evnt, container, queryCls) {
  */
 
 
-function clearActivedEvent(params, evnt) {
+function handleClearActivedEvent(params, evnt) {
   if ( // 下拉框
   getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag || // 级联
   getEventTargetNode(evnt, document.body, 'el-cascader-menus').flag || // 日期
@@ -355,12 +355,14 @@ function clearActivedEvent(params, evnt) {
 
 function VXETablePluginElement() {}
 
-VXETablePluginElement.install = function (GlobalConfig, EventInterceptor, options) {
-  Object.assign(GlobalConfig.renderMap, renderMap);
+VXETablePluginElement.install = function (options, _ref4) {
+  var setup = _ref4.setup,
+      interceptor = _ref4.interceptor,
+      renderer = _ref4.renderer;
+  // 添加到渲染器
+  renderer.mixin(renderMap); // 处理事件冲突
 
-  if (EventInterceptor.clearActiveds.indexOf(clearActivedEvent) === -1) {
-    EventInterceptor.clearActiveds.push(clearActivedEvent);
-  }
+  interceptor.add('event.clear_actived', handleClearActivedEvent);
 };
 
 if (typeof window !== 'undefined' && window.VXETable) {
