@@ -5,9 +5,7 @@ function getFormatDate (value, props, defaultFormat) {
 }
 
 function getFormatDates (values, props, separator, defaultFormat) {
-  return XEUtils.map(values, function (date) {
-    return getFormatDate(date, props, defaultFormat)
-  }).join(separator)
+  return XEUtils.map(values, date => getFormatDate(date, props, defaultFormat)).join(separator)
 }
 
 function matchCascaderData (index, list, values, labels) {
@@ -234,9 +232,6 @@ function hasClass (elem, cls) {
   return elem && elem.className && elem.className.split && elem.className.split(' ').indexOf(cls) > -1
 }
 
-/**
- * 检查触发源是否属于目标节点
- */
 function getEventTargetNode (evnt, container, queryCls) {
   let targetElem
   let target = evnt.target
@@ -251,6 +246,9 @@ function getEventTargetNode (evnt, container, queryCls) {
   return { flag: false }
 }
 
+/**
+ * 事件兼容性处理
+ */
 function clearActivedEvent (params, evnt) {
   if (
     // 下拉框

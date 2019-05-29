@@ -26,7 +26,7 @@ gulp.task('build_style', function () {
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('build_common', function () {
+gulp.task('build_commonjs', function () {
   return gulp.src('index.js')
     .pipe(babel({
       presets: ['@babel/env']
@@ -60,4 +60,4 @@ gulp.task('build_umd', function () {
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('build', gulp.parallel('build_style', 'build_common', 'build_umd'))
+gulp.task('build', gulp.parallel('build_style', 'build_commonjs', 'build_umd'))

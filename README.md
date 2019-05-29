@@ -6,7 +6,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vxe-table-plugin-element/dist/style.min.css?compression=gzip&label=gzip%20size:%20CSS)](http://img.badgesize.io/https://unpkg.com/vxe-table-plugin-element/dist/style.min.css?compression=gzip&label=gzip%20size:%20CSS)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vxe-table-plugin-element/blob/master/LICENSE)
 
-该插件用于 vxe-table 列中渲染 element-ui 组件中提供简化的配置
+该插件用于 vxe-table 表格渲染 element-ui 组件提供适配兼容
 
 ## Installing
 
@@ -30,7 +30,7 @@ VXETable.use(VXETablePluginElement)
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
-| name | 支持的渲染组件 | String | ElAutocomplete / ElInput / ElSelect / ElCascader / ElTimeSelect / ElTimePicker / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput | — |
+| name | 支持的渲染组件 | String | ElAutocomplete,ElInput,ElSelect,ElCascader,ElTimeSelect,ElTimePicker,ElDatePicker,ElInputNumber,ElSwitch,ElRate,ElColorPicker,ElSlider | ElInput | — |
 | props | 渲染组件附加属性，参数请查看被渲染的 Component props | Object | — | {} |
 | options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
 | optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
@@ -48,7 +48,7 @@ VXETable.use(VXETablePluginElement)
   class="vxe-table-element"
   height="600"
   :data.sync="tableData"
-  :edit-config="{trigger: 'click', mode: 'cell'}">
+  :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
   <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
   <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
   <vxe-table-column prop="name" label="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-table-column>
@@ -67,7 +67,20 @@ VXETable.use(VXETablePluginElement)
 export default {
   data () {
     return {
-      tableData: [],
+      tableData: [
+        {
+          id: 100,
+          name: 'test',
+          age: 26,
+          sex: '1',
+          region: ['shenzhen'],
+          date: null,
+          date1: null,
+          date2: null,
+          rate: 2,
+          flag: true
+        }
+      ],
       sexList: [
         {
           'label': '男',
