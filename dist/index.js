@@ -107,6 +107,10 @@
   }
 
   var renderMap = {
+    ElAutocomplete: {
+      autofocus: 'input.el-input__inner',
+      renderEdit: defaultRender
+    },
     ElInput: {
       autofocus: 'input.el-input__inner',
       renderEdit: defaultRender
@@ -357,7 +361,8 @@
 
 
   function handleClearActivedEvent(params, evnt) {
-    if ( // 下拉框
+    if ( // 远程搜索
+    getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag || // 下拉框
     getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag || // 级联
     getEventTargetNode(evnt, document.body, 'el-cascader-menus').flag || // 日期
     getEventTargetNode(evnt, document.body, 'el-picker-panel').flag) {

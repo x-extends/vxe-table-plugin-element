@@ -69,6 +69,10 @@ function cellText (h, cellValue) {
 }
 
 const renderMap = {
+  ElAutocomplete: {
+    autofocus: 'input.el-input__inner',
+    renderEdit: defaultRender
+  },
   ElInput: {
     autofocus: 'input.el-input__inner',
     renderEdit: defaultRender
@@ -251,6 +255,8 @@ function getEventTargetNode (evnt, container, queryCls) {
  */
 function handleClearActivedEvent (params, evnt) {
   if (
+    // 远程搜索
+    getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||
     // 下拉框
     getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag ||
     // 级联
