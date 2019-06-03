@@ -260,6 +260,7 @@ function handleClearActivedEvent (params, evnt) {
     // 下拉框
     getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag ||
     // 级联
+    getEventTargetNode(evnt, document.body, 'el-cascader__dropdown').flag ||
     getEventTargetNode(evnt, document.body, 'el-cascader-menus').flag ||
     // 日期
     getEventTargetNode(evnt, document.body, 'el-picker-panel').flag
@@ -270,7 +271,7 @@ function handleClearActivedEvent (params, evnt) {
 
 function VXETablePluginElement () {}
 
-VXETablePluginElement.install = function (options, { setup, interceptor, renderer }) {
+VXETablePluginElement.install = function ({ setup, interceptor, renderer }, options) {
   // 添加到渲染器
   renderer.mixin(renderMap)
   // 处理事件冲突
