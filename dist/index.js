@@ -372,9 +372,8 @@
 
   function VXETablePluginElement() {}
 
-  VXETablePluginElement.install = function (options, _ref4) {
-    var setup = _ref4.setup,
-        interceptor = _ref4.interceptor,
+  VXETablePluginElement.install = function (_ref4) {
+    var interceptor = _ref4.interceptor,
         renderer = _ref4.renderer;
     // 添加到渲染器
     renderer.mixin(renderMap); // 处理事件冲突

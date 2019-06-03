@@ -271,7 +271,7 @@ function handleClearActivedEvent (params, evnt) {
 
 function VXETablePluginElement () {}
 
-VXETablePluginElement.install = function ({ setup, interceptor, renderer }, options) {
+VXETablePluginElement.install = function ({ interceptor, renderer }) {
   // 添加到渲染器
   renderer.mixin(renderMap)
   // 处理事件冲突
