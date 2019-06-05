@@ -11,7 +11,7 @@ function getFormatDates (values, props, separator, defaultFormat) {
 function matchCascaderData (index, list, values, labels) {
   let val = values[index]
   if (list && values.length > index) {
-    XEUtils.each(list, function (item) {
+    XEUtils.each(list, item => {
       if (item.value === val) {
         labels.push(item.label)
         matchCascaderData(++index, item.children, values, labels)
@@ -103,13 +103,13 @@ const renderMap = {
               }
             },
             on: getEvents(editRender, params)
-          }, XEUtils.map(optionGroups, function (group, gIndex) {
+          }, XEUtils.map(optionGroups, (group, gIndex) => {
             return h('el-option-group', {
               props: {
                 label: group[groupLabel]
               },
               key: gIndex
-            }, XEUtils.map(group[groupOptions], function (item, index) {
+            }, XEUtils.map(group[groupOptions], (item, index) => {
               return h('el-option', {
                 props: {
                   value: item[valueProp],
@@ -131,7 +131,7 @@ const renderMap = {
             }
           },
           on: getEvents(editRender, params)
-        }, XEUtils.map(options, function (item, index) {
+        }, XEUtils.map(options, (item, index) => {
           return h('el-option', {
             props: {
               value: item[valueProp],
