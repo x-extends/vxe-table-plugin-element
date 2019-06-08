@@ -297,10 +297,10 @@ var renderMap = {
 
       var cellValue = _xeUtils["default"].get(row, column.property);
 
-      if (isRange) {
-        return cellValue ? cellValue.map(function (date) {
+      if (cellValue && isRange) {
+        cellValue = cellValue.map(function (date) {
           return _xeUtils["default"].toDateString(date, format);
-        }).join(" ".concat(rangeSeparator, " ")) : '';
+        }).join(" ".concat(rangeSeparator, " "));
       }
 
       return _xeUtils["default"].toDateString(cellValue, format);

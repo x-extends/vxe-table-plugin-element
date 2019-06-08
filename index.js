@@ -215,8 +215,8 @@ const renderMap = {
       let { row, column } = params
       let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
       let cellValue = XEUtils.get(row, column.property)
-      if (isRange) {
-        return cellValue ? cellValue.map(date => XEUtils.toDateString(date, format)).join(` ${rangeSeparator} `) : ''
+      if (cellValue && isRange) {
+        cellValue = cellValue.map(date => XEUtils.toDateString(date, format)).join(` ${rangeSeparator} `)
       }
       return XEUtils.toDateString(cellValue, format)
     }
