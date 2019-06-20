@@ -21,6 +21,11 @@ function getFormatDates(values, props, separator, defaultFormat) {
   }).join(separator);
 }
 
+function equalDaterange(cellValue, data, props, defaultFormat) {
+  cellValue = getFormatDate(cellValue, props, defaultFormat);
+  return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat);
+}
+
 function matchCascaderData(index, list, values, labels) {
   var val = values[index];
 
@@ -34,7 +39,7 @@ function matchCascaderData(index, list, values, labels) {
   }
 }
 
-function getEvents(editRender, params) {
+function getCellEvents(editRender, params) {
   var name = editRender.name,
       events = editRender.events;
   var $table = params.$table;
@@ -66,15 +71,15 @@ function getEvents(editRender, params) {
   return on;
 }
 
-function defaultRender(h, editRender, params) {
+function defaultCellRender(h, editRender, params) {
   var $table = params.$table,
       row = params.row,
       column = params.column;
   var props = editRender.props;
 
-  if ($table.size) {
+  if ($table.vSize) {
     props = _xeUtils["default"].assign({
-      size: $table.size
+      size: $table.vSize
     }, props);
   }
 
@@ -86,26 +91,92 @@ function defaultRender(h, editRender, params) {
         _xeUtils["default"].set(row, column.property, value);
       }
     },
-    on: getEvents(editRender, params)
+    on: getCellEvents(editRender, params)
   })];
+}
+
+function getFilterEvents(on, filterRender, params) {
+  var events = filterRender.events;
+
+  if (events) {
+    _xeUtils["default"].assign(on, _xeUtils["default"].objectMap(events, function (cb) {
+      return function () {
+        cb.apply(null, [params].concat.apply(params, arguments));
+      };
+    }));
+  }
+
+  return on;
+}
+
+function defaultFilterRender(h, filterRender, params, context) {
+  var $table = params.$table,
+      column = params.column;
+  var name = filterRender.name,
+      props = filterRender.props;
+  var type = 'input';
+
+  if ($table.vSize) {
+    props = _xeUtils["default"].assign({
+      size: $table.vSize
+    }, props);
+  }
+
+  return column.filters.map(function (item) {
+    return h(name, {
+      props: props,
+      model: {
+        value: item.data,
+        callback: function callback(optionValue) {
+          item.data = optionValue;
+        }
+      },
+      on: getFilterEvents(_defineProperty({}, type, function () {
+        context.changeMultipleOption({}, !!item.data, item);
+      }), filterRender, params)
+    });
+  });
+}
+
+function defaultFilterMethod(_ref) {
+  var option = _ref.option,
+      row = _ref.row,
+      column = _ref.column;
+  var data = option.data;
+
+  var cellValue = _xeUtils["default"].get(row, column.property);
+
+  return cellValue === data;
 }
 
 function cellText(h, cellValue) {
   return ['' + (cellValue === null || cellValue === void 0 ? '' : cellValue)];
 }
+/**
+ * 渲染函数
+ * renderEdit(h, editRender, params, context)
+ * renderCell(h, editRender, params, context)
+ */
+
 
 var renderMap = {
   ElAutocomplete: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElInput: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElInputNumber: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElSelect: {
     renderEdit: function renderEdit(h, editRender, params) {
@@ -123,9 +194,9 @@ var renderMap = {
       var labelProp = optionProps.label || 'label';
       var valueProp = optionProps.value || 'value';
 
-      if ($table.size) {
+      if ($table.vSize) {
         props = _xeUtils["default"].assign({
-          size: $table.size
+          size: $table.vSize
         }, props);
       }
 
@@ -140,7 +211,7 @@ var renderMap = {
               _xeUtils["default"].set(row, column.property, cellValue);
             }
           },
-          on: getEvents(editRender, params)
+          on: getCellEvents(editRender, params)
         }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
           return h('el-option-group', {
             props: {
@@ -167,7 +238,7 @@ var renderMap = {
             _xeUtils["default"].set(row, column.property, cellValue);
           }
         },
-        on: getEvents(editRender, params)
+        on: getCellEvents(editRender, params)
       }, _xeUtils["default"].map(options, function (item, index) {
         return h('el-option', {
           props: {
@@ -223,10 +294,10 @@ var renderMap = {
     }
   },
   ElCascader: {
-    renderEdit: defaultRender,
-    renderCell: function renderCell(h, _ref, params) {
-      var _ref$props = _ref.props,
-          props = _ref$props === void 0 ? {} : _ref$props;
+    renderEdit: defaultCellRender,
+    renderCell: function renderCell(h, _ref2, params) {
+      var _ref2$props = _ref2.props,
+          props = _ref2$props === void 0 ? {} : _ref2$props;
       var row = params.row,
           column = params.column;
 
@@ -239,10 +310,10 @@ var renderMap = {
     }
   },
   ElDatePicker: {
-    renderEdit: defaultRender,
-    renderCell: function renderCell(h, _ref2, params) {
-      var _ref2$props = _ref2.props,
-          props = _ref2$props === void 0 ? {} : _ref2$props;
+    renderEdit: defaultCellRender,
+    renderCell: function renderCell(h, _ref3, params) {
+      var _ref3$props = _ref3.props,
+          props = _ref3$props === void 0 ? {} : _ref3$props;
       var row = params.row,
           column = params.column;
       var _props$rangeSeparator = props.rangeSeparator,
@@ -280,13 +351,68 @@ var renderMap = {
       }
 
       return cellText(h, cellValue);
+    },
+    renderFilter: function renderFilter(h, filterRender, params, context) {
+      var $table = params.$table,
+          column = params.column;
+      var props = filterRender.props;
+
+      if ($table.vSize) {
+        props = _xeUtils["default"].assign({
+          size: $table.vSize
+        }, props);
+      }
+
+      return column.filters.map(function (item) {
+        return h(filterRender.name, {
+          props: props,
+          model: {
+            value: item.data,
+            callback: function callback(optionValue) {
+              item.data = optionValue;
+            }
+          },
+          on: getFilterEvents({
+            change: function change(value) {
+              // 当前的选项是否选中，如果有值就是选中了，需要进行筛选
+              context.changeMultipleOption({}, value && value.length > 0, item);
+            }
+          }, filterRender, params)
+        });
+      });
+    },
+    filterMethod: function filterMethod(_ref4) {
+      var option = _ref4.option,
+          row = _ref4.row,
+          column = _ref4.column;
+      var data = option.data;
+      var filterRender = column.filterRender;
+      var _filterRender$props = filterRender.props,
+          props = _filterRender$props === void 0 ? {} : _filterRender$props;
+
+      var cellValue = _xeUtils["default"].get(row, column.property);
+
+      if (data) {
+        switch (props.type) {
+          case 'daterange':
+            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd');
+
+          case 'datetimerange':
+            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd HH:ss:mm');
+
+          default:
+            return cellValue === data;
+        }
+      }
+
+      return false;
     }
   },
   ElTimePicker: {
-    renderEdit: defaultRender,
-    renderCell: function renderCell(h, _ref3, params) {
-      var _ref3$props = _ref3.props,
-          props = _ref3$props === void 0 ? {} : _ref3$props;
+    renderEdit: defaultCellRender,
+    renderCell: function renderCell(h, _ref5, params) {
+      var _ref5$props = _ref5.props,
+          props = _ref5$props === void 0 ? {} : _ref5$props;
       var row = params.row,
           column = params.column;
       var isRange = props.isRange,
@@ -307,48 +433,37 @@ var renderMap = {
     }
   },
   ElTimeSelect: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   },
   ElRate: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   },
   ElSwitch: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   }
+  /**
+   * 筛选兼容性处理
+   */
+
 };
 
-function hasClass(elem, cls) {
-  return elem && elem.className && elem.className.split && elem.className.split(' ').indexOf(cls) > -1;
-}
+function handleClearFilterEvent(params, evnt, _ref6) {
+  var getEventTargetNode = _ref6.getEventTargetNode;
 
-function getEventTargetNode(evnt, container, queryCls) {
-  var targetElem;
-  var target = evnt.target;
-
-  while (target && target.nodeType && target !== document) {
-    if (queryCls && hasClass(target, queryCls)) {
-      targetElem = target;
-    } else if (target === container) {
-      return {
-        flag: queryCls ? !!targetElem : true,
-        container: container,
-        targetElem: targetElem
-      };
-    }
-
-    target = target.parentNode;
+  if ( // 远程搜索
+  getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag || // 日期
+  getEventTargetNode(evnt, document.body, 'el-picker-panel').flag) {
+    return false;
   }
-
-  return {
-    flag: false
-  };
 }
 /**
- * 事件兼容性处理
+ * 单元格兼容性处理
  */
 
 
-function handleClearActivedEvent(params, evnt) {
+function handleClearActivedEvent(params, evnt, _ref7) {
+  var getEventTargetNode = _ref7.getEventTargetNode;
+
   if ( // 远程搜索
   getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag || // 下拉框
   getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag || // 级联
@@ -360,12 +475,13 @@ function handleClearActivedEvent(params, evnt) {
 
 function VXETablePluginElement() {}
 
-VXETablePluginElement.install = function (_ref4) {
-  var interceptor = _ref4.interceptor,
-      renderer = _ref4.renderer;
+VXETablePluginElement.install = function (_ref8) {
+  var interceptor = _ref8.interceptor,
+      renderer = _ref8.renderer;
   // 添加到渲染器
   renderer.mixin(renderMap); // 处理事件冲突
 
+  interceptor.add('event.clear_filter', handleClearFilterEvent);
   interceptor.add('event.clear_actived', handleClearActivedEvent);
 };
 

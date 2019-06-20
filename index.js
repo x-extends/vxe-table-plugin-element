@@ -8,6 +8,11 @@ function getFormatDates (values, props, separator, defaultFormat) {
   return XEUtils.map(values, date => getFormatDate(date, props, defaultFormat)).join(separator)
 }
 
+function equalDaterange (cellValue, data, props, defaultFormat) {
+  cellValue = getFormatDate(cellValue, props, defaultFormat)
+  return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat)
+}
+
 function matchCascaderData (index, list, values, labels) {
   let val = values[index]
   if (list && values.length > index) {
@@ -20,7 +25,7 @@ function matchCascaderData (index, list, values, labels) {
   }
 }
 
-function getEvents (editRender, params) {
+function getCellEvents (editRender, params) {
   let { name, events } = editRender
   let { $table } = params
   let type = 'change'
@@ -44,11 +49,11 @@ function getEvents (editRender, params) {
   return on
 }
 
-function defaultRender (h, editRender, params) {
+function defaultCellRender (h, editRender, params) {
   let { $table, row, column } = params
   let { props } = editRender
-  if ($table.size) {
-    props = XEUtils.assign({ size: $table.size }, props)
+  if ($table.vSize) {
+    props = XEUtils.assign({ size: $table.vSize }, props)
   }
   return [
     h(editRender.name, {
@@ -59,27 +64,79 @@ function defaultRender (h, editRender, params) {
           XEUtils.set(row, column.property, value)
         }
       },
-      on: getEvents(editRender, params)
+      on: getCellEvents(editRender, params)
     })
   ]
+}
+
+function getFilterEvents (on, filterRender, params) {
+  let { events } = filterRender
+  if (events) {
+    XEUtils.assign(on, XEUtils.objectMap(events, cb => function () {
+      cb.apply(null, [params].concat.apply(params, arguments))
+    }))
+  }
+  return on
+}
+
+function defaultFilterRender (h, filterRender, params, context) {
+  let { $table, column } = params
+  let { name, props } = filterRender
+  let type = 'input'
+  if ($table.vSize) {
+    props = XEUtils.assign({ size: $table.vSize }, props)
+  }
+  return column.filters.map(item => {
+    return h(name, {
+      props,
+      model: {
+        value: item.data,
+        callback (optionValue) {
+          item.data = optionValue
+        }
+      },
+      on: getFilterEvents({
+        [type] () {
+          context.changeMultipleOption({}, !!item.data, item)
+        }
+      }, filterRender, params)
+    })
+  })
+}
+
+function defaultFilterMethod ({ option, row, column }) {
+  let { data } = option
+  let cellValue = XEUtils.get(row, column.property)
+  return cellValue === data
 }
 
 function cellText (h, cellValue) {
   return ['' + (cellValue === null || cellValue === void 0 ? '' : cellValue)]
 }
 
+/**
+ * 渲染函数
+ * renderEdit(h, editRender, params, context)
+ * renderCell(h, editRender, params, context)
+ */
 const renderMap = {
   ElAutocomplete: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElInput: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElInputNumber: {
     autofocus: 'input.el-input__inner',
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender,
+    renderFilter: defaultFilterRender,
+    filterMethod: defaultFilterMethod
   },
   ElSelect: {
     renderEdit (h, editRender, params) {
@@ -87,8 +144,8 @@ const renderMap = {
       let { $table, row, column } = params
       let labelProp = optionProps.label || 'label'
       let valueProp = optionProps.value || 'value'
-      if ($table.size) {
-        props = XEUtils.assign({ size: $table.size }, props)
+      if ($table.vSize) {
+        props = XEUtils.assign({ size: $table.vSize }, props)
       }
       if (optionGroups) {
         let groupOptions = optionGroupProps.options || 'options'
@@ -102,7 +159,7 @@ const renderMap = {
                 XEUtils.set(row, column.property, cellValue)
               }
             },
-            on: getEvents(editRender, params)
+            on: getCellEvents(editRender, params)
           }, XEUtils.map(optionGroups, (group, gIndex) => {
             return h('el-option-group', {
               props: {
@@ -130,7 +187,7 @@ const renderMap = {
               XEUtils.set(row, column.property, cellValue)
             }
           },
-          on: getEvents(editRender, params)
+          on: getCellEvents(editRender, params)
         }, XEUtils.map(options, (item, index) => {
           return h('el-option', {
             props: {
@@ -168,7 +225,7 @@ const renderMap = {
     }
   },
   ElCascader: {
-    renderEdit: defaultRender,
+    renderEdit: defaultCellRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let cellValue = XEUtils.get(row, column.property)
@@ -179,7 +236,7 @@ const renderMap = {
     }
   },
   ElDatePicker: {
-    renderEdit: defaultRender,
+    renderEdit: defaultCellRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let { rangeSeparator = '-' } = props
@@ -207,10 +264,51 @@ const renderMap = {
           cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
       }
       return cellText(h, cellValue)
+    },
+    renderFilter (h, filterRender, params, context) {
+      let { $table, column } = params
+      let { props } = filterRender
+      if ($table.vSize) {
+        props = XEUtils.assign({ size: $table.vSize }, props)
+      }
+      return column.filters.map(item => {
+        return h(filterRender.name, {
+          props,
+          model: {
+            value: item.data,
+            callback (optionValue) {
+              item.data = optionValue
+            }
+          },
+          on: getFilterEvents({
+            change (value) {
+              // 当前的选项是否选中，如果有值就是选中了，需要进行筛选
+              context.changeMultipleOption({}, value && value.length > 0, item)
+            }
+          }, filterRender, params)
+        })
+      })
+    },
+    filterMethod ({ option, row, column }) {
+      let { data } = option
+      let { filterRender } = column
+      let { props = {} } = filterRender
+      let cellValue = XEUtils.get(row, column.property)
+      if (data) {
+        switch (props.type) {
+          case 'daterange':
+            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd')
+          case 'datetimerange':
+            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd HH:ss:mm')
+          default:
+            return cellValue === data
+        }
+      }
+      return false
     }
   },
   ElTimePicker: {
-    renderEdit: defaultRender,
+    renderEdit: defaultCellRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
@@ -222,38 +320,34 @@ const renderMap = {
     }
   },
   ElTimeSelect: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   },
   ElRate: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   },
   ElSwitch: {
-    renderEdit: defaultRender
+    renderEdit: defaultCellRender
   }
-}
-
-function hasClass (elem, cls) {
-  return elem && elem.className && elem.className.split && elem.className.split(' ').indexOf(cls) > -1
-}
-
-function getEventTargetNode (evnt, container, queryCls) {
-  let targetElem
-  let target = evnt.target
-  while (target && target.nodeType && target !== document) {
-    if (queryCls && hasClass(target, queryCls)) {
-      targetElem = target
-    } else if (target === container) {
-      return { flag: queryCls ? !!targetElem : true, container, targetElem: targetElem }
-    }
-    target = target.parentNode
-  }
-  return { flag: false }
 }
 
 /**
- * 事件兼容性处理
+ * 筛选兼容性处理
  */
-function handleClearActivedEvent (params, evnt) {
+function handleClearFilterEvent (params, evnt, { getEventTargetNode }) {
+  if (
+    // 远程搜索
+    getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||
+    // 日期
+    getEventTargetNode(evnt, document.body, 'el-picker-panel').flag
+  ) {
+    return false
+  }
+}
+
+/**
+ * 单元格兼容性处理
+ */
+function handleClearActivedEvent (params, evnt, { getEventTargetNode }) {
   if (
     // 远程搜索
     getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||
@@ -275,6 +369,7 @@ VXETablePluginElement.install = function ({ interceptor, renderer }) {
   // 添加到渲染器
   renderer.mixin(renderMap)
   // 处理事件冲突
+  interceptor.add('event.clear_filter', handleClearFilterEvent)
   interceptor.add('event.clear_actived', handleClearActivedEvent)
 }
 

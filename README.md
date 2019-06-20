@@ -26,7 +26,7 @@ VXETable.use(VXETablePluginElement)
 
 ## API
 
-### edit-render 配置项说明
+### edit-render 单元格渲染配置项说明
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
@@ -38,7 +38,15 @@ VXETable.use(VXETablePluginElement)
 | optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
 | events | 渲染组件附加事件，参数为 ( {row,rowIndex,column,columnIndex}, ...Component arguments ) | Object | — | — |
 
-## Demo
+### filter-render 筛选渲染配置项说明
+
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+|------|------|-----|-----|-----|
+| name | 支持的渲染组件 | String | ElInput, ElInputNumber, ElAutocomplete, ElDatePicker | — |
+| props | 渲染组件附加属性，参数请查看被渲染的 Component props | Object | — | {} |
+| events | 渲染组件附加事件，参数为 ( {row,rowIndex,column,columnIndex}, ...Component arguments ) | Object | — | — |
+
+## Cell demo
 
 默认直接使用 class=vxe-table-element 既可，当然你也可以不引入默认样式，自行实现样式也是可以的。
 
@@ -99,6 +107,37 @@ export default {
         {
           'label': '广州',
           'value': 'guangzhou'
+        }
+      ]
+    }
+  }
+}
+```
+
+## Filter demo
+
+```html
+<vxe-table
+  border
+  height="600"
+  :data.sync="tableData">
+  <vxe-table-column type="index" width="60"></vxe-table-column>
+  <vxe-table-column prop="name" label="Name"></vxe-table-column>
+  <vxe-table-column prop="age" label="Age"></vxe-table-column>
+  <vxe-table-column prop="date" label="Date" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange'}}"></vxe-table-column>
+</vxe-table>
+```
+
+```javascript
+export default {
+  data () {
+    return {
+      tableData: [
+        {
+          id: 100,
+          name: 'test',
+          age: 26,
+          date: null
         }
       ]
     }
