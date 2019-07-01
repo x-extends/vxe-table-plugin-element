@@ -333,7 +333,8 @@ const renderMap = {
 /**
  * 筛选兼容性处理
  */
-function handleClearFilterEvent (params, evnt, { getEventTargetNode }) {
+function handleClearFilterEvent (params, evnt, context) {
+  let { getEventTargetNode } = context
   if (
     // 远程搜索
     getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||
@@ -347,7 +348,8 @@ function handleClearFilterEvent (params, evnt, { getEventTargetNode }) {
 /**
  * 单元格兼容性处理
  */
-function handleClearActivedEvent (params, evnt, { getEventTargetNode }) {
+function handleClearActivedEvent (params, evnt, context) {
+  let { getEventTargetNode } = context
   if (
     // 远程搜索
     getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||

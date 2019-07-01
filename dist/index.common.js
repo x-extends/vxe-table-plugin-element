@@ -447,8 +447,8 @@ var renderMap = {
 
 };
 
-function handleClearFilterEvent(params, evnt, _ref6) {
-  var getEventTargetNode = _ref6.getEventTargetNode;
+function handleClearFilterEvent(params, evnt, context) {
+  var getEventTargetNode = context.getEventTargetNode;
 
   if ( // 远程搜索
   getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag || // 日期
@@ -461,8 +461,8 @@ function handleClearFilterEvent(params, evnt, _ref6) {
  */
 
 
-function handleClearActivedEvent(params, evnt, _ref7) {
-  var getEventTargetNode = _ref7.getEventTargetNode;
+function handleClearActivedEvent(params, evnt, context) {
+  var getEventTargetNode = context.getEventTargetNode;
 
   if ( // 远程搜索
   getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag || // 下拉框
@@ -475,9 +475,9 @@ function handleClearActivedEvent(params, evnt, _ref7) {
 
 function VXETablePluginElement() {}
 
-VXETablePluginElement.install = function (_ref8) {
-  var interceptor = _ref8.interceptor,
-      renderer = _ref8.renderer;
+VXETablePluginElement.install = function (_ref6) {
+  var interceptor = _ref6.interceptor,
+      renderer = _ref6.renderer;
   // 添加到渲染器
   renderer.mixin(renderMap); // 处理事件冲突
 
