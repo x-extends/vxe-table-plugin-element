@@ -38,6 +38,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
+    "vxe-table": "^1.4.0",
     "xe-utils": "^1.9.5"
   },
   "peerDependencies": {
