@@ -116,8 +116,6 @@ function cellText (h, cellValue) {
 
 /**
  * 渲染函数
- * renderEdit(h, editRender, params, context)
- * renderCell(h, editRender, params, context)
  */
 const renderMap = {
   ElAutocomplete: {
