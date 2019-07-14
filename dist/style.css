@@ -1,8 +1,16 @@
 .vxe-table-element.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-select .el-input__inner,
-.vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
-.vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__increase, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-date-editor .el-input__inner {
+.vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-select .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
+.vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__increase,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input-number__increase, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-date-editor .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-date-editor .el-input__inner {
   border: 0; }
 
 .vxe-table-element .vxe-cell > .el-input,
@@ -16,5 +24,9 @@
 .vxe-table-element.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-select .el-input__inner,
-.vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner {
+.vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-select .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner {
   padding: 0; }
