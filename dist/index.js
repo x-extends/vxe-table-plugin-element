@@ -356,6 +356,10 @@
             cellValue = getFormatDates(cellValue, props, " ".concat(rangeSeparator, " "), 'yyyy-MM-dd HH:ss:mm');
             break;
 
+          case 'monthrange':
+            cellValue = getFormatDates(cellValue, props, " ".concat(rangeSeparator, " "), 'yyyy-MM');
+            break;
+
           default:
             cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd');
         }

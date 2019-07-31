@@ -258,6 +258,9 @@ const renderMap = {
         case 'datetimerange':
           cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'yyyy-MM-dd HH:ss:mm')
           break
+        case 'monthrange':
+          cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'yyyy-MM')
+          break
         default:
           cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
       }
