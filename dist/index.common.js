@@ -132,7 +132,7 @@ function defaultFilterRender(h, filterRender, params, context) {
         }
       },
       on: getFilterEvents(_defineProperty({}, type, function () {
-        context.changeMultipleOption({}, !!item.data, item);
+        context[column.filterMultiple ? 'changeMultipleOption' : 'changeRadioOption']({}, !!item.data, item);
       }), filterRender, params)
     });
   });
@@ -373,7 +373,7 @@ var renderMap = {
           on: getFilterEvents({
             change: function change(value) {
               // 当前的选项是否选中，如果有值就是选中了，需要进行筛选
-              context.changeMultipleOption({}, value && value.length > 0, item);
+              context[column.filterMultiple ? 'changeMultipleOption' : 'changeRadioOption']({}, value && value.length > 0, item);
             }
           }, filterRender, params)
         });
