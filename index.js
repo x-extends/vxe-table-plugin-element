@@ -301,6 +301,8 @@ const renderMap = {
             return equalDaterange(cellValue, data, props, 'yyyy-MM-dd')
           case 'datetimerange':
             return equalDaterange(cellValue, data, props, 'yyyy-MM-dd HH:ss:mm')
+          case 'monthrange':
+            return equalDaterange(cellValue, data, props, 'yyyy-MM')
           default:
             return cellValue === data
         }
