@@ -2,29 +2,37 @@
   border: 0;
 }
 .vxe-table-element {
+  .vxe-table--filter-body {
+    & > .el-input,
+    & > .el-input-number,
+    & > .el-autocomplete,
+    & > .el-select {
+      width: 180px;
+    }
+  }
   .vxe-cell {
-    > .el-input,
-    > .el-autocomplete,
-    > .el-input-number,
-    > .el-select,
-    > .el-cascader,
-    > .el-date-editor {
+    & > .el-input,
+    & > .el-autocomplete,
+    & > .el-input-number,
+    & > .el-select,
+    & > .el-cascader,
+    & > .el-date-editor {
       width: 100%;
     }
   }
   &.c--highlight,
   .vxe-table.c--highlight {
     .vxe-cell {
-      > .el-input:not(.el-date-editor),
-      > .el-autocomplete,
-      > .el-select,
-      > .el-cascader {
+      & > .el-input:not(.el-date-editor),
+      & > .el-autocomplete,
+      & > .el-select,
+      & > .el-cascader {
         .el-input__inner {
           padding: 0;
           @extend %ResetBorder;
         }
       }
-      > .el-input-number {
+      & > .el-input-number {
         .el-input-number__decrease,
         .el-input-number__increase {
           @extend %ResetBorder;
@@ -33,7 +41,7 @@
           @extend %ResetBorder;
         }
       }
-      > .el-date-editor {
+      & > .el-date-editor {
         .el-input__inner {
           @extend %ResetBorder;
         }

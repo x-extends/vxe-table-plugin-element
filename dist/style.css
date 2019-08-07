@@ -13,6 +13,12 @@
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-date-editor .el-input__inner {
   border: 0; }
 
+.vxe-table-element .vxe-table--filter-body > .el-input,
+.vxe-table-element .vxe-table--filter-body > .el-input-number,
+.vxe-table-element .vxe-table--filter-body > .el-autocomplete,
+.vxe-table-element .vxe-table--filter-body > .el-select {
+  width: 180px; }
+
 .vxe-table-element .vxe-cell > .el-input,
 .vxe-table-element .vxe-cell > .el-autocomplete,
 .vxe-table-element .vxe-cell > .el-input-number,
