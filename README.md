@@ -26,7 +26,19 @@ VXETable.use(VXETablePluginElement)
 
 ## API
 
-### edit-render 单元格渲染配置项说明
+### edit-render 默认的渲染配置项说明
+
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+|------|------|-----|-----|-----|
+| name | 支持的渲染组件 | String | ElInput, ElAutocomplete, ElInputNumber, ElSwitch, ElRate, ElSlider | — |
+| props | 渲染组件附加属性，参数请查看被渲染的 Component props | Object | — | {} |
+| options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
+| optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
+| optionGroups | 只对 name=ElSelect 有效，下拉组件分组选项列表 | Array | — | [] |
+| optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
+| events | 渲染组件附加事件，参数为 ( {row,rowIndex,column,columnIndex}, ...Component arguments ) | Object | — | — |
+
+### edit-render 可编辑渲染器配置项说明
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
@@ -38,7 +50,7 @@ VXETable.use(VXETablePluginElement)
 | optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
 | events | 渲染组件附加事件，参数为 ( {row,rowIndex,column,columnIndex}, ...Component arguments ) | Object | — | — |
 
-### filter-render 筛选渲染配置项说明
+### filter-render 筛选渲染器配置项说明
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
