@@ -94,9 +94,11 @@
   function defaultCellRender(h, editRender, params) {
     var row = params.row,
         column = params.column;
+    var attrs = editRender.attrs;
     var props = getProps(params, editRender);
     return [h(editRender.name, {
       props: props,
+      attrs: attrs,
       model: {
         value: _xeUtils["default"].get(row, column.property),
         callback: function callback(value) {
@@ -123,12 +125,26 @@
 
   function defaultFilterRender(h, filterRender, params, context) {
     var column = params.column;
-    var name = filterRender.name;
-    var type = 'input';
+    var name = filterRender.name,
+        attrs = filterRender.attrs;
     var props = getProps(params, filterRender);
+    var type = 'change';
+
+    switch (name) {
+      case 'ElAutocomplete':
+        type = 'select';
+        break;
+
+      case 'ElInput':
+      case 'ElInputNumber':
+        type = 'input';
+        break;
+    }
+
     return column.filters.map(function (item) {
       return h(name, {
         props: props,
+        attrs: attrs,
         model: {
           value: item.data,
           callback: function callback(optionValue) {
@@ -208,6 +224,7 @@
             optionGroupProps = _editRender$optionGro === void 0 ? {} : _editRender$optionGro;
         var row = params.row,
             column = params.column;
+        var attrs = editRender.attrs;
         var props = getProps(params, editRender);
 
         if (optionGroups) {
@@ -215,6 +232,7 @@
           var groupLabel = optionGroupProps.label || 'label';
           return [h('el-select', {
             props: props,
+            attrs: attrs,
             model: {
               value: _xeUtils["default"].get(row, column.property),
               callback: function callback(cellValue) {
@@ -234,6 +252,7 @@
 
         return [h('el-select', {
           props: props,
+          attrs: attrs,
           model: {
             value: _xeUtils["default"].get(row, column.property),
             callback: function callback(cellValue) {
@@ -294,6 +313,7 @@
             _filterRender$optionG = filterRender.optionGroupProps,
             optionGroupProps = _filterRender$optionG === void 0 ? {} : _filterRender$optionG;
         var column = params.column;
+        var attrs = filterRender.attrs;
         var props = getProps(params, filterRender);
 
         if (optionGroups) {
@@ -302,6 +322,7 @@
           return column.filters.map(function (item) {
             return h('el-select', {
               props: props,
+              attrs: attrs,
               model: {
                 value: item.data,
                 callback: function callback(optionValue) {
@@ -327,6 +348,7 @@
         return column.filters.map(function (item) {
           return h('el-select', {
             props: props,
+            attrs: attrs,
             model: {
               value: item.data,
               callback: function callback(optionValue) {
@@ -429,10 +451,12 @@
       },
       renderFilter: function renderFilter(h, filterRender, params, context) {
         var column = params.column;
+        var attrs = filterRender.attrs;
         var props = getProps(params, filterRender);
         return column.filters.map(function (item) {
           return h(filterRender.name, {
             props: props,
+            attrs: attrs,
             model: {
               value: item.data,
               callback: function callback(optionValue) {
@@ -505,10 +529,19 @@
       renderEdit: defaultCellRender
     },
     ElRate: {
-      renderEdit: defaultCellRender
+      renderEdit: defaultCellRender,
+      renderFilter: defaultFilterRender,
+      filterMethod: defaultFilterMethod
     },
     ElSwitch: {
-      renderEdit: defaultCellRender
+      renderEdit: defaultCellRender,
+      renderFilter: defaultFilterRender,
+      filterMethod: defaultFilterMethod
+    },
+    ElSlider: {
+      renderEdit: defaultCellRender,
+      renderFilter: defaultFilterRender,
+      filterMethod: defaultFilterMethod
     }
     /**
      * 事件兼容性处理

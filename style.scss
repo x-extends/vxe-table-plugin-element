@@ -1,13 +1,26 @@
 %ResetBorder {
   border: 0;
 }
+%SliderStyle {
+  .el-slider__runway {
+    margin: 8px 0;
+    .el-slider__button-wrapper {
+      z-index: auto;
+    }
+  }
+}
 .vxe-table-element {
   .vxe-table--filter-body {
     & > .el-input,
     & > .el-input-number,
     & > .el-autocomplete,
-    & > .el-select {
+    & > .el-select,
+    & > .el-rate,
+    & > .el-slider {
       width: 180px;
+    }
+    & > .el-slider {
+      @extend %SliderStyle;
     }
   }
   .vxe-cell {
@@ -16,8 +29,12 @@
     & > .el-input-number,
     & > .el-select,
     & > .el-cascader,
-    & > .el-date-editor {
+    & > .el-date-editor,
+    & > .el-slider {
       width: 100%;
+    }
+    & > .el-slider {
+      @extend %SliderStyle;
     }
   }
   &.c--highlight,

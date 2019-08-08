@@ -13,10 +13,17 @@
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-date-editor .el-input__inner {
   border: 0; }
 
+.vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway {
+  margin: 8px 0; }
+  .vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway .el-slider__button-wrapper, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway .el-slider__button-wrapper {
+    z-index: auto; }
+
 .vxe-table-element .vxe-table--filter-body > .el-input,
 .vxe-table-element .vxe-table--filter-body > .el-input-number,
 .vxe-table-element .vxe-table--filter-body > .el-autocomplete,
-.vxe-table-element .vxe-table--filter-body > .el-select {
+.vxe-table-element .vxe-table--filter-body > .el-select,
+.vxe-table-element .vxe-table--filter-body > .el-rate,
+.vxe-table-element .vxe-table--filter-body > .el-slider {
   width: 180px; }
 
 .vxe-table-element .vxe-cell > .el-input,
@@ -24,7 +31,8 @@
 .vxe-table-element .vxe-cell > .el-input-number,
 .vxe-table-element .vxe-cell > .el-select,
 .vxe-table-element .vxe-cell > .el-cascader,
-.vxe-table-element .vxe-cell > .el-date-editor {
+.vxe-table-element .vxe-cell > .el-date-editor,
+.vxe-table-element .vxe-cell > .el-slider {
   width: 100%; }
 
 .vxe-table-element.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
