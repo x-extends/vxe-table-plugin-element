@@ -290,7 +290,7 @@ const renderMap = {
     },
     filterMethod ({ option, row, column }) {
       let { data } = option
-      let { property, renderOpts } = column
+      let { property, filterRender: renderOpts } = column
       let { props = {} } = renderOpts
       let cellValue = XEUtils.get(row, property)
       if (props.multiple) {
@@ -371,7 +371,7 @@ const renderMap = {
     },
     filterMethod ({ option, row, column }) {
       let { data } = option
-      let { renderOpts } = column
+      let { filterRender: renderOpts } = column
       let { props = {} } = renderOpts
       let cellValue = XEUtils.get(row, column.property)
       if (data) {

@@ -362,7 +362,7 @@ var renderMap = {
           column = _ref4.column;
       var data = option.data;
       var property = column.property,
-          renderOpts = column.renderOpts;
+          renderOpts = column.filterRender;
       var _renderOpts$props2 = renderOpts.props,
           props = _renderOpts$props2 === void 0 ? {} : _renderOpts$props2;
 
@@ -471,7 +471,7 @@ var renderMap = {
           row = _ref7.row,
           column = _ref7.column;
       var data = option.data;
-      var renderOpts = column.renderOpts;
+      var renderOpts = column.filterRender;
       var _renderOpts$props3 = renderOpts.props,
           props = _renderOpts$props3 === void 0 ? {} : _renderOpts$props3;
 
