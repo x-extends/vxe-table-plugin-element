@@ -122,7 +122,8 @@ function handleConfirmFilter (context, column, checked, item) {
 function defaultFilterMethod ({ option, row, column }) {
   let { data } = option
   let cellValue = XEUtils.get(row, column.property)
-  return cellValue === data
+  /* eslint-disable eqeqeq */
+  return cellValue == data
 }
 
 function renderOptions (h, options, optionProps) {
@@ -298,7 +299,8 @@ const renderMap = {
         }
         return data.indexOf(cellValue) > -1
       }
-      return cellValue === data
+      /* eslint-disable eqeqeq */
+      return cellValue == data
     }
   },
   ElCascader: {
