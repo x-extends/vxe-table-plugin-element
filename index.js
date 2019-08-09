@@ -429,16 +429,17 @@ const renderMap = {
  */
 function handleClearEvent (params, evnt, context) {
   let { getEventTargetNode } = context
+  let bodyElem = document.body
   if (
     // 远程搜索
-    getEventTargetNode(evnt, document.body, 'el-autocomplete-suggestion').flag ||
+    getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag ||
     // 下拉框
-    getEventTargetNode(evnt, document.body, 'el-select-dropdown').flag ||
+    getEventTargetNode(evnt, bodyElem, 'el-select-dropdown').flag ||
     // 级联
-    getEventTargetNode(evnt, document.body, 'el-cascader__dropdown').flag ||
-    getEventTargetNode(evnt, document.body, 'el-cascader-menus').flag ||
+    getEventTargetNode(evnt, bodyElem, 'el-cascader__dropdown').flag ||
+    getEventTargetNode(evnt, bodyElem, 'el-cascader-menus').flag ||
     // 日期
-    getEventTargetNode(evnt, document.body, 'el-picker-panel').flag
+    getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag
   ) {
     return false
   }
