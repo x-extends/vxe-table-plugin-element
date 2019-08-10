@@ -561,8 +561,8 @@ function handleClearEvent(params, evnt, context) {
 }
 
 var eventMap = {
-  'CLEAR_FILTER': handleClearEvent,
-  'CLEAR_ACTIVED': handleClearEvent
+  'event.clear_filter': handleClearEvent,
+  'event.clear_actived': handleClearEvent
 };
 var VXETablePluginElement = {
   install: function install(_ref9) {
