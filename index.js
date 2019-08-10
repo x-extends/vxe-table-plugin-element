@@ -445,17 +445,13 @@ function handleClearEvent (params, evnt, context) {
   }
 }
 
-const eventMap = {
-  'event.clear_filter': handleClearEvent,
-  'event.clear_actived': handleClearEvent
-}
-
 const VXETablePluginElement = {
   install ({ interceptor, renderer }) {
     // 添加到渲染器
     renderer.mixin(renderMap)
     // 处理事件冲突
-    interceptor.mixin(eventMap)
+    interceptor.add('event.clear_filter', handleClearEvent)
+    interceptor.add('event.clear_actived', handleClearEvent)
   }
 }
 
