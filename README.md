@@ -26,7 +26,7 @@ VXETable.use(VXETablePluginElement)
 
 ## API
 
-### edit-render 默认的渲染配置项说明
+### cell-render 默认的渲染配置项说明
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
