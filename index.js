@@ -445,7 +445,7 @@ function handleClearEvent (params, evnt, context) {
   }
 }
 
-const VXETablePluginElement = {
+export const VXETablePluginElement = {
   install ({ interceptor, renderer }) {
     // 添加到渲染器
     renderer.mixin(renderMap)
