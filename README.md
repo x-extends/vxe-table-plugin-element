@@ -72,9 +72,9 @@ VXETable.use(VXETablePluginElement)
   class="vxe-table-element"
   height="600"
   :data.sync="tableData"
-  :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-  <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
-  <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+  :edit-config="{trigger: 'click', mode: 'cell'}">
+  <vxe-table-column type="selection" width="60"></vxe-table-column>
+  <vxe-table-column type="index" width="60"></vxe-table-column>
   <vxe-table-column prop="name" label="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-table-column>
   <vxe-table-column prop="age" label="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
   <vxe-table-column prop="sex" label="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></vxe-table-column>
@@ -83,7 +83,7 @@ VXETable.use(VXETablePluginElement)
   <vxe-table-column prop="date1" label="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></vxe-table-column>
   <vxe-table-column prop="date2" label="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></vxe-table-column>
   <vxe-table-column prop="rate" label="ElRate" width="200" :edit-render="{name: 'ElRate', type: 'visible'}"></vxe-table-column>
-  <vxe-table-column prop="flag" label="ElSwitch" width="100" fixed="right" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-table-column>
+  <vxe-table-column prop="flag" label="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-table-column>
 </vxe-table>
 ```
 
