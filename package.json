@@ -1,7 +1,7 @@
 {
   "name": "vxe-table-plugin-element",
   "version": "1.4.1",
-  "description": "vxe-table renderer plugins for element-ui.",
+  "description": "vxe-table renderer plugin for element-ui.",
   "scripts": {
     "lib": "gulp build"
   },
@@ -38,9 +38,10 @@
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
-    "xe-utils": "^2.0.10"
+    "xe-utils": "^2.2.1"
   },
   "peerDependencies": {
+    "element-ui": ">=2.0.0",
     "vxe-table": ">=1.4.0",
     "xe-utils": ">=2.2.0"
   },
