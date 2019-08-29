@@ -1,4 +1,4 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 
 function getFormatDate (value, props, defaultFormat) {
   return XEUtils.toDateString(value, props.format || defaultFormat)

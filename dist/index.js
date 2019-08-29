@@ -573,9 +573,9 @@
   }
 
   var VXETablePluginElement = {
-    install: function install(_ref9) {
-      var interceptor = _ref9.interceptor,
-          renderer = _ref9.renderer;
+    install: function install(VXETable) {
+      var interceptor = VXETable.interceptor,
+          renderer = VXETable.renderer;
       renderer.mixin(renderMap);
       interceptor.add('event.clear_filter', handleClearEvent);
       interceptor.add('event.clear_actived', handleClearEvent);
