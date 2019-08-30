@@ -5,7 +5,7 @@ export interface VXETablePluginStatic {
 }
 
 /**
- * vxe-table renderer plugins for element-ui.
+ * 基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库
  */
 declare var VXETablePluginElement: VXETablePluginStatic;
 

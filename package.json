@@ -1,7 +1,7 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "1.4.2",
-  "description": "vxe-table renderer plugin for element-ui.",
+  "version": "1.4.3",
+  "description": "基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库",
   "scripts": {
     "lib": "gulp build"
   },
