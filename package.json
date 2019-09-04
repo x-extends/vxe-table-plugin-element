@@ -38,7 +38,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
-    "xe-utils": "^2.2.1"
+    "xe-utils": "^2.2.2"
   },
   "peerDependencies": {
     "element-ui": ">=2.0.0",
