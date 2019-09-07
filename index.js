@@ -53,7 +53,7 @@ function getCellEvents (renderOpts, params) {
   return on
 }
 
-function defaultCellRender (h, renderOpts, params) {
+function defaultEditRender (h, renderOpts, params) {
   let { row, column } = params
   let { attrs } = renderOpts
   let props = getProps(params, renderOpts)
@@ -150,22 +150,22 @@ function cellText (h, cellValue) {
 const renderMap = {
   ElAutocomplete: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElInput: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElInputNumber: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
@@ -304,7 +304,7 @@ const renderMap = {
     }
   },
   ElCascader: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let cellValue = XEUtils.get(row, column.property)
@@ -315,7 +315,7 @@ const renderMap = {
     }
   },
   ElDatePicker: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let { rangeSeparator = '-' } = props
@@ -390,7 +390,7 @@ const renderMap = {
     }
   },
   ElTimePicker: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell (h, { props = {} }, params) {
       let { row, column } = params
       let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
@@ -402,23 +402,23 @@ const renderMap = {
     }
   },
   ElTimeSelect: {
-    renderEdit: defaultCellRender
+    renderEdit: defaultEditRender
   },
   ElRate: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElSwitch: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElSlider: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   }

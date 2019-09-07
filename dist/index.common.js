@@ -79,7 +79,7 @@ function getCellEvents(renderOpts, params) {
   return on;
 }
 
-function defaultCellRender(h, renderOpts, params) {
+function defaultEditRender(h, renderOpts, params) {
   var row = params.row,
       column = params.column;
   var attrs = renderOpts.attrs;
@@ -188,22 +188,22 @@ function cellText(h, cellValue) {
 var renderMap = {
   ElAutocomplete: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElInput: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElInputNumber: {
     autofocus: 'input.el-input__inner',
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
@@ -382,7 +382,7 @@ var renderMap = {
     }
   },
   ElCascader: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell: function renderCell(h, _ref5, params) {
       var _ref5$props = _ref5.props,
           props = _ref5$props === void 0 ? {} : _ref5$props;
@@ -398,7 +398,7 @@ var renderMap = {
     }
   },
   ElDatePicker: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell: function renderCell(h, _ref6, params) {
       var _ref6$props = _ref6.props,
           props = _ref6$props === void 0 ? {} : _ref6$props;
@@ -497,7 +497,7 @@ var renderMap = {
     }
   },
   ElTimePicker: {
-    renderEdit: defaultCellRender,
+    renderEdit: defaultEditRender,
     renderCell: function renderCell(h, _ref8, params) {
       var _ref8$props = _ref8.props,
           props = _ref8$props === void 0 ? {} : _ref8$props;
@@ -521,23 +521,23 @@ var renderMap = {
     }
   },
   ElTimeSelect: {
-    renderEdit: defaultCellRender
+    renderEdit: defaultEditRender
   },
   ElRate: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElSwitch: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   },
   ElSlider: {
-    renderDefault: defaultCellRender,
-    renderEdit: defaultCellRender,
+    renderDefault: defaultEditRender,
+    renderEdit: defaultEditRender,
     renderFilter: defaultFilterRender,
     filterMethod: defaultFilterMethod
   }
