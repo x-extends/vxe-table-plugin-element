@@ -21,6 +21,7 @@
     "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/runtime": "^7.4.4",
+    "del": "^5.1.0",
     "eslint": "^5.15.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
@@ -36,8 +37,13 @@
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
+    "typescript": "^3.6.3",
+    "vue": "^2.6.10",
+    "vxe-table": "^2.5.22",
     "xe-utils": "^2.2.4"
   },
   "peerDependencies": {
