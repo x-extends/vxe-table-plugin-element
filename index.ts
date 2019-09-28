@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
-import { VXETable } from 'vxe-table'
+// import { VXETable } from 'vxe-table'
 
 function getFormatDate (value: any, props: any, defaultFormat: string) {
   return XEUtils.toDateString(value, props.format || defaultFormat)
@@ -450,11 +450,17 @@ function handleClearEvent (params: any, evnt: any, context: any) {
  * 基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库
  */
 export const VXETablePluginElement = {
-  install (xtable: typeof VXETable) {
+  install (xtable: any) {
     let { interceptor, renderer } = xtable
     renderer.mixin(renderMap)
     interceptor.add('event.clear_filter', handleClearEvent)
     interceptor.add('event.clear_actived', handleClearEvent)
+  }
+}
+
+declare global {
+  interface Window {
+    VXETable: any
   }
 }
 

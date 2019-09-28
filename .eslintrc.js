@@ -1,6 +1,8 @@
 // https://eslint.org/docs/user-guide/configuring
 
 module.exports = {
+  root: true,
+  parser:  '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 6,
     sourceType: 'module',
@@ -15,10 +17,10 @@ module.exports = {
     node: true
   },
   plugins: [
-    'import'
+    '@typescript-eslint'
   ],
   extends: [
-    'plugin:import/errors',
+    'prettier/@typescript-eslint',
     'standard'
   ],
   rules: {
