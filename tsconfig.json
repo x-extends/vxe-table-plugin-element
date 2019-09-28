@@ -1,0 +1,10 @@
+{
+  "files": [
+    "index.ts",
+    "depend.ts"
+  ],
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es5"
+  }
+}
