@@ -1,15 +1,15 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 // import { VXETable } from 'vxe-table'
 
-function getFormatDate (value: any, props: any, defaultFormat: string) {
+function getFormatDate (value: any, props: any, defaultFormat: string): string {
   return XEUtils.toDateString(value, props.format || defaultFormat)
 }
 
-function getFormatDates (values: any, props: any, separator: string, defaultFormat: string) {
+function getFormatDates (values: any, props: any, separator: string, defaultFormat: string): string {
   return XEUtils.map(values, (date: any) => getFormatDate(date, props, defaultFormat)).join(separator)
 }
 
-function equalDaterange (cellValue: any, data: any, props: any, defaultFormat: string) {
+function equalDaterange (cellValue: any, data: any, props: any, defaultFormat: string): boolean {
   cellValue = getFormatDate(cellValue, props, defaultFormat)
   return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat)
 }
