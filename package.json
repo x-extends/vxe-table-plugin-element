@@ -7,8 +7,8 @@
   },
   "files": [
     "dist",
-    "index.ts",
-    "index.d.ts",
+    "*.ts",
+    "*.d.ts",
     "style.scss"
   ],
   "main": "dist/index.common.js",
