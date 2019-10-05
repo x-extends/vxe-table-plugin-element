@@ -23,7 +23,6 @@
 
   function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-  // import { VXETable } from 'vxe-table'
   function getFormatDate(value, props, defaultFormat) {
     return _xeUtils["default"].toDateString(value, props.format || defaultFormat);
   }
@@ -84,7 +83,11 @@
     if (events) {
       _xeUtils["default"].assign(on, _xeUtils["default"].objectMap(events, function (cb) {
         return function () {
-          cb.apply(null, [params].concat.apply(params, arguments));
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          cb.apply(null, [params].concat.apply(params, args));
         };
       }));
     }
@@ -116,7 +119,11 @@
     if (events) {
       _xeUtils["default"].assign(on, _xeUtils["default"].objectMap(events, function (cb) {
         return function () {
-          cb.apply(null, [params].concat.apply(params, arguments));
+          for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+          }
+
+          cb.apply(null, [params].concat.apply(params, args));
         };
       }));
     }

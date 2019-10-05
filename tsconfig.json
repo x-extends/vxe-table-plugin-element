@@ -4,7 +4,10 @@
     "depend.ts"
   ],
   "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "node",
     "noImplicitAny": true,
-    "target": "es5"
+    "target": "es6",
+    "lib": ["dom", "es6"]
   }
 }
