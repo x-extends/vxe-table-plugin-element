@@ -588,8 +588,8 @@
       var interceptor = xtable.interceptor,
           renderer = xtable.renderer;
       renderer.mixin(renderMap);
-      interceptor.add('event.clear_filter', handleClearEvent);
-      interceptor.add('event.clear_actived', handleClearEvent);
+      interceptor.add('event.clearFilter', handleClearEvent);
+      interceptor.add('event.clearActived', handleClearEvent);
     }
   };
   _exports.VXETablePluginElement = VXETablePluginElement;
