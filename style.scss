@@ -1,6 +1,9 @@
+$vxe-table-validate-error-color: #f56c6c;
+
 %ResetBorder {
   border: 0;
 }
+
 %SliderStyle {
   .el-slider__runway {
     margin: 8px 0;
@@ -35,6 +38,18 @@
     }
     & > .el-slider {
       @extend %SliderStyle;
+    }
+  }
+  .col--valid-error {
+    & > .vxe-cell {
+      & > .el-input .el-input__inner,
+      & > .el-autocomplete .el-input__inner,
+      & > .el-input-number .el-input__inner,
+      & > .el-select .el-input__inner,
+      & > .el-cascader .el-input__inner,
+      & > .el-date-picker .el-input__inner {
+        border-color: $vxe-table-validate-error-color;
+      }
     }
   }
   &.c--highlight,
