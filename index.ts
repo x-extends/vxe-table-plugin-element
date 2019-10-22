@@ -1,8 +1,12 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import VXETable from 'vxe-table/lib/vxe-table'
 
+function parseDate(value: any, props: any): any {
+  return props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
+}
+
 function getFormatDate (value: any, props: any, defaultFormat: string): string {
-  return XEUtils.toDateString(value, props.format || defaultFormat)
+  return XEUtils.toDateString(parseDate(value, props), props.format || defaultFormat)
 }
 
 function getFormatDates (values: any, props: any, separator: string, defaultFormat: string): string {
@@ -397,9 +401,9 @@ const renderMap = {
       let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
       let cellValue = XEUtils.get(row, column.property)
       if (cellValue && isRange) {
-        cellValue = XEUtils.map(cellValue, (date: any) => XEUtils.toDateString(date, format)).join(` ${rangeSeparator} `)
+        cellValue = XEUtils.map(cellValue, (date: any) => XEUtils.toDateString(parseDate(date, props), format)).join(` ${rangeSeparator} `)
       }
-      return XEUtils.toDateString(cellValue, format)
+      return XEUtils.toDateString(parseDate(cellValue, props), format)
     }
   },
   ElTimeSelect: {

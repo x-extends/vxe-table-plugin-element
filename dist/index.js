@@ -23,8 +23,12 @@
 
   function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+  function parseDate(value, props) {
+    return props.valueFormat ? _xeUtils["default"].toStringDate(value, props.valueFormat) : value;
+  }
+
   function getFormatDate(value, props, defaultFormat) {
-    return _xeUtils["default"].toDateString(value, props.format || defaultFormat);
+    return _xeUtils["default"].toDateString(parseDate(value, props), props.format || defaultFormat);
   }
 
   function getFormatDates(values, props, separator, defaultFormat) {
@@ -533,11 +537,11 @@
 
         if (cellValue && isRange) {
           cellValue = _xeUtils["default"].map(cellValue, function (date) {
-            return _xeUtils["default"].toDateString(date, format);
+            return _xeUtils["default"].toDateString(parseDate(date, props), format);
           }).join(" ".concat(rangeSeparator, " "));
         }
 
-        return _xeUtils["default"].toDateString(cellValue, format);
+        return _xeUtils["default"].toDateString(parseDate(cellValue, props), format);
       }
     },
     ElTimeSelect: {
