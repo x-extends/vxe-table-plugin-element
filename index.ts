@@ -146,11 +146,13 @@ function defaultFilterMethod ({ option, row, column }: any) {
 function renderOptions (h: Function, options: any, optionProps: any) {
   let labelProp = optionProps.label || 'label'
   let valueProp = optionProps.value || 'value'
+  let disabledProp = optionProps.disabled || 'disabled'
   return XEUtils.map(options, (item: any, index: number) => {
     return h('el-option', {
       props: {
         value: item[valueProp],
-        label: item[labelProp]
+        label: item[labelProp],
+        disabled: item[disabledProp]
       },
       key: index
     })
