@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils/methods/xe-utils'
 import VXETable from 'vxe-table/lib/vxe-table'
 
 function parseDate(value: any, props: any): any {
-  return props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
+  return value && props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
 }
 
 function getFormatDate (value: any, props: any, defaultFormat: string): string {

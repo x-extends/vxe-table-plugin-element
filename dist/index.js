@@ -24,7 +24,7 @@
   function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
   function parseDate(value, props) {
-    return props.valueFormat ? _xeUtils["default"].toStringDate(value, props.valueFormat) : value;
+    return value && props.valueFormat ? _xeUtils["default"].toStringDate(value, props.valueFormat) : value;
   }
 
   function getFormatDate(value, props, defaultFormat) {
