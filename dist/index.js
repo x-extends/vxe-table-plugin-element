@@ -89,7 +89,7 @@
     });
 
     if (events) {
-      _xeUtils["default"].assign({}, _xeUtils["default"].objectMap(events, function (cb) {
+      return _xeUtils["default"].assign({}, _xeUtils["default"].objectMap(events, function (cb) {
         return function () {
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -125,7 +125,7 @@
     var events = renderOpts.events;
 
     if (events) {
-      _xeUtils["default"].assign({}, _xeUtils["default"].objectMap(events, function (cb) {
+      return _xeUtils["default"].assign({}, _xeUtils["default"].objectMap(events, function (cb) {
         return function () {
           for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
