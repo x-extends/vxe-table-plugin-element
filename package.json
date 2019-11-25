@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "1.5.10",
+  "version": "1.5.11",
   "description": "基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库",
   "scripts": {
     "lib": "gulp build"
@@ -50,7 +50,7 @@
     "typescript": "^3.6.3",
     "vue": "^2.6.10",
     "vxe-table": "^2.6.22",
-    "xe-utils": "^2.2.12"
+    "xe-utils": "^2.2.14"
   },
   "peerDependencies": {
     "element-ui": ">=2.0.0",

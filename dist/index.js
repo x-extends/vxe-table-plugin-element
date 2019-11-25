@@ -55,12 +55,12 @@
     }
   }
 
-  function getProps(_ref, _ref2) {
+  function getProps(_ref, _ref2, defaultProps) {
     var $table = _ref.$table;
     var props = _ref2.props;
     return _xeUtils["default"].assign($table.vSize ? {
       size: $table.vSize
-    } : {}, props);
+    } : {}, defaultProps, props);
   }
 
   function getCellEvents(renderOpts, params) {
@@ -103,22 +103,24 @@
     return on;
   }
 
-  function defaultEditRender(h, renderOpts, params) {
-    var row = params.row,
-        column = params.column;
-    var attrs = renderOpts.attrs;
-    var props = getProps(params, renderOpts);
-    return [h(renderOpts.name, {
-      props: props,
-      attrs: attrs,
-      model: {
-        value: _xeUtils["default"].get(row, column.property),
-        callback: function callback(value) {
-          _xeUtils["default"].set(row, column.property, value);
-        }
-      },
-      on: getCellEvents(renderOpts, params)
-    })];
+  function createEditRender(defaultProps) {
+    return function (h, renderOpts, params) {
+      var row = params.row,
+          column = params.column;
+      var attrs = renderOpts.attrs;
+      var props = getProps(params, renderOpts, defaultProps);
+      return [h(renderOpts.name, {
+        props: props,
+        attrs: attrs,
+        model: {
+          value: _xeUtils["default"].get(row, column.property),
+          callback: function callback(value) {
+            _xeUtils["default"].set(row, column.property, value);
+          }
+        },
+        on: getCellEvents(renderOpts, params)
+      })];
+    };
   }
 
   function getFilterEvents(on, renderOpts, params, context) {
@@ -143,46 +145,48 @@
     return on;
   }
 
-  function defaultFilterRender(h, renderOpts, params, context) {
-    var column = params.column;
-    var name = renderOpts.name,
-        attrs = renderOpts.attrs,
-        events = renderOpts.events;
-    var props = getProps(params, renderOpts);
-    var type = 'change';
+  function createFilterRender(defaultProps) {
+    return function (h, renderOpts, params, context) {
+      var column = params.column;
+      var name = renderOpts.name,
+          attrs = renderOpts.attrs,
+          events = renderOpts.events;
+      var props = getProps(params, renderOpts);
+      var type = 'change';
 
-    switch (name) {
-      case 'ElAutocomplete':
-        type = 'select';
-        break;
+      switch (name) {
+        case 'ElAutocomplete':
+          type = 'select';
+          break;
 
-      case 'ElInput':
-      case 'ElInputNumber':
-        type = 'input';
-        break;
-    }
+        case 'ElInput':
+        case 'ElInputNumber':
+          type = 'input';
+          break;
+      }
 
-    return column.filters.map(function (item) {
-      return h(name, {
-        props: props,
-        attrs: attrs,
-        model: {
-          value: item.data,
-          callback: function callback(optionValue) {
-            item.data = optionValue;
-          }
-        },
-        on: getFilterEvents(_defineProperty({}, type, function (evnt) {
-          handleConfirmFilter(context, column, !!item.data, item);
+      return column.filters.map(function (item) {
+        return h(name, {
+          props: props,
+          attrs: attrs,
+          model: {
+            value: item.data,
+            callback: function callback(optionValue) {
+              item.data = optionValue;
+            }
+          },
+          on: getFilterEvents(_defineProperty({}, type, function (evnt) {
+            handleConfirmFilter(context, column, !!item.data, item);
 
-          if (events && events[type]) {
-            events[type](Object.assign({
-              context: context
-            }, params), evnt);
-          }
-        }), renderOpts, params, context)
+            if (events && events[type]) {
+              events[type](Object.assign({
+                context: context
+              }, params), evnt);
+            }
+          }), renderOpts, params, context)
+        });
       });
-    });
+    };
   }
 
   function handleConfirmFilter(context, column, checked, item) {
@@ -229,23 +233,23 @@
   var renderMap = {
     ElAutocomplete: {
       autofocus: 'input.el-input__inner',
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     },
     ElInput: {
       autofocus: 'input.el-input__inner',
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     },
     ElInputNumber: {
       autofocus: 'input.el-input__inner',
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     },
     ElSelect: {
@@ -435,7 +439,7 @@
       }
     },
     ElCascader: {
-      renderEdit: defaultEditRender,
+      renderEdit: createEditRender(),
       renderCell: function renderCell(h, _ref5, params) {
         var _ref5$props = _ref5.props,
             props = _ref5$props === void 0 ? {} : _ref5$props;
@@ -451,7 +455,7 @@
       }
     },
     ElDatePicker: {
-      renderEdit: defaultEditRender,
+      renderEdit: createEditRender(),
       renderCell: function renderCell(h, _ref6, params) {
         var _ref6$props = _ref6.props,
             props = _ref6$props === void 0 ? {} : _ref6$props;
@@ -556,7 +560,7 @@
       }
     },
     ElTimePicker: {
-      renderEdit: defaultEditRender,
+      renderEdit: createEditRender(),
       renderCell: function renderCell(h, _ref8, params) {
         var _ref8$props = _ref8.props,
             props = _ref8$props === void 0 ? {} : _ref8$props;
@@ -580,24 +584,24 @@
       }
     },
     ElTimeSelect: {
-      renderEdit: defaultEditRender
+      renderEdit: createEditRender()
     },
     ElRate: {
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     },
     ElSwitch: {
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     },
     ElSlider: {
-      renderDefault: defaultEditRender,
-      renderEdit: defaultEditRender,
-      renderFilter: defaultFilterRender,
+      renderDefault: createEditRender(),
+      renderEdit: createEditRender(),
+      renderFilter: createFilterRender(),
       filterMethod: defaultFilterMethod
     }
   };
