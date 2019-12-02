@@ -301,7 +301,8 @@
         }, renderOptions(h, options, optionProps))];
       },
       renderCell: function renderCell(h, renderOpts, params) {
-        var options = renderOpts.options,
+        var remote = renderOpts.remote,
+            options = renderOpts.options,
             optionGroups = renderOpts.optionGroups,
             _renderOpts$props = renderOpts.props,
             props = _renderOpts$props === void 0 ? {} : _renderOpts$props,
@@ -309,13 +310,36 @@
             optionProps = _renderOpts$optionPro2 === void 0 ? {} : _renderOpts$optionPro2,
             _renderOpts$optionGro2 = renderOpts.optionGroupProps,
             optionGroupProps = _renderOpts$optionGro2 === void 0 ? {} : _renderOpts$optionGro2;
-        var row = params.row,
+        var $table = params.$table,
+            row = params.row,
             column = params.column;
         var labelProp = optionProps.label || 'label';
         var valueProp = optionProps.value || 'value';
         var groupOptions = optionGroupProps.options || 'options';
 
         var cellValue = _xeUtils["default"].get(row, column.property);
+
+        var colid = column.id;
+        var rest;
+        var cellData;
+
+        if (props.remote) {
+          var fullAllDataRowMap = $table.fullAllDataRowMap;
+          var cacheCell = fullAllDataRowMap.has(row);
+
+          if (cacheCell) {
+            rest = fullAllDataRowMap.get(row);
+            cellData = rest.cellData;
+
+            if (!cellData) {
+              cellData = fullAllDataRowMap.get(row).cellData = {};
+            }
+          }
+
+          if (rest && cellData[colid] && cellData[colid].value === cellValue) {
+            return cellData[colid].label;
+          }
+        }
 
         if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
           return cellText(h, _xeUtils["default"].map(props.multiple ? cellValue : [cellValue], optionGroups ? function (value) {
@@ -331,13 +355,31 @@
               }
             }
 
-            return selectItem ? selectItem[labelProp] : null;
+            var cellLabel = selectItem ? selectItem[labelProp] : value;
+
+            if (cellData && options && options.length) {
+              cellData[colid] = {
+                value: cellValue,
+                label: cellLabel
+              };
+            }
+
+            return cellLabel;
           } : function (value) {
             var selectItem = _xeUtils["default"].find(options, function (item) {
               return item[valueProp] === value;
             });
 
-            return selectItem ? selectItem[labelProp] : null;
+            var cellLabel = selectItem ? selectItem[labelProp] : value;
+
+            if (cellData && options && options.length) {
+              cellData[colid] = {
+                value: cellValue,
+                label: cellLabel
+              };
+            }
+
+            return cellLabel;
           }).join(';'));
         }
 

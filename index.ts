@@ -19,7 +19,7 @@ function equalDaterange(cellValue: any, data: any, props: any, defaultFormat: st
 }
 
 function matchCascaderData(index: number, list: Array<any>, values: Array<any>, labels: Array<any>) {
-  let val = values[index]
+  let val: any = values[index]
   if (list && values.length > index) {
     XEUtils.each(list, (item: any) => {
       if (item.value === val) {
@@ -35,9 +35,9 @@ function getProps({ $table }: any, { props }: any, defaultProps?: any) {
 }
 
 function getCellEvents(renderOpts: any, params: any) {
-  let { name, events } = renderOpts
-  let { $table } = params
-  let type = 'change'
+  let { name, events }: any = renderOpts
+  let { $table }: any = params
+  let type: string = 'change'
   switch (name) {
     case 'ElAutocomplete':
       type = 'select'
@@ -65,9 +65,9 @@ function getCellEvents(renderOpts: any, params: any) {
 
 function createEditRender(defaultProps?: any) {
   return function (h: Function, renderOpts: any, params: any) {
-    let { row, column } = params
-    let { attrs } = renderOpts
-    let props = getProps(params, renderOpts, defaultProps)
+    let { row, column }: any = params
+    let { attrs }: any = renderOpts
+    let props: any = getProps(params, renderOpts, defaultProps)
     return [
       h(renderOpts.name, {
         props,
@@ -85,7 +85,7 @@ function createEditRender(defaultProps?: any) {
 }
 
 function getFilterEvents(on: any, renderOpts: any, params: any, context: any) {
-  let { events } = renderOpts
+  let { events }: any = renderOpts
   if (events) {
     return XEUtils.assign({}, XEUtils.objectMap(events, (cb: Function) => function (...args: any[]) {
       params = Object.assign({ context }, params)
@@ -97,10 +97,10 @@ function getFilterEvents(on: any, renderOpts: any, params: any, context: any) {
 
 function createFilterRender(defaultProps?: any) {
   return function (h: Function, renderOpts: any, params: any, context: any) {
-    let { column } = params
-    let { name, attrs, events } = renderOpts
-    let props = getProps(params, renderOpts)
-    let type = 'change'
+    let { column }: any = params
+    let { name, attrs, events }: any = renderOpts
+    let props: any = getProps(params, renderOpts)
+    let type: string = 'change'
     switch (name) {
       case 'ElAutocomplete':
         type = 'select'
@@ -138,16 +138,16 @@ function handleConfirmFilter(context: any, column: any, checked: any, item: any)
 }
 
 function defaultFilterMethod({ option, row, column }: any) {
-  let { data } = option
-  let cellValue = XEUtils.get(row, column.property)
+  let { data }: any = option
+  let cellValue: string = XEUtils.get(row, column.property)
   /* eslint-disable eqeqeq */
   return cellValue == data
 }
 
 function renderOptions(h: Function, options: any, optionProps: any) {
-  let labelProp = optionProps.label || 'label'
-  let valueProp = optionProps.value || 'value'
-  let disabledProp = optionProps.disabled || 'disabled'
+  let labelProp: string = optionProps.label || 'label'
+  let valueProp: string = optionProps.value || 'value'
+  let disabledProp: string = optionProps.disabled || 'disabled'
   return XEUtils.map(options, (item: any, index: number) => {
     return h('el-option', {
       props: {
@@ -194,10 +194,10 @@ const renderMap = {
       let { options, optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
       let { row, column } = params
       let { attrs } = renderOpts
-      let props = getProps(params, renderOpts)
+      let props: any = getProps(params, renderOpts)
       if (optionGroups) {
-        let groupOptions = optionGroupProps.options || 'options'
-        let groupLabel = optionGroupProps.label || 'label'
+        let groupOptions: string = optionGroupProps.options || 'options'
+        let groupLabel: string = optionGroupProps.label || 'label'
         return [
           h('el-select', {
             props,
@@ -234,25 +234,50 @@ const renderMap = {
       ]
     },
     renderCell(h: Function, renderOpts: any, params: any) {
-      let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = renderOpts
-      let { row, column } = params
-      let labelProp = optionProps.label || 'label'
-      let valueProp = optionProps.value || 'value'
-      let groupOptions = optionGroupProps.options || 'options'
-      let cellValue = XEUtils.get(row, column.property)
+      let { remote, options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} }: any = renderOpts
+      let { $table, row, column }: any = params
+      let labelProp: string = optionProps.label || 'label'
+      let valueProp: string = optionProps.value || 'value'
+      let groupOptions: string = optionGroupProps.options || 'options'
+      let cellValue: any = XEUtils.get(row, column.property)
+      let colid: string = column.id
+      let rest: any
+      let cellData: any
+      if (props.remote) {
+        let fullAllDataRowMap: Map<any, any> = $table.fullAllDataRowMap
+        let cacheCell: any = fullAllDataRowMap.has(row)
+        if (cacheCell) {
+          rest = fullAllDataRowMap.get(row)
+          cellData = rest.cellData
+          if (!cellData) {
+            cellData = fullAllDataRowMap.get(row).cellData = {}
+          }
+        }
+        if (rest && cellData[colid] && cellData[colid].value === cellValue) {
+          return cellData[colid].label
+        }
+      }
       if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
         return cellText(h, XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? (value: any) => {
-          let selectItem
+          let selectItem: any
           for (let index = 0; index < optionGroups.length; index++) {
             selectItem = XEUtils.find(optionGroups[index][groupOptions], (item: any) => item[valueProp] === value)
             if (selectItem) {
               break
             }
           }
-          return selectItem ? selectItem[labelProp] : null
+          let cellLabel: any = selectItem ? selectItem[labelProp] : value
+          if (cellData && options && options.length) {
+            cellData[colid] = { value: cellValue, label: cellLabel }
+          }
+          return cellLabel
         } : (value: any) => {
-          let selectItem = XEUtils.find(options, (item: any) => item[valueProp] === value)
-          return selectItem ? selectItem[labelProp] : null
+          let selectItem: any = XEUtils.find(options, (item: any) => item[valueProp] === value)
+          let cellLabel: any = selectItem ? selectItem[labelProp] : value
+          if (cellData && options && options.length) {
+            cellData[colid] = { value: cellValue, label: cellLabel }
+          }
+          return cellLabel
         }).join(';'))
       }
       return cellText(h, '')
@@ -316,10 +341,10 @@ const renderMap = {
       })
     },
     filterMethod({ option, row, column }: any) {
-      let { data } = option
-      let { property, filterRender: renderOpts } = column
-      let { props = {} } = renderOpts
-      let cellValue = XEUtils.get(row, property)
+      let { data }: any = option
+      let { property, filterRender: renderOpts }: any = column
+      let { props = {} }: any = renderOpts
+      let cellValue: any = XEUtils.get(row, property)
       if (props.multiple) {
         if (XEUtils.isArray(cellValue)) {
           return XEUtils.includeArrays(cellValue, data)
@@ -333,10 +358,10 @@ const renderMap = {
   ElCascader: {
     renderEdit: createEditRender(),
     renderCell(h: Function, { props = {} }: any, params: any) {
-      let { row, column } = params
-      let cellValue = XEUtils.get(row, column.property)
-      var values = cellValue || []
-      var labels: Array<any> = []
+      let { row, column }: any = params
+      let cellValue: any = XEUtils.get(row, column.property)
+      var values: any[] = cellValue || []
+      var labels: any[] = []
       matchCascaderData(0, props.options, values, labels)
       return cellText(h, (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `))
     }
@@ -344,9 +369,9 @@ const renderMap = {
   ElDatePicker: {
     renderEdit: createEditRender(),
     renderCell(h: Function, { props = {} }: any, params: any) {
-      let { row, column } = params
-      let { rangeSeparator = '-' } = props
-      let cellValue = XEUtils.get(row, column.property)
+      let { row, column }: any = params
+      let { rangeSeparator = '-' }: any = props
+      let cellValue: any = XEUtils.get(row, column.property)
       switch (props.type) {
         case 'week':
           cellValue = getFormatDate(cellValue, props, 'yyyywWW')
@@ -375,10 +400,10 @@ const renderMap = {
       return cellText(h, cellValue)
     },
     renderFilter(h: Function, renderOpts: any, params: any, context: any) {
-      let { column } = params
-      let { attrs, events } = renderOpts
-      let props = getProps(params, renderOpts)
-      let type = 'change'
+      let { column }: any = params
+      let { attrs, events }: any = renderOpts
+      let props: any = getProps(params, renderOpts)
+      let type: string = 'change'
       return column.filters.map((item: any) => {
         return h(renderOpts.name, {
           props,
@@ -401,10 +426,10 @@ const renderMap = {
       })
     },
     filterMethod({ option, row, column }: any) {
-      let { data } = option
-      let { filterRender: renderOpts } = column
-      let { props = {} } = renderOpts
-      let cellValue = XEUtils.get(row, column.property)
+      let { data }: any = option
+      let { filterRender: renderOpts }: any = column
+      let { props = {} }: any = renderOpts
+      let cellValue: any = XEUtils.get(row, column.property)
       if (data) {
         switch (props.type) {
           case 'daterange':
@@ -423,9 +448,9 @@ const renderMap = {
   ElTimePicker: {
     renderEdit: createEditRender(),
     renderCell(h: Function, { props = {} }: any, params: any) {
-      let { row, column } = params
-      let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
-      let cellValue = XEUtils.get(row, column.property)
+      let { row, column }: any = params
+      let { isRange, format = 'hh:mm:ss', rangeSeparator = '-' }: any = props
+      let cellValue: any = XEUtils.get(row, column.property)
       if (cellValue && isRange) {
         cellValue = XEUtils.map(cellValue, (date: any) => XEUtils.toDateString(parseDate(date, props), format)).join(` ${rangeSeparator} `)
       }
@@ -459,8 +484,8 @@ const renderMap = {
  * 事件兼容性处理
  */
 function handleClearEvent(params: any, evnt: any, context: any) {
-  let { getEventTargetNode } = context
-  let bodyElem = document.body
+  let { getEventTargetNode }: any = context
+  let bodyElem: HTMLElement = document.body
   if (
     // 远程搜索
     getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag ||
