@@ -54,7 +54,7 @@
   },
   "peerDependencies": {
     "element-ui": ">=2.0.0",
-    "vxe-table": ">=1.15.1",
+    "vxe-table": ">=1.15.2",
     "xe-utils": ">=2.2.0"
   },
   "repository": {
