@@ -234,7 +234,7 @@ const renderMap = {
       ]
     },
     renderCell(h: Function, renderOpts: any, params: any) {
-      let { remote, options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} }: any = renderOpts
+      let { options, optionGroups, props = {}, optionProps = {}, optionGroupProps = {} }: any = renderOpts
       let { $table, row, column }: any = params
       let labelProp: string = optionProps.label || 'label'
       let valueProp: string = optionProps.value || 'value'
@@ -243,7 +243,7 @@ const renderMap = {
       let colid: string = column.id
       let rest: any
       let cellData: any
-      if (props.remote) {
+      if (props.filterable) {
         let fullAllDataRowMap: Map<any, any> = $table.fullAllDataRowMap
         let cacheCell: any = fullAllDataRowMap.has(row)
         if (cacheCell) {

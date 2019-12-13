@@ -10,7 +10,7 @@
     factory(mod.exports, global.XEUtils);
     global.VXETablePluginElement = mod.exports.default;
   }
-})(this, function (_exports, _xeUtils) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _xeUtils) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -301,8 +301,7 @@
         }, renderOptions(h, options, optionProps))];
       },
       renderCell: function renderCell(h, renderOpts, params) {
-        var remote = renderOpts.remote,
-            options = renderOpts.options,
+        var options = renderOpts.options,
             optionGroups = renderOpts.optionGroups,
             _renderOpts$props = renderOpts.props,
             props = _renderOpts$props === void 0 ? {} : _renderOpts$props,
@@ -323,7 +322,7 @@
         var rest;
         var cellData;
 
-        if (props.remote) {
+        if (props.filterable) {
           var fullAllDataRowMap = $table.fullAllDataRowMap;
           var cacheCell = fullAllDataRowMap.has(row);
 
