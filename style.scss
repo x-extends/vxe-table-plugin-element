@@ -26,7 +26,8 @@ $vxe-table-validate-error-color: #f56c6c;
       @extend %SliderStyle;
     }
   }
-  .vxe-cell {
+  .vxe-cell,
+  .vxe-tree-cell {
     & > .el-input,
     & > .el-autocomplete,
     & > .el-input-number,
@@ -41,7 +42,8 @@ $vxe-table-validate-error-color: #f56c6c;
     }
   }
   .col--valid-error {
-    & > .vxe-cell {
+    & > .vxe-cell,
+    & > .vxe-tree-cell {
       & > .el-input .el-input__inner,
       & > .el-autocomplete .el-input__inner,
       & > .el-input-number .el-input__inner,
@@ -54,7 +56,8 @@ $vxe-table-validate-error-color: #f56c6c;
   }
   &.c--highlight,
   .vxe-table.c--highlight {
-    .vxe-cell {
+    .vxe-cell,
+    .vxe-tree-cell {
       & > .el-input:not(.el-date-editor),
       & > .el-autocomplete,
       & > .el-select,

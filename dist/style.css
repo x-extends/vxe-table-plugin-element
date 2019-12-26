@@ -2,20 +2,36 @@
 .vxe-table-element.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-select .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-select .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-cascader .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-select .el-input__inner,
-.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-select .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-cascader .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
 .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input-number__increase,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-input-number .el-input-number__decrease,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-input-number .el-input-number__increase,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input-number__decrease,
-.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input-number__increase, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input__inner,
-.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-date-editor .el-input__inner,
-.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-date-editor .el-input__inner {
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input-number__increase,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-input-number .el-input-number__decrease,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-input-number .el-input-number__increase, .vxe-table-element.c--highlight .vxe-cell > .el-input-number .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-input-number .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input-number .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-input-number .el-input__inner, .vxe-table-element.c--highlight .vxe-cell > .el-date-editor .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-date-editor .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-date-editor .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-date-editor .el-input__inner {
   border: 0; }
 
-.vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway {
+.vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway, .vxe-table-element .vxe-tree-cell > .el-slider .el-slider__runway {
   margin: 8px 0; }
-  .vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway .el-slider__button-wrapper, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway .el-slider__button-wrapper {
+  .vxe-table-element .vxe-table--filter-body > .el-slider .el-slider__runway .el-slider__button-wrapper, .vxe-table-element .vxe-cell > .el-slider .el-slider__runway .el-slider__button-wrapper, .vxe-table-element .vxe-tree-cell > .el-slider .el-slider__runway .el-slider__button-wrapper {
     z-index: auto; }
 
 .vxe-table-element .vxe-table--filter-body > .el-input,
@@ -32,7 +48,14 @@
 .vxe-table-element .vxe-cell > .el-select,
 .vxe-table-element .vxe-cell > .el-cascader,
 .vxe-table-element .vxe-cell > .el-date-editor,
-.vxe-table-element .vxe-cell > .el-slider {
+.vxe-table-element .vxe-cell > .el-slider,
+.vxe-table-element .vxe-tree-cell > .el-input,
+.vxe-table-element .vxe-tree-cell > .el-autocomplete,
+.vxe-table-element .vxe-tree-cell > .el-input-number,
+.vxe-table-element .vxe-tree-cell > .el-select,
+.vxe-table-element .vxe-tree-cell > .el-cascader,
+.vxe-table-element .vxe-tree-cell > .el-date-editor,
+.vxe-table-element .vxe-tree-cell > .el-slider {
   width: 100%; }
 
 .vxe-table-element .col--valid-error > .vxe-cell > .el-input .el-input__inner,
@@ -40,15 +63,29 @@
 .vxe-table-element .col--valid-error > .vxe-cell > .el-input-number .el-input__inner,
 .vxe-table-element .col--valid-error > .vxe-cell > .el-select .el-input__inner,
 .vxe-table-element .col--valid-error > .vxe-cell > .el-cascader .el-input__inner,
-.vxe-table-element .col--valid-error > .vxe-cell > .el-date-picker .el-input__inner {
+.vxe-table-element .col--valid-error > .vxe-cell > .el-date-picker .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-input .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-input-number .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-select .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-cascader .el-input__inner,
+.vxe-table-element .col--valid-error > .vxe-tree-cell > .el-date-picker .el-input__inner {
   border-color: #f56c6c; }
 
 .vxe-table-element.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-select .el-input__inner,
 .vxe-table-element.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-select .el-input__inner,
+.vxe-table-element.c--highlight .vxe-tree-cell > .el-cascader .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-input:not(.el-date-editor) .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-autocomplete .el-input__inner,
 .vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-select .el-input__inner,
-.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner {
+.vxe-table-element .vxe-table.c--highlight .vxe-cell > .el-cascader .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-input:not(.el-date-editor) .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-autocomplete .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-select .el-input__inner,
+.vxe-table-element .vxe-table.c--highlight .vxe-tree-cell > .el-cascader .el-input__inner {
   padding: 0; }
