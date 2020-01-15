@@ -23,9 +23,6 @@ $vxe-table-validate-error-color: #f56c6c;
   & > .el-slider {
     width: 100%;
   }
-  & > .el-slider {
-    @extend %SliderStyle;
-  }
 }
 .vxe-form {
   .vxe-form--item-content {
@@ -49,6 +46,9 @@ $vxe-table-validate-error-color: #f56c6c;
   .vxe-cell,
   .vxe-tree-cell {
     @extend %CompWidth;
+    & > .el-slider {
+      @extend %SliderStyle;
+    }
   }
 }
 .col--valid-error {
