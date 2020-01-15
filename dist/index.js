@@ -733,7 +733,8 @@
       renderDefault: createEditRender(),
       renderEdit: createEditRender(),
       renderFilter: createFilterRender(),
-      filterMethod: defaultFilterMethod
+      filterMethod: defaultFilterMethod,
+      renderItem: createFormItemRender()
     },
     ElSwitch: {
       renderDefault: createEditRender(),
@@ -746,7 +747,8 @@
       renderDefault: createEditRender(),
       renderEdit: createEditRender(),
       renderFilter: createFilterRender(),
-      filterMethod: defaultFilterMethod
+      filterMethod: defaultFilterMethod,
+      renderItem: createFormItemRender()
     }
   };
   /**

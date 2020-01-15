@@ -551,7 +551,8 @@ const renderMap = {
     renderDefault: createEditRender(),
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod
+    filterMethod: defaultFilterMethod,
+    renderItem: createFormItemRender()
   },
   ElSwitch: {
     renderDefault: createEditRender(),
@@ -564,7 +565,8 @@ const renderMap = {
     renderDefault: createEditRender(),
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod
+    filterMethod: defaultFilterMethod,
+    renderItem: createFormItemRender()
   }
 }
 
