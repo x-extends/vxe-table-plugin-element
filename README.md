@@ -81,12 +81,9 @@ VXETable.use(VXETablePluginElement)
 
 ## Cell demo
 
-默认直接使用 class=vxe-table-element 既可，当然你也可以不引入默认样式，自行实现样式也是可以的。
-
 ```html
 <vxe-table
   border
-  class="vxe-table-element"
   height="600"
   :data="tableData"
   :edit-config="{trigger: 'click', mode: 'cell'}">
