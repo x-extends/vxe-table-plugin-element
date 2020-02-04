@@ -274,7 +274,7 @@ function cellText (h: Function, cellValue: any) {
 
 function createFormItemRender (defaultProps?: any) {
   return function (h: Function, renderOpts: any, params: any, context: any) {
-    let { data, field } = params
+    let { data, property } = params
     let { name } = renderOpts
     let { attrs }: any = renderOpts
     let props: any = getFormProps(context, renderOpts, defaultProps)
@@ -283,9 +283,9 @@ function createFormItemRender (defaultProps?: any) {
         attrs,
         props,
         model: {
-          value: XEUtils.get(data, field),
+          value: XEUtils.get(data, property),
           callback (value: any) {
-            XEUtils.set(data, field, value)
+            XEUtils.set(data, property, value)
           }
         },
         on: getFormEvents(renderOpts, params, context)
