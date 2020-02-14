@@ -334,6 +334,38 @@ function createExportMethod (valueMethod: Function, isEdit?: boolean) {
   }
 }
 
+function createFormItemRadioAndCheckboxRender () {
+  return function (h: Function, renderOpts: any, params: any, context: any) {
+    let { name, options, optionProps = {} } = renderOpts
+    let { data, property } = params
+    let { attrs } = renderOpts
+    let props: any = getFormProps(context, renderOpts)
+    let labelProp: string = optionProps.label || 'label'
+    let valueProp: string = optionProps.value || 'value'
+    let disabledProp: string = optionProps.disabled || 'disabled'
+    return [
+      h(`${name}Group`, {
+        props,
+        attrs,
+        model: {
+          value: XEUtils.get(data, property),
+          callback (cellValue: any) {
+            XEUtils.set(data, property, cellValue)
+          }
+        },
+        on: getFormEvents(renderOpts, params, context)
+      }, options.map((option: any) => {
+        return h(name, {
+          props: {
+            label: option[valueProp],
+            disabled: option[disabledProp]
+          }
+        }, option[labelProp])
+      }))
+    ]
+  }
+}
+
 /**
  * 渲染函数
  */
@@ -623,6 +655,12 @@ const renderMap = {
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
     renderItem: createFormItemRender()
+  },
+  ElRadio: {
+    renderItem: createFormItemRadioAndCheckboxRender()
+  },
+  ElCheckbox: {
+    renderItem: createFormItemRadioAndCheckboxRender()
   }
 }
 
