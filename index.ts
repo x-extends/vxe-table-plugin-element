@@ -556,8 +556,8 @@ const renderMap = {
         }, renderOptions(h, options, optionProps))
       ]
     },
-    editExportMethod: createExportMethod(getSelectCellValue, true),
-    cellExportMethod: createExportMethod(getSelectCellValue)
+    cellExportMethod: createExportMethod(getSelectCellValue),
+    editCellExportMethod: createExportMethod(getSelectCellValue, true)
   },
   ElCascader: {
     renderEdit: createEditRender(),
@@ -565,8 +565,8 @@ const renderMap = {
       return cellText(h, getCascaderCellValue(renderOpts, params))
     },
     renderItem: createFormItemRender(),
-    editExportMethod: createExportMethod(getCascaderCellValue, true),
-    cellExportMethod: createExportMethod(getCascaderCellValue)
+    cellExportMethod: createExportMethod(getCascaderCellValue),
+    editCellExportMethod: createExportMethod(getCascaderCellValue, true)
   },
   ElDatePicker: {
     renderEdit: createEditRender(),
@@ -619,8 +619,8 @@ const renderMap = {
       return false
     },
     renderItem: createFormItemRender(),
-    editExportMethod: createExportMethod(getDatePickerCellValue, true),
-    cellExportMethod: createExportMethod(getDatePickerCellValue)
+    cellExportMethod: createExportMethod(getDatePickerCellValue),
+    editCellExportMethod: createExportMethod(getDatePickerCellValue, true)
   },
   ElTimePicker: {
     renderEdit: createEditRender(),
@@ -628,8 +628,8 @@ const renderMap = {
       return getTimePickerCellValue(renderOpts, params)
     },
     renderItem: createFormItemRender(),
-    editExportMethod: createExportMethod(getTimePickerCellValue, true),
-    cellExportMethod: createExportMethod(getTimePickerCellValue)
+    cellExportMethod: createExportMethod(getTimePickerCellValue),
+    editCellExportMethod: createExportMethod(getTimePickerCellValue, true)
   },
   ElTimeSelect: {
     renderEdit: createEditRender(),
