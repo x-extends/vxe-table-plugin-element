@@ -294,21 +294,17 @@
     };
   }
 
-  function getFilterEvents(on, renderOpts, params, context) {
+  function getFilterEvents(on, renderOpts, params) {
     var events = renderOpts.events;
 
     if (events) {
       return _xeUtils["default"].assign({}, _xeUtils["default"].objectMap(events, function (cb) {
         return function () {
-          params = Object.assign({
-            context: context
-          }, params);
-
           for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
           }
 
-          cb.apply(null, [params].concat.apply(params, args));
+          cb.apply(null, [params].concat(args));
         };
       }), on);
     }
@@ -347,21 +343,20 @@
             }
           },
           on: getFilterEvents(_defineProperty({}, type, function (evnt) {
-            handleConfirmFilter(context, column, !!item.data, item);
+            handleConfirmFilter(params, column, !!item.data, item);
 
             if (events && events[type]) {
-              events[type](Object.assign({
-                context: context
-              }, params), evnt);
+              events[type](params, evnt);
             }
-          }), renderOpts, params, context)
+          }), renderOpts, params)
         });
       });
     };
   }
 
-  function handleConfirmFilter(context, column, checked, item) {
-    context[column.filterMultiple ? 'changeMultipleOption' : 'changeRadioOption']({}, checked, item);
+  function handleConfirmFilter(params, column, checked, item) {
+    var $panel = params.$panel || params.context;
+    $panel[column.filterMultiple ? 'changeMultipleOption' : 'changeRadioOption']({}, checked, item);
   }
 
   function defaultFilterMethod(_ref3) {
@@ -403,7 +398,7 @@
           property = params.property;
       var name = renderOpts.name;
       var attrs = renderOpts.attrs;
-      var props = getFormProps(context, renderOpts, defaultProps);
+      var props = getFormProps(params, renderOpts, defaultProps);
       return [h(name, {
         attrs: attrs,
         props: props,
@@ -413,7 +408,7 @@
             _xeUtils["default"].set(data, property, value);
           }
         },
-        on: getFormEvents(renderOpts, params, context)
+        on: getFormEvents(renderOpts, params)
       })];
     };
   }
@@ -426,7 +421,7 @@
     } : {}, defaultProps, props);
   }
 
-  function getFormEvents(renderOpts, params, context) {
+  function getFormEvents(renderOpts, params) {
     var events = renderOpts.events;
     var $form = params.$form;
     var type = 'change';
@@ -481,7 +476,7 @@
       var data = params.data,
           property = params.property;
       var attrs = renderOpts.attrs;
-      var props = getFormProps(context, renderOpts);
+      var props = getFormProps(params, renderOpts);
       var labelProp = optionProps.label || 'label';
       var valueProp = optionProps.value || 'value';
       var disabledProp = optionProps.disabled || 'disabled';
@@ -494,7 +489,7 @@
             _xeUtils["default"].set(data, property, cellValue);
           }
         },
-        on: getFormEvents(renderOpts, params, context)
+        on: getFormEvents(renderOpts, params)
       }, options.map(function (option) {
         return h(name, {
           props: {
@@ -613,14 +608,12 @@
                 }
               },
               on: getFilterEvents(_defineProperty({}, type, function (value) {
-                handleConfirmFilter(context, column, value && value.length > 0, item);
+                handleConfirmFilter(params, column, value && value.length > 0, item);
 
                 if (events && events[type]) {
-                  events[type](Object.assign({
-                    context: context
-                  }, params), value);
+                  events[type](params, value);
                 }
-              }), renderOpts, params, context)
+              }), renderOpts, params)
             }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
               return h('el-option-group', {
                 props: {
@@ -644,15 +637,13 @@
             },
             on: getFilterEvents({
               change: function change(value) {
-                handleConfirmFilter(context, column, value && value.length > 0, item);
+                handleConfirmFilter(params, column, value && value.length > 0, item);
 
                 if (events && events[type]) {
-                  events[type](Object.assign({
-                    context: context
-                  }, params), value);
+                  events[type](params, value);
                 }
               }
-            }, renderOpts, params, context)
+            }, renderOpts, params)
           }, renderOptions(h, options, optionProps));
         });
       },
@@ -690,7 +681,7 @@
         var data = params.data,
             property = params.property;
         var attrs = renderOpts.attrs;
-        var props = getFormProps(context, renderOpts);
+        var props = getFormProps(params, renderOpts);
 
         if (optionGroups) {
           var groupOptions = optionGroupProps.options || 'options';
@@ -704,7 +695,7 @@
                 _xeUtils["default"].set(data, property, cellValue);
               }
             },
-            on: getFormEvents(renderOpts, params, context)
+            on: getFormEvents(renderOpts, params)
           }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
             return h('el-option-group', {
               props: {
@@ -724,7 +715,7 @@
               _xeUtils["default"].set(data, property, cellValue);
             }
           },
-          on: getFormEvents(renderOpts, params, context)
+          on: getFormEvents(renderOpts, params)
         }, renderOptions(h, options, optionProps))];
       },
       cellExportMethod: createExportMethod(getSelectCellValue),
@@ -761,14 +752,12 @@
               }
             },
             on: getFilterEvents(_defineProperty({}, type, function (value) {
-              handleConfirmFilter(context, column, !!value, item);
+              handleConfirmFilter(params, column, !!value, item);
 
               if (events && events[type]) {
-                events[type](Object.assign({
-                  context: context
-                }, params), value);
+                events[type](params, value);
               }
-            }), renderOpts, params, context)
+            }), renderOpts, params)
           });
         });
       },
@@ -851,7 +840,8 @@
    */
 
   function handleClearEvent(params, evnt, context) {
-    var getEventTargetNode = context.getEventTargetNode;
+    var $table = params.$table;
+    var getEventTargetNode = $table ? $table.getEventTargetNode : context.getEventTargetNode;
     var bodyElem = document.body;
 
     if ( // 远程搜索
