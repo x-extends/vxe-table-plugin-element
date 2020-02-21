@@ -681,7 +681,9 @@ function handleClearEvent (params: any, evnt: any, context:any) {
     getEventTargetNode(evnt, bodyElem, 'el-cascader-menus').flag ||
     // 日期
     getEventTargetNode(evnt, bodyElem, 'el-time-panel').flag ||
-    getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag
+    getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag ||
+    // 颜色
+    getEventTargetNode(evnt, bodyElem, 'el-color-dropdown').flag
   ) {
     return false
   }

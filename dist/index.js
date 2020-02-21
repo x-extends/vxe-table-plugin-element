@@ -848,7 +848,8 @@
     getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag || // 下拉框
     getEventTargetNode(evnt, bodyElem, 'el-select-dropdown').flag || // 级联
     getEventTargetNode(evnt, bodyElem, 'el-cascader__dropdown').flag || getEventTargetNode(evnt, bodyElem, 'el-cascader-menus').flag || // 日期
-    getEventTargetNode(evnt, bodyElem, 'el-time-panel').flag || getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag) {
+    getEventTargetNode(evnt, bodyElem, 'el-time-panel').flag || getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag || // 颜色
+    getEventTargetNode(evnt, bodyElem, 'el-color-dropdown').flag) {
       return false;
     }
   }
