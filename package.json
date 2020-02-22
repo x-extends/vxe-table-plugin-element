@@ -49,8 +49,8 @@
     "prettier": "^1.18.2",
     "typescript": "^3.6.3",
     "vue": "^2.6.10",
-    "vxe-table": "^2.7.24",
-    "xe-utils": "^2.3.0"
+    "vxe-table": "^2.8.2",
+    "xe-utils": "^2.3.2"
   },
   "peerDependencies": {
     "element-ui": ">=2.0.0",
