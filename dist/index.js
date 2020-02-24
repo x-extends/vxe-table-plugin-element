@@ -294,6 +294,22 @@
     };
   }
 
+  function defaultButtonEditRender(h, renderOpts, params) {
+    var attrs = renderOpts.attrs;
+    var props = getProps(params, renderOpts);
+    return [h('el-button', {
+      attrs: attrs,
+      props: props,
+      on: getCellEvents(renderOpts, params)
+    }, cellText(h, renderOpts.content))];
+  }
+
+  function defaultButtonsEditRender(h, renderOpts, params) {
+    return renderOpts.children.map(function (childRenderOpts) {
+      return defaultButtonEditRender(h, childRenderOpts, params)[0];
+    });
+  }
+
   function getFilterEvents(on, renderOpts, params) {
     var events = renderOpts.events;
 
@@ -313,7 +329,7 @@
   }
 
   function createFilterRender(defaultProps) {
-    return function (h, renderOpts, params, context) {
+    return function (h, renderOpts, params) {
       var column = params.column;
       var name = renderOpts.name,
           attrs = renderOpts.attrs,
@@ -393,12 +409,12 @@
   }
 
   function createFormItemRender(defaultProps) {
-    return function (h, renderOpts, params, context) {
+    return function (h, renderOpts, params) {
       var data = params.data,
           property = params.property;
       var name = renderOpts.name;
       var attrs = renderOpts.attrs;
-      var props = getFormProps(params, renderOpts, defaultProps);
+      var props = getFormItemProps(params, renderOpts, defaultProps);
       return [h(name, {
         attrs: attrs,
         props: props,
@@ -413,7 +429,23 @@
     };
   }
 
-  function getFormProps(_ref4, _ref5, defaultProps) {
+  function defaultButtonItemRender(h, renderOpts, params) {
+    var attrs = renderOpts.attrs;
+    var props = getFormItemProps(params, renderOpts);
+    return [h('el-button', {
+      attrs: attrs,
+      props: props,
+      on: getFormEvents(renderOpts, params)
+    }, cellText(h, props.content))];
+  }
+
+  function defaultButtonsItemRender(h, renderOpts, params) {
+    return renderOpts.children.map(function (childRenderOpts) {
+      return defaultButtonItemRender(h, childRenderOpts, params)[0];
+    });
+  }
+
+  function getFormItemProps(_ref4, _ref5, defaultProps) {
     var $form = _ref4.$form;
     var props = _ref5.props;
     return _xeUtils["default"].assign($form.vSize ? {
@@ -468,7 +500,7 @@
   }
 
   function createFormItemRadioAndCheckboxRender() {
-    return function (h, renderOpts, params, context) {
+    return function (h, renderOpts, params) {
       var name = renderOpts.name,
           options = renderOpts.options,
           _renderOpts$optionPro2 = renderOpts.optionProps,
@@ -476,7 +508,7 @@
       var data = params.data,
           property = params.property;
       var attrs = renderOpts.attrs;
-      var props = getFormProps(params, renderOpts);
+      var props = getFormItemProps(params, renderOpts);
       var labelProp = optionProps.label || 'label';
       var valueProp = optionProps.value || 'value';
       var disabledProp = optionProps.disabled || 'disabled';
@@ -581,7 +613,7 @@
       renderCell: function renderCell(h, renderOpts, params) {
         return cellText(h, getSelectCellValue(renderOpts, params));
       },
-      renderFilter: function renderFilter(h, renderOpts, params, context) {
+      renderFilter: function renderFilter(h, renderOpts, params) {
         var options = renderOpts.options,
             optionGroups = renderOpts.optionGroups,
             _renderOpts$optionPro4 = renderOpts.optionProps,
@@ -671,7 +703,7 @@
 
         return cellValue == data;
       },
-      renderItem: function renderItem(h, renderOpts, params, context) {
+      renderItem: function renderItem(h, renderOpts, params) {
         var options = renderOpts.options,
             optionGroups = renderOpts.optionGroups,
             _renderOpts$optionPro5 = renderOpts.optionProps,
@@ -681,7 +713,7 @@
         var data = params.data,
             property = params.property;
         var attrs = renderOpts.attrs;
-        var props = getFormProps(params, renderOpts);
+        var props = getFormItemProps(params, renderOpts);
 
         if (optionGroups) {
           var groupOptions = optionGroupProps.options || 'options';
@@ -735,7 +767,7 @@
       renderCell: function renderCell(h, renderOpts, params) {
         return cellText(h, getDatePickerCellValue(renderOpts, params));
       },
-      renderFilter: function renderFilter(h, renderOpts, params, context) {
+      renderFilter: function renderFilter(h, renderOpts, params) {
         var column = params.column;
         var attrs = renderOpts.attrs,
             events = renderOpts.events;
@@ -833,6 +865,16 @@
     },
     ElCheckbox: {
       renderItem: createFormItemRadioAndCheckboxRender()
+    },
+    ElButton: {
+      renderEdit: defaultButtonEditRender,
+      renderDefault: defaultButtonEditRender,
+      renderItem: defaultButtonItemRender
+    },
+    ElButtons: {
+      renderEdit: defaultButtonsEditRender,
+      renderDefault: defaultButtonsEditRender,
+      renderItem: defaultButtonsItemRender
     }
   };
   /**
