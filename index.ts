@@ -112,7 +112,7 @@ function getSelectCellValue (renderOpts: any, params: any) {
         cellData[colid] = { value: cellValue, label: cellLabel }
       }
       return cellLabel
-    }).join(';')
+    }).join(', ')
   }
   return null
 }
