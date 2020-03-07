@@ -318,7 +318,7 @@ function defaultButtonItemRender (h: Function, renderOpts: any, params: any) {
       attrs,
       props,
       on: getFormEvents(renderOpts, params)
-    }, cellText(h, props.content))
+    }, cellText(h, renderOpts.content || props.content))
   ]
 }
 
