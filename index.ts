@@ -1,6 +1,26 @@
-import { CreateElement } from 'vue' // eslint-disable-line no-unused-vars
+/* eslint-disable no-unused-vars */
+import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils/methods/xe-utils'
-import { VXETable, RenderParams, OptionProps, TableRenderParams, RenderOptions, FilterRenderOptions, CellRenderOptions, EditRenderOptions, ItemRenderOptions, CellRenderParams, EditRenderParams, FilterRenderParams, FilterMethodParams, ItemRenderParams, DataExportLabelParams } from 'vxe-table/lib/vxe-table' // eslint-disable-line no-unused-vars
+import {
+  VXETable,
+  RenderParams,
+  OptionProps,
+  RenderOptions,
+  InterceptorParams,
+  TableRenderParams,
+  ColumnConfig,
+  ColumnFilterRenderOptions,
+  ColumnCellRenderOptions,
+  ColumnEditRenderOptions,
+  ColumnCellRenderParams,
+  ColumnEditRenderParams,
+  ColumnFilterRenderParams,
+  ColumnFilterMethodParams,
+  ColumnExportCellRenderParams,
+  FormItemRenderOptions,
+  FormItemRenderParams
+} from 'vxe-table/lib/vxe-table'
+/* eslint-enable no-unused-vars */
 
 function isEmptyValue (cellValue: any) {
   return cellValue === null || cellValue === undefined || cellValue === ''
@@ -50,7 +70,7 @@ function getCellEditFilterProps (renderOpts: RenderOptions, params: TableRenderP
   return XEUtils.assign(vSize ? { size: vSize } : {}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
-function getItemProps (renderOpts: RenderOptions, params: ItemRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
+function getItemProps (renderOpts: RenderOptions, params: FormItemRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
   const { vSize } = params.$form
   return XEUtils.assign(vSize ? { size: vSize } : {}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
@@ -88,7 +108,7 @@ function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Fu
   return ons
 }
 
-function getEditOns (renderOpts: RenderOptions, params: EditRenderParams) {
+function getEditOns (renderOpts: RenderOptions, params: ColumnEditRenderParams) {
   const { $table, row, column } = params
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
@@ -99,14 +119,14 @@ function getEditOns (renderOpts: RenderOptions, params: EditRenderParams) {
   })
 }
 
-function getFilterOns (renderOpts: RenderOptions, params: FilterRenderParams, option: any, changeFunc: Function) {
+function getFilterOns (renderOpts: RenderOptions, params: ColumnFilterRenderParams, option: any, changeFunc: Function) {
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
     option.data = value
   }, changeFunc)
 }
 
-function getItemOns (renderOpts: RenderOptions, params: ItemRenderParams) {
+function getItemOns (renderOpts: RenderOptions, params: FormItemRenderParams) {
   const { $form, data, property } = params
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
@@ -129,7 +149,7 @@ function matchCascaderData (index: number, list: any[], values: any[], labels: a
   }
 }
 
-function getSelectCellValue (renderOpts: CellRenderOptions, params: any) {
+function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: { $table: any, row: any, column: ColumnConfig }) {
   const { options = [], optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = renderOpts
   const { $table, row, column } = params
   const labelProp = optionProps.label || 'label'
@@ -179,7 +199,7 @@ function getSelectCellValue (renderOpts: CellRenderOptions, params: any) {
   return null
 }
 
-function getCascaderCellValue (renderOpts: RenderOptions, params: CellRenderParams) {
+function getCascaderCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const cellValue = XEUtils.get(row, column.property)
@@ -189,7 +209,7 @@ function getCascaderCellValue (renderOpts: RenderOptions, params: CellRenderPara
   return (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `)
 }
 
-function getDatePickerCellValue (renderOpts: RenderOptions, params: CellRenderParams) {
+function getDatePickerCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams | ColumnExportCellRenderParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const { rangeSeparator = '-' } = props
@@ -222,7 +242,7 @@ function getDatePickerCellValue (renderOpts: RenderOptions, params: CellRenderPa
   return cellValue
 }
 
-function getTimePickerCellValue (renderOpts: RenderOptions, params: CellRenderParams) {
+function getTimePickerCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams | ColumnEditRenderParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
@@ -234,7 +254,7 @@ function getTimePickerCellValue (renderOpts: RenderOptions, params: CellRenderPa
 }
 
 function createEditRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: EditRenderOptions, params: EditRenderParams) {
+  return function (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
     const { row, column } = params
     const { attrs } = renderOpts
     const cellValue = XEUtils.get(row, column.property)
@@ -248,7 +268,7 @@ function createEditRender (defaultProps?: { [key: string]: any }) {
   }
 }
 
-function defaultButtonEditRender (h: CreateElement, renderOpts: EditRenderOptions, params: EditRenderParams) {
+function defaultButtonEditRender (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
   const { attrs } = renderOpts
   return [
     h('el-button', {
@@ -259,12 +279,12 @@ function defaultButtonEditRender (h: CreateElement, renderOpts: EditRenderOption
   ]
 }
 
-function defaultButtonsEditRender (h: CreateElement, renderOpts: EditRenderOptions, params: EditRenderParams) {
+function defaultButtonsEditRender (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
   return renderOpts.children.map((childRenderOpts: any) => defaultButtonEditRender(h, childRenderOpts, params)[0])
 }
 
 function createFilterRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: FilterRenderOptions, params: FilterRenderParams) {
+  return function (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
     const { column } = params
     const { name, attrs } = renderOpts
     return column.filters.map((option, oIndex) => {
@@ -282,12 +302,12 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
   }
 }
 
-function handleConfirmFilter (params: FilterRenderParams, checked: boolean, option: any) {
+function handleConfirmFilter (params: ColumnFilterRenderParams, checked: boolean, option: any) {
   const { $panel } = params
   $panel.changeOption({}, checked, option)
 }
 
-function defaultFilterMethod (params: FilterMethodParams) {
+function defaultFilterMethod (params: ColumnFilterMethodParams) {
   const { option, row, column } = params
   const { data } = option
   const cellValue: string = XEUtils.get(row, column.property)
@@ -316,7 +336,7 @@ function cellText (h: CreateElement, cellValue: any) {
 }
 
 function createFormItemRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: ItemRenderOptions, params: ItemRenderParams) {
+  return function (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
     const { data, property } = params
     const { name } = renderOpts
     const { attrs } = renderOpts
@@ -331,7 +351,7 @@ function createFormItemRender (defaultProps?: { [key: string]: any }) {
   }
 }
 
-function defaultButtonItemRender (h: CreateElement, renderOpts: ItemRenderOptions, params: ItemRenderParams) {
+function defaultButtonItemRender (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
   const { attrs } = renderOpts
   const props = getItemProps(renderOpts, params, null)
   return [
@@ -343,22 +363,21 @@ function defaultButtonItemRender (h: CreateElement, renderOpts: ItemRenderOption
   ]
 }
 
-function defaultButtonsItemRender (h: CreateElement, renderOpts: ItemRenderOptions, params: ItemRenderParams) {
+function defaultButtonsItemRender (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
   return renderOpts.children.map((childRenderOpts: any) => defaultButtonItemRender(h, childRenderOpts, params)[0])
 }
 
 function createExportMethod (valueMethod: Function, isEdit?: boolean) {
   const renderProperty = isEdit ? 'editRender' : 'cellRender'
-  return function (params: DataExportLabelParams) {
+  return function (params: ColumnExportCellRenderParams) {
     return valueMethod(params.column[renderProperty], params)
   }
 }
 
 function createFormItemRadioAndCheckboxRender () {
-  return function (h: CreateElement, renderOpts: ItemRenderOptions, params: ItemRenderParams) {
-    const { name, options = [], optionProps = {} } = renderOpts
+  return function (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
+    const { name, options = [], optionProps = {}, attrs } = renderOpts
     const { data, property } = params
-    const { attrs } = renderOpts
     const labelProp = optionProps.label || 'label'
     const valueProp = optionProps.value || 'value'
     const disabledProp = optionProps.disabled || 'disabled'
@@ -410,7 +429,7 @@ const renderMap = {
     renderItem: createFormItemRender()
   },
   ElSelect: {
-    renderEdit (h: CreateElement, renderOpts: EditRenderOptions, params: EditRenderParams) {
+    renderEdit (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
       const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
       const { row, column } = params
       const { attrs } = renderOpts
@@ -443,10 +462,10 @@ const renderMap = {
         }, renderOptions(h, options, optionProps))
       ]
     },
-    renderCell (h: CreateElement, renderOpts: CellRenderOptions, params: CellRenderParams) {
+    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
       return cellText(h, getSelectCellValue(renderOpts, params))
     },
-    renderFilter (h: CreateElement, renderOpts: FilterRenderOptions, params: FilterRenderParams) {
+    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
       const { column } = params
       const { attrs } = renderOpts
@@ -486,7 +505,7 @@ const renderMap = {
         }, renderOptions(h, options, optionProps))
       })
     },
-    filterMethod (params: FilterMethodParams) {
+    filterMethod (params: ColumnFilterMethodParams) {
       const { option, row, column } = params
       const { data } = option
       const { property, filterRender: renderOpts } = column
@@ -501,7 +520,7 @@ const renderMap = {
       /* eslint-disable eqeqeq */
       return cellValue == data
     },
-    renderItem (h: CreateElement, renderOpts: ItemRenderOptions, params: ItemRenderParams) {
+    renderItem (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
       const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
       const { data, property } = params
       const { attrs } = renderOpts
@@ -539,7 +558,7 @@ const renderMap = {
   },
   ElCascader: {
     renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: CellRenderOptions, params: EditRenderParams) {
+    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
       return cellText(h, getCascaderCellValue(renderOpts, params))
     },
     renderItem: createFormItemRender(),
@@ -548,10 +567,10 @@ const renderMap = {
   },
   ElDatePicker: {
     renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: CellRenderOptions, params: EditRenderParams) {
+    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
       return cellText(h, getDatePickerCellValue(renderOpts, params))
     },
-    renderFilter (h: CreateElement, renderOpts: FilterRenderOptions, params: FilterRenderParams) {
+    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { attrs } = renderOpts
       return column.filters.map((option, oIndex) => {
@@ -567,7 +586,7 @@ const renderMap = {
         })
       })
     },
-    filterMethod (params: FilterMethodParams) {
+    filterMethod (params: ColumnFilterMethodParams) {
       const { option, row, column } = params
       const { data } = option
       const { filterRender: renderOpts } = column
@@ -593,8 +612,10 @@ const renderMap = {
   },
   ElTimePicker: {
     renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: CellRenderOptions, params: EditRenderParams) {
-      return getTimePickerCellValue(renderOpts, params)
+    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
+      return [
+        getTimePickerCellValue(renderOpts, params)
+      ]
     },
     renderItem: createFormItemRender(),
     cellExportMethod: createExportMethod(getTimePickerCellValue),
@@ -614,7 +635,7 @@ const renderMap = {
   ElSwitch: {
     renderDefault: createEditRender(),
     renderEdit: createEditRender(),
-    renderFilter (h: CreateElement, renderOpts: FilterRenderOptions, params: FilterRenderParams) {
+    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { name, attrs } = renderOpts
       return column.filters.map((option, oIndex) => {
@@ -676,7 +697,7 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: TableRenderParams, evnt: any) {
+function handleClearEvent (params: InterceptorParams, evnt: any) {
   const bodyElem = document.body
   if (
     // 远程搜索

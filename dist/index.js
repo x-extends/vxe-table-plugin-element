@@ -23,6 +23,7 @@
 
   function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+  /* eslint-enable no-unused-vars */
   function isEmptyValue(cellValue) {
     return cellValue === null || cellValue === undefined || cellValue === '';
   }
@@ -482,10 +483,10 @@
           _renderOpts$options2 = renderOpts.options,
           options = _renderOpts$options2 === void 0 ? [] : _renderOpts$options2,
           _renderOpts$optionPro2 = renderOpts.optionProps,
-          optionProps = _renderOpts$optionPro2 === void 0 ? {} : _renderOpts$optionPro2;
+          optionProps = _renderOpts$optionPro2 === void 0 ? {} : _renderOpts$optionPro2,
+          attrs = renderOpts.attrs;
       var data = params.data,
           property = params.property;
-      var attrs = renderOpts.attrs;
       var labelProp = optionProps.label || 'label';
       var valueProp = optionProps.value || 'value';
       var disabledProp = optionProps.disabled || 'disabled';
@@ -762,7 +763,7 @@
     ElTimePicker: {
       renderEdit: createEditRender(),
       renderCell: function renderCell(h, renderOpts, params) {
-        return getTimePickerCellValue(renderOpts, params);
+        return [getTimePickerCellValue(renderOpts, params)];
       },
       renderItem: createFormItemRender(),
       cellExportMethod: createExportMethod(getTimePickerCellValue),
