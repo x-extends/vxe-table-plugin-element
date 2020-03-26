@@ -190,9 +190,9 @@
         optionProps = _renderOpts$optionPro === void 0 ? {} : _renderOpts$optionPro,
         _renderOpts$optionGro = renderOpts.optionGroupProps,
         optionGroupProps = _renderOpts$optionGro === void 0 ? {} : _renderOpts$optionGro;
-    var $table = params.$table,
-        row = params.row,
+    var row = params.row,
         column = params.column;
+    var $table = params.$table;
     var labelProp = optionProps.label || 'label';
     var valueProp = optionProps.value || 'value';
     var groupOptions = optionGroupProps.options || 'options';
@@ -834,7 +834,7 @@
     var target = evnt.target;
 
     while (target && target.nodeType && target !== document) {
-      if (className && target.className && target.className.split(' ').indexOf(className) > -1) {
+      if (className && target.className && target.className.split && target.className.split(' ').indexOf(className) > -1) {
         targetElem = target;
       } else if (target === container) {
         return {

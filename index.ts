@@ -8,7 +8,7 @@ import {
   RenderOptions,
   InterceptorParams,
   TableRenderParams,
-  ColumnConfig,
+  ColumnFilterParams,
   ColumnFilterRenderOptions,
   ColumnCellRenderOptions,
   ColumnEditRenderOptions,
@@ -48,19 +48,19 @@ function getChangeEvent (renderOpts: RenderOptions) {
   return type
 }
 
-function parseDate (value: any, props: any) {
+function parseDate (value: any, props: { [key: string]: any }) {
   return value && props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
 }
 
-function getFormatDate (value: any, props: any, defaultFormat: string) {
+function getFormatDate (value: any, props: { [key: string]: any }, defaultFormat: string) {
   return XEUtils.toDateString(parseDate(value, props), props.format || defaultFormat)
 }
 
-function getFormatDates (values: any[], props: any, separator: string, defaultFormat: string) {
+function getFormatDates (values: any[], props: { [key: string]: any }, separator: string, defaultFormat: string) {
   return XEUtils.map(values, (date: any) => getFormatDate(date, props, defaultFormat)).join(separator)
 }
 
-function equalDaterange (cellValue: any, data: any, props: any, defaultFormat: string) {
+function equalDaterange (cellValue: any, data: any, props: { [key: string]: any }, defaultFormat: string) {
   cellValue = getFormatDate(cellValue, props, defaultFormat)
   return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat)
 }
@@ -119,7 +119,7 @@ function getEditOns (renderOpts: RenderOptions, params: ColumnEditRenderParams) 
   })
 }
 
-function getFilterOns (renderOpts: RenderOptions, params: ColumnFilterRenderParams, option: any, changeFunc: Function) {
+function getFilterOns (renderOpts: RenderOptions, params: ColumnFilterRenderParams, option: ColumnFilterParams, changeFunc: Function) {
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
     option.data = value
@@ -149,9 +149,10 @@ function matchCascaderData (index: number, list: any[], values: any[], labels: a
   }
 }
 
-function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: { $table: any, row: any, column: ColumnConfig }) {
+function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: ColumnCellRenderParams) {
   const { options = [], optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = renderOpts
-  const { $table, row, column } = params
+  const { row, column } = params
+  const $table: any = params.$table
   const labelProp = optionProps.label || 'label'
   const valueProp = optionProps.value || 'value'
   const groupOptions = optionGroupProps.options || 'options'
@@ -280,7 +281,7 @@ function defaultButtonEditRender (h: CreateElement, renderOpts: ColumnEditRender
 }
 
 function defaultButtonsEditRender (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
-  return renderOpts.children.map((childRenderOpts: any) => defaultButtonEditRender(h, childRenderOpts, params)[0])
+  return renderOpts.children.map((childRenderOpts: ColumnEditRenderOptions) => defaultButtonEditRender(h, childRenderOpts, params)[0])
 }
 
 function createFilterRender (defaultProps?: { [key: string]: any }) {
@@ -302,7 +303,7 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
   }
 }
 
-function handleConfirmFilter (params: ColumnFilterRenderParams, checked: boolean, option: any) {
+function handleConfirmFilter (params: ColumnFilterRenderParams, checked: boolean, option: ColumnFilterParams) {
   const { $panel } = params
   $panel.changeOption({}, checked, option)
 }
@@ -364,7 +365,7 @@ function defaultButtonItemRender (h: CreateElement, renderOpts: FormItemRenderOp
 }
 
 function defaultButtonsItemRender (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
-  return renderOpts.children.map((childRenderOpts: any) => defaultButtonItemRender(h, childRenderOpts, params)[0])
+  return renderOpts.children.map((childRenderOpts: FormItemRenderOptions) => defaultButtonItemRender(h, childRenderOpts, params)[0])
 }
 
 function createExportMethod (valueMethod: Function, isEdit?: boolean) {
@@ -684,7 +685,7 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
   let targetElem
   let target = evnt.target
   while (target && target.nodeType && target !== document) {
-    if (className && target.className && target.className.split(' ').indexOf(className) > -1) {
+    if (className && target.className && target.className.split && target.className.split(' ').indexOf(className) > -1) {
       targetElem = target
     } else if (target === container) {
       return { flag: className ? !!targetElem : true, container, targetElem: targetElem }
