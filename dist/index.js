@@ -104,28 +104,28 @@
     });
 
     if (inputFunc) {
-      ons[modelEvent] = function (value) {
-        inputFunc(value);
+      ons[modelEvent] = function (args1) {
+        inputFunc(args1);
 
         if (events && events[modelEvent]) {
-          events[modelEvent](value);
+          events[modelEvent](args1);
         }
 
         if (isSameEvent && changeFunc) {
-          changeFunc();
+          changeFunc(args1);
         }
       };
     }
 
     if (!isSameEvent && changeFunc) {
       ons[changeEvent] = function () {
-        changeFunc();
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        changeFunc.apply(void 0, args);
 
         if (events && events[changeEvent]) {
-          for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            args[_key2] = arguments[_key2];
-          }
-
           events[changeEvent].apply(events, [params].concat(args));
         }
       };
