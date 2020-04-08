@@ -856,8 +856,9 @@
    */
 
 
-  function handleClearEvent(params, evnt) {
+  function handleClearEvent(params, e) {
     var bodyElem = document.body;
+    var evnt = params.$event || e;
 
     if ( // 远程搜索
     getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag || // 下拉框

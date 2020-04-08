@@ -698,8 +698,9 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: InterceptorParams, evnt: any) {
+function handleClearEvent (params: any, e: any) {
   const bodyElem = document.body
+  const evnt = params.$event || e
   if (
     // 远程搜索
     getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag ||

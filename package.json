@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库",
   "scripts": {
     "lib": "gulp build"
@@ -25,14 +25,14 @@
     "@typescript-eslint/parser": "^2.3.1",
     "del": "^5.1.0",
     "eslint": "^5.15.1",
-    "eslint-config-standard": "^12.0.0",
     "eslint-config-prettier": "^6.3.0",
+    "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-typescript": "^0.14.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
