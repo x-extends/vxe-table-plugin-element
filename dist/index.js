@@ -384,7 +384,9 @@
       var column = params.column;
       var name = renderOpts.name,
           attrs = renderOpts.attrs;
-      return column.filters.map(function (option, oIndex) {
+      return [h('div', {
+        "class": 'vxe-table--filter-element-wrapper'
+      }, column.filters.map(function (option, oIndex) {
         var optionValue = option.data;
         return h(name, {
           key: oIndex,
@@ -395,7 +397,7 @@
             handleConfirmFilter(params, !!option.data, option);
           })
         });
-      });
+      }))];
     };
   }
 
@@ -590,34 +592,31 @@
             optionProps = _renderOpts$optionPro4 === void 0 ? {} : _renderOpts$optionPro4,
             _renderOpts$optionGro3 = renderOpts.optionGroupProps,
             optionGroupProps = _renderOpts$optionGro3 === void 0 ? {} : _renderOpts$optionGro3;
+        var groupOptions = optionGroupProps.options || 'options';
+        var groupLabel = optionGroupProps.label || 'label';
         var column = params.column;
         var attrs = renderOpts.attrs;
-
-        if (optionGroups) {
-          var groupOptions = optionGroupProps.options || 'options';
-          var groupLabel = optionGroupProps.label || 'label';
-          return column.filters.map(function (option, oIndex) {
-            var optionValue = option.data;
-            return h('el-select', {
-              key: oIndex,
-              attrs: attrs,
-              props: getCellEditFilterProps(renderOpts, params, optionValue),
-              on: getFilterOns(renderOpts, params, option, function () {
-                // 处理 change 事件相关逻辑
-                handleConfirmFilter(params, option.data && option.data.length > 0, option);
-              })
-            }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
-              return h('el-option-group', {
-                key: gIndex,
-                props: {
-                  label: group[groupLabel]
-                }
-              }, renderOptions(h, group[groupOptions], optionProps));
-            }));
-          });
-        }
-
-        return column.filters.map(function (option, oIndex) {
+        return [h('div', {
+          "class": 'vxe-table--filter-element-wrapper'
+        }, optionGroups ? column.filters.map(function (option, oIndex) {
+          var optionValue = option.data;
+          return h('el-select', {
+            key: oIndex,
+            attrs: attrs,
+            props: getCellEditFilterProps(renderOpts, params, optionValue),
+            on: getFilterOns(renderOpts, params, option, function () {
+              // 处理 change 事件相关逻辑
+              handleConfirmFilter(params, option.data && option.data.length > 0, option);
+            })
+          }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
+            return h('el-option-group', {
+              key: gIndex,
+              props: {
+                label: group[groupLabel]
+              }
+            }, renderOptions(h, group[groupOptions], optionProps));
+          }));
+        }) : column.filters.map(function (option, oIndex) {
           var optionValue = option.data;
           return h('el-select', {
             key: oIndex,
@@ -628,7 +627,7 @@
               handleConfirmFilter(params, option.data && option.data.length > 0, option);
             })
           }, renderOptions(h, options, optionProps));
-        });
+        }))];
       },
       filterMethod: function filterMethod(params) {
         var option = params.option,
@@ -714,7 +713,9 @@
       renderFilter: function renderFilter(h, renderOpts, params) {
         var column = params.column;
         var attrs = renderOpts.attrs;
-        return column.filters.map(function (option, oIndex) {
+        return [h('div', {
+          "class": 'vxe-table--filter-element-wrapper'
+        }, column.filters.map(function (option, oIndex) {
           var optionValue = option.data;
           return h(renderOpts.name, {
             key: oIndex,
@@ -725,7 +726,7 @@
               handleConfirmFilter(params, !!option.data, option);
             })
           });
-        });
+        }))];
       },
       filterMethod: function filterMethod(params) {
         var option = params.option,
@@ -787,7 +788,9 @@
         var column = params.column;
         var name = renderOpts.name,
             attrs = renderOpts.attrs;
-        return column.filters.map(function (option, oIndex) {
+        return [h('div', {
+          "class": 'vxe-table--filter-element-wrapper'
+        }, column.filters.map(function (option, oIndex) {
           var optionValue = option.data;
           return h(name, {
             key: oIndex,
@@ -798,7 +801,7 @@
               handleConfirmFilter(params, _xeUtils["default"].isBoolean(option.data), option);
             })
           });
-        });
+        }))];
       },
       filterMethod: defaultFilterMethod,
       renderItem: createFormItemRender()

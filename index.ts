@@ -288,18 +288,22 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
   return function (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
     const { column } = params
     const { name, attrs } = renderOpts
-    return column.filters.map((option, oIndex) => {
-      const optionValue = option.data
-      return h(name, {
-        key: oIndex,
-        attrs,
-        props: getCellEditFilterProps(renderOpts, params, optionValue, defaultProps),
-        on: getFilterOns(renderOpts, params, option, () => {
-          // 处理 change 事件相关逻辑
-          handleConfirmFilter(params, !!option.data, option)
+    return [
+      h('div', {
+        class: 'vxe-table--filter-element-wrapper'
+      }, column.filters.map((option, oIndex) => {
+        const optionValue = option.data
+        return h(name, {
+          key: oIndex,
+          attrs,
+          props: getCellEditFilterProps(renderOpts, params, optionValue, defaultProps),
+          on: getFilterOns(renderOpts, params, option, () => {
+            // 处理 change 事件相关逻辑
+            handleConfirmFilter(params, !!option.data, option)
+          })
         })
-      })
-    })
+      }))
+    ]
   }
 }
 
@@ -468,43 +472,46 @@ const renderMap = {
     },
     renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
+      const groupOptions = optionGroupProps.options || 'options'
+      const groupLabel = optionGroupProps.label || 'label'
       const { column } = params
       const { attrs } = renderOpts
-      if (optionGroups) {
-        const groupOptions = optionGroupProps.options || 'options'
-        const groupLabel = optionGroupProps.label || 'label'
-        return column.filters.map((option, oIndex) => {
-          const optionValue = option.data
-          return h('el-select', {
-            key: oIndex,
-            attrs,
-            props: getCellEditFilterProps(renderOpts, params, optionValue),
-            on: getFilterOns(renderOpts, params, option, () => {
+      return [
+        h('div', {
+          class: 'vxe-table--filter-element-wrapper'
+        }, optionGroups
+          ? column.filters.map((option, oIndex) => {
+            const optionValue = option.data
+            return h('el-select', {
+              key: oIndex,
+              attrs,
+              props: getCellEditFilterProps(renderOpts, params, optionValue),
+              on: getFilterOns(renderOpts, params, option, () => {
               // 处理 change 事件相关逻辑
-              handleConfirmFilter(params, option.data && option.data.length > 0, option)
-            })
-          }, XEUtils.map(optionGroups, (group, gIndex) => {
-            return h('el-option-group', {
-              key: gIndex,
-              props: {
-                label: group[groupLabel]
-              }
-            }, renderOptions(h, group[groupOptions], optionProps))
-          }))
-        })
-      }
-      return column.filters.map((option, oIndex) => {
-        const optionValue = option.data
-        return h('el-select', {
-          key: oIndex,
-          attrs,
-          props: getCellEditFilterProps(renderOpts, params, optionValue),
-          on: getFilterOns(renderOpts, params, option, () => {
-            // 处理 change 事件相关逻辑
-            handleConfirmFilter(params, option.data && option.data.length > 0, option)
+                handleConfirmFilter(params, option.data && option.data.length > 0, option)
+              })
+            }, XEUtils.map(optionGroups, (group, gIndex) => {
+              return h('el-option-group', {
+                key: gIndex,
+                props: {
+                  label: group[groupLabel]
+                }
+              }, renderOptions(h, group[groupOptions], optionProps))
+            }))
           })
-        }, renderOptions(h, options, optionProps))
-      })
+          : column.filters.map((option, oIndex) => {
+            const optionValue = option.data
+            return h('el-select', {
+              key: oIndex,
+              attrs,
+              props: getCellEditFilterProps(renderOpts, params, optionValue),
+              on: getFilterOns(renderOpts, params, option, () => {
+              // 处理 change 事件相关逻辑
+                handleConfirmFilter(params, option.data && option.data.length > 0, option)
+              })
+            }, renderOptions(h, options, optionProps))
+          }))
+      ]
     },
     filterMethod (params: ColumnFilterMethodParams) {
       const { option, row, column } = params
@@ -574,18 +581,22 @@ const renderMap = {
     renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { attrs } = renderOpts
-      return column.filters.map((option, oIndex) => {
-        const optionValue = option.data
-        return h(renderOpts.name, {
-          key: oIndex,
-          attrs,
-          props: getCellEditFilterProps(renderOpts, params, optionValue),
-          on: getFilterOns(renderOpts, params, option, () => {
-            // 处理 change 事件相关逻辑
-            handleConfirmFilter(params, !!option.data, option)
+      return [
+        h('div', {
+          class: 'vxe-table--filter-element-wrapper'
+        }, column.filters.map((option, oIndex) => {
+          const optionValue = option.data
+          return h(renderOpts.name, {
+            key: oIndex,
+            attrs,
+            props: getCellEditFilterProps(renderOpts, params, optionValue),
+            on: getFilterOns(renderOpts, params, option, () => {
+              // 处理 change 事件相关逻辑
+              handleConfirmFilter(params, !!option.data, option)
+            })
           })
-        })
-      })
+        }))
+      ]
     },
     filterMethod (params: ColumnFilterMethodParams) {
       const { option, row, column } = params
@@ -639,18 +650,22 @@ const renderMap = {
     renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { name, attrs } = renderOpts
-      return column.filters.map((option, oIndex) => {
-        const optionValue = option.data
-        return h(name, {
-          key: oIndex,
-          attrs,
-          props: getCellEditFilterProps(renderOpts, params, optionValue),
-          on: getFilterOns(renderOpts, params, option, () => {
-            // 处理 change 事件相关逻辑
-            handleConfirmFilter(params, XEUtils.isBoolean(option.data), option)
+      return [
+        h('div', {
+          class: 'vxe-table--filter-element-wrapper'
+        }, column.filters.map((option, oIndex) => {
+          const optionValue = option.data
+          return h(name, {
+            key: oIndex,
+            attrs,
+            props: getCellEditFilterProps(renderOpts, params, optionValue),
+            on: getFilterOns(renderOpts, params, option, () => {
+              // 处理 change 事件相关逻辑
+              handleConfirmFilter(params, XEUtils.isBoolean(option.data), option)
+            })
           })
-        })
-      })
+        }))
+      ]
     },
     filterMethod: defaultFilterMethod,
     renderItem: createFormItemRender()

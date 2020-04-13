@@ -39,6 +39,9 @@
 .vxe-table .vxe-tree-cell > .el-slider {
   width: 100%; }
 
+.vxe-table--filter-element-wrapper {
+  padding: 0.8em 1em; }
+
 .vxe-table--filter-body > .el-input,
 .vxe-table--filter-body > .el-input-number,
 .vxe-table--filter-body > .el-autocomplete,

@@ -29,6 +29,9 @@ $vxe-table-validate-error-color: #f56c6c;
     @extend %CompWidth;
   }
 }
+.vxe-table--filter-element-wrapper {
+  padding: 0.8em 1em;
+}
 .vxe-table--filter-body {
   & > .el-input,
   & > .el-input-number,
