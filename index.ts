@@ -87,13 +87,13 @@ function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Fu
     }
   })
   if (inputFunc) {
-    ons[modelEvent] = function (args1: any) {
-      inputFunc(args1)
+    ons[modelEvent] = function (targetEvnt: any) {
+      inputFunc(targetEvnt)
       if (events && events[modelEvent]) {
-        events[modelEvent](args1)
+        events[modelEvent](params, targetEvnt)
       }
       if (isSameEvent && changeFunc) {
-        changeFunc(args1)
+        changeFunc(targetEvnt)
       }
     }
   }
