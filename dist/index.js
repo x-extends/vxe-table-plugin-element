@@ -600,13 +600,14 @@
           "class": 'vxe-table--filter-element-wrapper'
         }, optionGroups ? column.filters.map(function (option, oIndex) {
           var optionValue = option.data;
+          var props = getCellEditFilterProps(renderOpts, params, optionValue);
           return h('el-select', {
             key: oIndex,
             attrs: attrs,
-            props: getCellEditFilterProps(renderOpts, params, optionValue),
+            props: props,
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
-              handleConfirmFilter(params, option.data && option.data.length > 0, option);
+              handleConfirmFilter(params, props.multiple ? option.data && option.data.length > 0 : !_xeUtils["default"].eqNull(option.data), option);
             })
           }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
             return h('el-option-group', {
@@ -618,13 +619,14 @@
           }));
         }) : column.filters.map(function (option, oIndex) {
           var optionValue = option.data;
+          var props = getCellEditFilterProps(renderOpts, params, optionValue);
           return h('el-select', {
             key: oIndex,
             attrs: attrs,
-            props: getCellEditFilterProps(renderOpts, params, optionValue),
+            props: props,
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
-              handleConfirmFilter(params, option.data && option.data.length > 0, option);
+              handleConfirmFilter(params, props.multiple ? option.data && option.data.length > 0 : !_xeUtils["default"].eqNull(option.data), option);
             })
           }, renderOptions(h, options, optionProps));
         }))];
