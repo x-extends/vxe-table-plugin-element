@@ -715,7 +715,7 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: any, e: any) {
+function handleClearEvent (params: InterceptorParams, e: any) {
   const bodyElem = document.body
   const evnt = params.$event || e
   if (

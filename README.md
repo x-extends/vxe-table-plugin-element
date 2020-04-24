@@ -16,13 +16,11 @@ npm install xe-utils vxe-table vxe-table-plugin-element element-ui
 ```
 
 ```javascript
-import Vue from 'vue'
-import VXETable from 'vxe-table'
+// ...
 import VXETablePluginElement from 'vxe-table-plugin-element'
-import 'vxe-table/lib/index.css'
 import 'vxe-table-plugin-element/dist/style.css'
+// ...
 
-Vue.use(VXETable)
 VXETable.use(VXETablePluginElement)
 ```
 
