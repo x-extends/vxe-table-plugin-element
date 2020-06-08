@@ -47,7 +47,7 @@
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^0.9.1",
     "prettier": "^1.18.2",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.3",
     "vue": "^2.6.11",
     "vxe-table": "^2.9.11",
     "xe-utils": "^2.4.6"
