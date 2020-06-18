@@ -86,6 +86,23 @@
     } : {}, defaultProps, renderOpts.props, _defineProperty({}, getModelProp(renderOpts), value));
   }
 
+  function getNativeOns(renderOpts, params) {
+    var nativeEvents = renderOpts.nativeEvents;
+    var nativeOns = {};
+
+    _xeUtils["default"].objectEach(nativeEvents, function (func, key) {
+      nativeOns[key] = function () {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        func.apply(void 0, [params].concat(args));
+      };
+    });
+
+    return nativeOns;
+  }
+
   function getOns(renderOpts, params, inputFunc, changeFunc) {
     var events = renderOpts.events;
     var modelEvent = getModelEvent(renderOpts);
@@ -95,8 +112,8 @@
 
     _xeUtils["default"].objectEach(events, function (func, key) {
       ons[key] = function () {
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
         }
 
         func.apply(void 0, [params].concat(args));
@@ -119,8 +136,8 @@
 
     if (!isSameEvent && changeFunc) {
       ons[changeEvent] = function () {
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          args[_key2] = arguments[_key2];
+        for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+          args[_key3] = arguments[_key3];
         }
 
         changeFunc.apply(void 0, args);
@@ -359,7 +376,8 @@
       return [h(renderOpts.name, {
         attrs: attrs,
         props: getCellEditFilterProps(renderOpts, params, cellValue, defaultProps),
-        on: getEditOns(renderOpts, params)
+        on: getEditOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       })];
     };
   }
@@ -369,7 +387,8 @@
     return [h('el-button', {
       attrs: attrs,
       props: getCellEditFilterProps(renderOpts, params, null),
-      on: getOns(renderOpts, params)
+      on: getOns(renderOpts, params),
+      nativeOn: getNativeOns(renderOpts, params)
     }, cellText(h, renderOpts.content))];
   }
 
@@ -384,6 +403,7 @@
       var column = params.column;
       var name = renderOpts.name,
           attrs = renderOpts.attrs;
+      var nativeOn = getNativeOns(renderOpts, params);
       return [h('div', {
         "class": 'vxe-table--filter-element-wrapper'
       }, column.filters.map(function (option, oIndex) {
@@ -395,7 +415,8 @@
           on: getFilterOns(renderOpts, params, option, function () {
             // 处理 change 事件相关逻辑
             handleConfirmFilter(params, !!option.data, option);
-          })
+          }),
+          nativeOn: nativeOn
         });
       }))];
     };
@@ -451,7 +472,8 @@
       return [h(name, {
         attrs: attrs,
         props: getItemProps(renderOpts, params, itemValue, defaultProps),
-        on: getItemOns(renderOpts, params)
+        on: getItemOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       })];
     };
   }
@@ -462,7 +484,8 @@
     return [h('el-button', {
       attrs: attrs,
       props: props,
-      on: getOns(renderOpts, params)
+      on: getOns(renderOpts, params),
+      nativeOn: getNativeOns(renderOpts, params)
     }, cellText(h, renderOpts.content || props.content))];
   }
 
@@ -498,7 +521,8 @@
       return [h("".concat(name, "Group"), {
         attrs: attrs,
         props: getItemProps(renderOpts, params, itemValue),
-        on: getItemOns(renderOpts, params)
+        on: getItemOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       }, options.map(function (option, oIndex) {
         return h(name, {
           key: oIndex,
@@ -557,6 +581,7 @@
 
         var props = getCellEditFilterProps(renderOpts, params, cellValue);
         var on = getEditOns(renderOpts, params);
+        var nativeOn = getNativeOns(renderOpts, params);
 
         if (optionGroups) {
           var groupOptions = optionGroupProps.options || 'options';
@@ -564,7 +589,8 @@
           return [h('el-select', {
             attrs: attrs,
             props: props,
-            on: on
+            on: on,
+            nativeOn: nativeOn
           }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
             return h('el-option-group', {
               key: gIndex,
@@ -578,7 +604,8 @@
         return [h('el-select', {
           props: props,
           attrs: attrs,
-          on: on
+          on: on,
+          nativeOn: nativeOn
         }, renderOptions(h, options, optionProps))];
       },
       renderCell: function renderCell(h, renderOpts, params) {
@@ -596,6 +623,7 @@
         var groupLabel = optionGroupProps.label || 'label';
         var column = params.column;
         var attrs = renderOpts.attrs;
+        var nativeOn = getNativeOns(renderOpts, params);
         return [h('div', {
           "class": 'vxe-table--filter-element-wrapper'
         }, optionGroups ? column.filters.map(function (option, oIndex) {
@@ -608,7 +636,8 @@
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, props.multiple ? option.data && option.data.length > 0 : !_xeUtils["default"].eqNull(option.data), option);
-            })
+            }),
+            nativeOn: nativeOn
           }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
             return h('el-option-group', {
               key: gIndex,
@@ -627,7 +656,8 @@
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, props.multiple ? option.data && option.data.length > 0 : !_xeUtils["default"].eqNull(option.data), option);
-            })
+            }),
+            nativeOn: nativeOn
           }, renderOptions(h, options, optionProps));
         }))];
       },
@@ -671,6 +701,7 @@
 
         var props = getItemProps(renderOpts, params, itemValue);
         var on = getItemOns(renderOpts, params);
+        var nativeOn = getNativeOns(renderOpts, params);
 
         if (optionGroups) {
           var groupOptions = optionGroupProps.options || 'options';
@@ -678,7 +709,8 @@
           return [h('el-select', {
             attrs: attrs,
             props: props,
-            on: on
+            on: on,
+            nativeOn: nativeOn
           }, _xeUtils["default"].map(optionGroups, function (group, gIndex) {
             return h('el-option-group', {
               props: {
@@ -692,7 +724,8 @@
         return [h('el-select', {
           attrs: attrs,
           props: props,
-          on: on
+          on: on,
+          nativeOn: nativeOn
         }, renderOptions(h, options, optionProps))];
       },
       cellExportMethod: createExportMethod(getSelectCellValue),
@@ -715,6 +748,7 @@
       renderFilter: function renderFilter(h, renderOpts, params) {
         var column = params.column;
         var attrs = renderOpts.attrs;
+        var nativeOn = getNativeOns(renderOpts, params);
         return [h('div', {
           "class": 'vxe-table--filter-element-wrapper'
         }, column.filters.map(function (option, oIndex) {
@@ -726,7 +760,8 @@
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, !!option.data, option);
-            })
+            }),
+            nativeOn: nativeOn
           });
         }))];
       },
@@ -790,6 +825,7 @@
         var column = params.column;
         var name = renderOpts.name,
             attrs = renderOpts.attrs;
+        var nativeOn = getNativeOns(renderOpts, params);
         return [h('div', {
           "class": 'vxe-table--filter-element-wrapper'
         }, column.filters.map(function (option, oIndex) {
@@ -801,7 +837,8 @@
             on: getFilterOns(renderOpts, params, option, function () {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, _xeUtils["default"].isBoolean(option.data), option);
-            })
+            }),
+            nativeOn: nativeOn
           });
         }))];
       },

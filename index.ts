@@ -75,6 +75,17 @@ function getItemProps (renderOpts: RenderOptions, params: FormItemRenderParams, 
   return XEUtils.assign(vSize ? { size: vSize } : {}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
+function getNativeOns (renderOpts: RenderOptions, params: RenderParams) {
+  const { nativeEvents } = renderOpts
+  const nativeOns: { [type: string]: Function } = {}
+  XEUtils.objectEach(nativeEvents, (func: Function, key: string) => {
+    nativeOns[key] = function (...args: any[]) {
+      func(params, ...args)
+    }
+  })
+  return nativeOns
+}
+
 function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Function, changeFunc?: Function) {
   const { events } = renderOpts
   const modelEvent = getModelEvent(renderOpts)
@@ -263,7 +274,8 @@ function createEditRender (defaultProps?: { [key: string]: any }) {
       h(renderOpts.name, {
         attrs,
         props: getCellEditFilterProps(renderOpts, params, cellValue, defaultProps),
-        on: getEditOns(renderOpts, params)
+        on: getEditOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       })
     ]
   }
@@ -275,7 +287,8 @@ function defaultButtonEditRender (h: CreateElement, renderOpts: ColumnEditRender
     h('el-button', {
       attrs,
       props: getCellEditFilterProps(renderOpts, params, null),
-      on: getOns(renderOpts, params)
+      on: getOns(renderOpts, params),
+      nativeOn: getNativeOns(renderOpts, params)
     }, cellText(h, renderOpts.content))
   ]
 }
@@ -288,6 +301,7 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
   return function (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
     const { column } = params
     const { name, attrs } = renderOpts
+    const nativeOn = getNativeOns(renderOpts, params)
     return [
       h('div', {
         class: 'vxe-table--filter-element-wrapper'
@@ -300,7 +314,8 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
           on: getFilterOns(renderOpts, params, option, () => {
             // 处理 change 事件相关逻辑
             handleConfirmFilter(params, !!option.data, option)
-          })
+          }),
+          nativeOn
         })
       }))
     ]
@@ -350,7 +365,8 @@ function createFormItemRender (defaultProps?: { [key: string]: any }) {
       h(name, {
         attrs,
         props: getItemProps(renderOpts, params, itemValue, defaultProps),
-        on: getItemOns(renderOpts, params)
+        on: getItemOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       })
     ]
   }
@@ -363,7 +379,8 @@ function defaultButtonItemRender (h: CreateElement, renderOpts: FormItemRenderOp
     h('el-button', {
       attrs,
       props,
-      on: getOns(renderOpts, params)
+      on: getOns(renderOpts, params),
+      nativeOn: getNativeOns(renderOpts, params)
     }, cellText(h, renderOpts.content || props.content))
   ]
 }
@@ -391,7 +408,8 @@ function createFormItemRadioAndCheckboxRender () {
       h(`${name}Group`, {
         attrs,
         props: getItemProps(renderOpts, params, itemValue),
-        on: getItemOns(renderOpts, params)
+        on: getItemOns(renderOpts, params),
+        nativeOn: getNativeOns(renderOpts, params)
       }, options.map((option, oIndex) => {
         return h(name, {
           key: oIndex,
@@ -441,6 +459,7 @@ const renderMap = {
       const cellValue = XEUtils.get(row, column.property)
       const props = getCellEditFilterProps(renderOpts, params, cellValue)
       const on = getEditOns(renderOpts, params)
+      const nativeOn = getNativeOns(renderOpts, params)
       if (optionGroups) {
         const groupOptions = optionGroupProps.options || 'options'
         const groupLabel = optionGroupProps.label || 'label'
@@ -448,7 +467,8 @@ const renderMap = {
           h('el-select', {
             attrs,
             props,
-            on
+            on,
+            nativeOn
           }, XEUtils.map(optionGroups, (group, gIndex) => {
             return h('el-option-group', {
               key: gIndex,
@@ -463,7 +483,8 @@ const renderMap = {
         h('el-select', {
           props,
           attrs,
-          on
+          on,
+          nativeOn
         }, renderOptions(h, options, optionProps))
       ]
     },
@@ -476,6 +497,7 @@ const renderMap = {
       const groupLabel = optionGroupProps.label || 'label'
       const { column } = params
       const { attrs } = renderOpts
+      const nativeOn = getNativeOns(renderOpts, params)
       return [
         h('div', {
           class: 'vxe-table--filter-element-wrapper'
@@ -490,7 +512,8 @@ const renderMap = {
               on: getFilterOns(renderOpts, params, option, () => {
               // 处理 change 事件相关逻辑
                 handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
-              })
+              }),
+              nativeOn
             }, XEUtils.map(optionGroups, (group, gIndex) => {
               return h('el-option-group', {
                 key: gIndex,
@@ -510,7 +533,8 @@ const renderMap = {
               on: getFilterOns(renderOpts, params, option, () => {
               // 处理 change 事件相关逻辑
                 handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
-              })
+              }),
+              nativeOn
             }, renderOptions(h, options, optionProps))
           }))
       ]
@@ -537,6 +561,7 @@ const renderMap = {
       const itemValue = XEUtils.get(data, property)
       const props = getItemProps(renderOpts, params, itemValue)
       const on = getItemOns(renderOpts, params)
+      const nativeOn = getNativeOns(renderOpts, params)
       if (optionGroups) {
         const groupOptions = optionGroupProps.options || 'options'
         const groupLabel = optionGroupProps.label || 'label'
@@ -544,7 +569,8 @@ const renderMap = {
           h('el-select', {
             attrs,
             props,
-            on
+            on,
+            nativeOn
           }, XEUtils.map(optionGroups, (group, gIndex) => {
             return h('el-option-group', {
               props: {
@@ -559,7 +585,8 @@ const renderMap = {
         h('el-select', {
           attrs,
           props,
-          on
+          on,
+          nativeOn
         }, renderOptions(h, options, optionProps))
       ]
     },
@@ -583,6 +610,7 @@ const renderMap = {
     renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { attrs } = renderOpts
+      const nativeOn = getNativeOns(renderOpts, params)
       return [
         h('div', {
           class: 'vxe-table--filter-element-wrapper'
@@ -595,7 +623,8 @@ const renderMap = {
             on: getFilterOns(renderOpts, params, option, () => {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, !!option.data, option)
-            })
+            }),
+            nativeOn
           })
         }))
       ]
@@ -652,6 +681,7 @@ const renderMap = {
     renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
       const { column } = params
       const { name, attrs } = renderOpts
+      const nativeOn = getNativeOns(renderOpts, params)
       return [
         h('div', {
           class: 'vxe-table--filter-element-wrapper'
@@ -664,7 +694,8 @@ const renderMap = {
             on: getFilterOns(renderOpts, params, option, () => {
               // 处理 change 事件相关逻辑
               handleConfirmFilter(params, XEUtils.isBoolean(option.data), option)
-            })
+            }),
+            nativeOn
           })
         }))
       ]
