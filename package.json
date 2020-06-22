@@ -35,13 +35,13 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-typescript": "^0.14.0",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^6.1.0",
+    "gulp-autoprefixer": "^7.0.1",
     "gulp-babel": "^8.0.0",
-    "gulp-clean-css": "^4.2.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.4.0",
+    "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.0.2",
+    "gulp-sass": "^4.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
@@ -49,8 +49,8 @@
     "prettier": "^1.18.2",
     "typescript": "^3.9.3",
     "vue": "^2.6.11",
-    "vxe-table": "^2.9.11",
-    "xe-utils": "^2.4.6"
+    "vxe-table": "^2.9.13",
+    "xe-utils": "^2.4.8"
   },
   "peerDependencies": {
     "element-ui": ">= 2.0.0",
