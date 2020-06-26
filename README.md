@@ -7,7 +7,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vxe-table-plugin-element/dist/style.min.css?compression=gzip&label=gzip%20size:%20CSS)](https://unpkg.com/vxe-table-plugin-element/dist/style.min.css)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://github.com/xuliangzhan/vxe-table) 表格的适配插件，用于兼容 [element-ui](https://www.npmjs.com/package/element-ui) 组件库
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-ui](https://www.npmjs.com/package/element-ui) 组件库
 
 ## Installing
 

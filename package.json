@@ -59,7 +59,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xuliangzhan/vxe-table-plugin-element.git"
+    "url": "git+https://github.com/x-extends/vxe-table-plugin-element.git"
   },
   "keywords": [
     "vxe-table",
@@ -71,7 +71,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xuliangzhan/vxe-table-plugin-element/issues"
+    "url": "https://github.com/x-extends/vxe-table-plugin-element/issues"
   },
-  "homepage": "https://github.com/xuliangzhan/vxe-table-plugin-element#readme"
+  "homepage": "https://github.com/x-extends/vxe-table-plugin-element#readme"
 }
