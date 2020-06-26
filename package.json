@@ -49,12 +49,12 @@
     "prettier": "^1.18.2",
     "typescript": "^3.9.3",
     "vue": "^2.6.11",
-    "vxe-table": "^2.9.13",
-    "xe-utils": "^2.4.8"
+    "vxe-table": "^2.9.14",
+    "xe-utils": "^2.5.0"
   },
   "peerDependencies": {
     "element-ui": ">= 2.0.0",
-    "vxe-table": ">= 1.15.27",
+    "vxe-table": ">= 1.15.30",
     "xe-utils": ">= 2.4.0 < 3"
   },
   "repository": {
