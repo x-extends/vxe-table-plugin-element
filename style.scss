@@ -23,6 +23,9 @@ $vxe-table-validate-error-color: #f56c6c;
   & > .el-slider {
     width: 100%;
   }
+  & > .el-color-picker {
+    vertical-align: middle;
+  }
 }
 .vxe-form {
   .vxe-form--item-content {
