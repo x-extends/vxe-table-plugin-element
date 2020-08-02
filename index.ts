@@ -389,10 +389,10 @@ function defaultButtonsItemRender (h: CreateElement, renderOpts: FormItemRenderO
   return renderOpts.children.map((childRenderOpts: FormItemRenderOptions) => defaultButtonItemRender(h, childRenderOpts, params)[0])
 }
 
-function createExportMethod (valueMethod: Function, isEdit?: boolean) {
-  const renderProperty = isEdit ? 'editRender' : 'cellRender'
+function createExportMethod (getExportCellValue: Function) {
   return function (params: ColumnExportCellRenderParams) {
-    return valueMethod(params.column[renderProperty], params)
+    const { column } = params
+    return getExportCellValue(column.editRender || column.cellRender, params)
   }
 }
 
@@ -590,8 +590,7 @@ const renderMap = {
         }, renderOptions(h, options, optionProps))
       ]
     },
-    cellExportMethod: createExportMethod(getSelectCellValue),
-    editCellExportMethod: createExportMethod(getSelectCellValue, true)
+    cellExportMethod: createExportMethod(getSelectCellValue)
   },
   ElCascader: {
     renderEdit: createEditRender(),
@@ -599,8 +598,7 @@ const renderMap = {
       return cellText(h, getCascaderCellValue(renderOpts, params))
     },
     renderItem: createFormItemRender(),
-    cellExportMethod: createExportMethod(getCascaderCellValue),
-    editCellExportMethod: createExportMethod(getCascaderCellValue, true)
+    cellExportMethod: createExportMethod(getCascaderCellValue)
   },
   ElDatePicker: {
     renderEdit: createEditRender(),
@@ -650,8 +648,7 @@ const renderMap = {
       return false
     },
     renderItem: createFormItemRender(),
-    cellExportMethod: createExportMethod(getDatePickerCellValue),
-    editCellExportMethod: createExportMethod(getDatePickerCellValue, true)
+    cellExportMethod: createExportMethod(getDatePickerCellValue)
   },
   ElTimePicker: {
     renderEdit: createEditRender(),
@@ -661,8 +658,7 @@ const renderMap = {
       ]
     },
     renderItem: createFormItemRender(),
-    cellExportMethod: createExportMethod(getTimePickerCellValue),
-    editCellExportMethod: createExportMethod(getTimePickerCellValue, true)
+    cellExportMethod: createExportMethod(getTimePickerCellValue)
   },
   ElTimeSelect: {
     renderEdit: createEditRender(),
