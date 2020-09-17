@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { CreateElement } from 'vue'
-import XEUtils from 'xe-utils/methods/xe-utils'
+import XEUtils from 'xe-utils/ctor'
 import {
   VXETable,
   RenderParams,
