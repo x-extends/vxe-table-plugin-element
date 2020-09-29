@@ -12,9 +12,9 @@
     "style.scss"
   ],
   "main": "dist/index.common.js",
-  "unpkg": "dist/index.umd.min.js",
-  "jsdelivr": "dist/index.umd.min.js",
-  "style": "dist/style.min.css",
+  "unpkg": "dist/index.umd.js",
+  "jsdelivr": "dist/index.umd.js",
+  "style": "dist/style.css",
   "typings": "index.ts",
   "devDependencies": {
     "@babel/core": "^7.4.4",
