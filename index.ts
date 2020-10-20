@@ -390,8 +390,8 @@ function defaultButtonsItemRender (h: CreateElement, renderOpts: FormItemRenderO
 
 function createExportMethod (getExportCellValue: Function) {
   return function (params: ColumnExportCellRenderParams) {
-    const { column } = params
-    return getExportCellValue(column.editRender || column.cellRender, params)
+    const { row, column, options } = params
+    return options && options.original ? XEUtils.get(row, column.property) : getExportCellValue(column.editRender || column.cellRender, params)
   }
 }
 
