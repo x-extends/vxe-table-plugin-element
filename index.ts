@@ -431,7 +431,8 @@ const renderMap = {
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElInput: {
     autofocus: 'input.el-input__inner',
@@ -439,7 +440,8 @@ const renderMap = {
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElInputNumber: {
     autofocus: 'input.el-input__inner',
@@ -447,7 +449,8 @@ const renderMap = {
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElSelect: {
     renderEdit (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
@@ -588,6 +591,42 @@ const renderMap = {
         }, renderOptions(h, options, optionProps))
       ]
     },
+    renderItemContent (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
+      const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
+      const { data, property } = params
+      const { attrs } = renderOpts
+      const itemValue = XEUtils.get(data, property)
+      const props = getItemProps(renderOpts, params, itemValue)
+      const on = getItemOns(renderOpts, params)
+      const nativeOn = getNativeOns(renderOpts, params)
+      if (optionGroups) {
+        const groupOptions = optionGroupProps.options || 'options'
+        const groupLabel = optionGroupProps.label || 'label'
+        return [
+          h('el-select', {
+            attrs,
+            props,
+            on,
+            nativeOn
+          }, XEUtils.map(optionGroups, (group, gIndex) => {
+            return h('el-option-group', {
+              props: {
+                label: group[groupLabel]
+              },
+              key: gIndex
+            }, renderOptions(h, group[groupOptions], optionProps))
+          }))
+        ]
+      }
+      return [
+        h('el-select', {
+          attrs,
+          props,
+          on,
+          nativeOn
+        }, renderOptions(h, options, optionProps))
+      ]
+    },
     cellExportMethod: createExportMethod(getSelectCellValue)
   },
   ElCascader: {
@@ -596,6 +635,7 @@ const renderMap = {
       return cellText(h, getCascaderCellValue(renderOpts, params))
     },
     renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender(),
     cellExportMethod: createExportMethod(getCascaderCellValue)
   },
   ElDatePicker: {
@@ -646,6 +686,7 @@ const renderMap = {
       return false
     },
     renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender(),
     cellExportMethod: createExportMethod(getDatePickerCellValue)
   },
   ElTimePicker: {
@@ -656,18 +697,21 @@ const renderMap = {
       ]
     },
     renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender(),
     cellExportMethod: createExportMethod(getTimePickerCellValue)
   },
   ElTimeSelect: {
     renderEdit: createEditRender(),
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElRate: {
     renderDefault: createEditRender(),
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElSwitch: {
     renderDefault: createEditRender(),
@@ -695,28 +739,34 @@ const renderMap = {
       ]
     },
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElSlider: {
     renderDefault: createEditRender(),
     renderEdit: createEditRender(),
     renderFilter: createFilterRender(),
     filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender()
+    renderItem: createFormItemRender(),
+    renderItemContent: createFormItemRender()
   },
   ElRadio: {
-    renderItem: createFormItemRadioAndCheckboxRender()
+    renderItem: createFormItemRadioAndCheckboxRender(),
+    renderItemContent: createFormItemRadioAndCheckboxRender()
   },
   ElCheckbox: {
-    renderItem: createFormItemRadioAndCheckboxRender()
+    renderItem: createFormItemRadioAndCheckboxRender(),
+    renderItemContent: createFormItemRadioAndCheckboxRender()
   },
   ElButton: {
     renderDefault: defaultButtonEditRender,
-    renderItem: defaultButtonItemRender
+    renderItem: defaultButtonItemRender,
+    renderItemContent: defaultButtonItemRender
   },
   ElButtons: {
     renderDefault: defaultButtonsEditRender,
-    renderItem: defaultButtonsItemRender
+    renderItem: defaultButtonsItemRender,
+    renderItemContent: defaultButtonsItemRender
   }
 }
 
