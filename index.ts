@@ -186,7 +186,7 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
     }
   }
   if (!isEmptyValue(cellValue)) {
-    return XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? (value) => {
+    const selectlabel = XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? (value) => {
       let selectItem: any
       for (let index = 0; index < optionGroups.length; index++) {
         selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
@@ -194,19 +194,15 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
           break
         }
       }
-      const cellLabel: any = selectItem ? selectItem[labelProp] : value
-      if (cellData && options && options.length) {
-        cellData[colid] = { value: cellValue, label: cellLabel }
-      }
-      return cellLabel
+      return selectItem ? selectItem[labelProp] : value
     } : (value) => {
       const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
-      const cellLabel = selectItem ? selectItem[labelProp] : value
-      if (cellData && options && options.length) {
-        cellData[colid] = { value: cellValue, label: cellLabel }
-      }
-      return cellLabel
+      return selectItem ? selectItem[labelProp] : value
     }).join(', ')
+    if (cellData && options && options.length) {
+      cellData[colid] = { value: cellValue, label: selectlabel }
+    }
+    return selectlabel
   }
   return null
 }
