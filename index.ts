@@ -163,6 +163,7 @@ function matchCascaderData (index: number, list: any[], values: any[], labels: a
 function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: ColumnCellRenderParams) {
   const { options = [], optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = renderOpts
   const { row, column } = params
+  const { filterable, multiple } = props
   const $table: any = params.$table
   const labelProp = optionProps.label || 'label'
   const valueProp = optionProps.value || 'value'
@@ -171,7 +172,7 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
   const colid = column.id
   let rest: any
   let cellData: any
-  if (props.filterable) {
+  if (filterable) {
     const fullAllDataRowMap: Map<any, any> = $table.fullAllDataRowMap
     const cacheCell = fullAllDataRowMap.has(row)
     if (cacheCell) {
@@ -186,7 +187,7 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
     }
   }
   if (!isEmptyValue(cellValue)) {
-    return XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? (value) => {
+    const selectlabel = XEUtils.map(multiple ? cellValue : [cellValue], optionGroups ? (value) => {
       let selectItem: any
       for (let index = 0; index < optionGroups.length; index++) {
         selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
@@ -194,19 +195,15 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
           break
         }
       }
-      const cellLabel: any = selectItem ? selectItem[labelProp] : value
-      if (cellData && options && options.length) {
-        cellData[colid] = { value: cellValue, label: cellLabel }
-      }
-      return cellLabel
+      return selectItem ? selectItem[labelProp] : value
     } : (value) => {
       const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
-      const cellLabel = selectItem ? selectItem[labelProp] : value
-      if (cellData && options && options.length) {
-        cellData[colid] = { value: cellValue, label: cellLabel }
-      }
-      return cellLabel
+      return selectItem ? selectItem[labelProp] : value
     }).join(', ')
+    if (cellData && options && options.length) {
+      cellData[colid] = { value: cellValue, label: selectlabel }
+    }
+    return selectlabel
   }
   return null
 }
