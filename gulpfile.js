@@ -55,7 +55,8 @@ gulp.task('build_umd', function () {
       plugins: [['@babel/transform-modules-umd', {
         globals: {
           [pack.name]: exportModuleName,
-          'xe-utils': 'XEUtils'
+          'xe-utils': 'XEUtils',
+          'dayjs': 'dayjs'
         },
         exactGlobals: true
       }]]

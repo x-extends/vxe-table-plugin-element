@@ -1,40 +1,33 @@
-/* eslint-disable no-unused-vars */
-import { CreateElement } from 'vue'
+import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils/ctor'
 import {
   VXETable,
-  RenderParams,
-  OptionProps,
-  RenderOptions,
-  InterceptorParams,
-  TableRenderParams,
-  ColumnFilterParams,
-  ColumnFilterRenderOptions,
-  ColumnCellRenderOptions,
-  ColumnEditRenderOptions,
-  ColumnCellRenderParams,
-  ColumnEditRenderParams,
-  ColumnFilterRenderParams,
-  ColumnFilterMethodParams,
-  ColumnExportCellRenderParams,
+  VxeTableDefines,
+  VxeColumnPropTypes,
+  VxeGlobalRendererHandles,
+  VxeGlobalInterceptorHandles,
   FormItemRenderOptions,
-  FormItemRenderParams
+  FormItemContentRenderParams
 } from 'vxe-table/lib/vxe-table'
-/* eslint-enable no-unused-vars */
+import dayjs from 'dayjs'
 
 function isEmptyValue (cellValue: any) {
   return cellValue === null || cellValue === undefined || cellValue === ''
 }
 
-function getModelProp (renderOpts: RenderOptions) {
-  return 'value'
+function getOnName (type: string) {
+  return 'on' + type.substring(0, 1).toLocaleUpperCase() + type.substring(1)
 }
 
-function getModelEvent (renderOpts: RenderOptions) {
-  return 'input'
+function getModelProp (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
+  return 'modelValue'
 }
 
-function getChangeEvent (renderOpts: RenderOptions) {
+function getModelEvent (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
+  return 'update:modelValue'
+}
+
+function getChangeEvent (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
   let type = 'change'
   switch (renderOpts.name) {
     case 'ElAutocomplete':
@@ -48,12 +41,20 @@ function getChangeEvent (renderOpts: RenderOptions) {
   return type
 }
 
+function toDayStringDate (value: any, format: string) {
+  return dayjs(value, format).date
+}
+
+function toDayDateString (date: any, format: string) {
+  return dayjs(date).format(format)
+}
+
 function parseDate (value: any, props: { [key: string]: any }) {
-  return value && props.valueFormat ? XEUtils.toStringDate(value, props.valueFormat) : value
+  return value && props.valueFormat ? toDayStringDate(value, props.valueFormat) : value
 }
 
 function getFormatDate (value: any, props: { [key: string]: any }, defaultFormat: string) {
-  return XEUtils.toDateString(parseDate(value, props), props.format || defaultFormat)
+  return value ? toDayDateString(parseDate(value, props), props.format || defaultFormat) : value
 }
 
 function getFormatDates (values: any[], props: { [key: string]: any }, separator: string, defaultFormat: string) {
@@ -65,40 +66,27 @@ function equalDaterange (cellValue: any, data: any, props: { [key: string]: any 
   return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat)
 }
 
-function getCellEditFilterProps (renderOpts: RenderOptions, params: TableRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
-  const { vSize } = params.$table
-  return XEUtils.assign(vSize ? { size: vSize } : {}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
+function getCellEditFilterProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderEditParams | VxeGlobalRendererHandles.RenderFilterParams, value: any, defaultProps?: { [prop: string]: any }) {
+  return XEUtils.assign({}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
-function getItemProps (renderOpts: RenderOptions, params: FormItemRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
-  const { vSize } = params.$form
-  return XEUtils.assign(vSize ? { size: vSize } : {}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
+function getItemProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: FormItemContentRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
+  return XEUtils.assign({}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
-function getNativeOns (renderOpts: RenderOptions, params: RenderParams) {
-  const { nativeEvents } = renderOpts
-  const nativeOns: { [type: string]: Function } = {}
-  XEUtils.objectEach(nativeEvents, (func: Function, key: string) => {
-    nativeOns[key] = function (...args: any[]) {
-      func(params, ...args)
-    }
-  })
-  return nativeOns
-}
-
-function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Function, changeFunc?: Function) {
+function getOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderParams, inputFunc?: Function, changeFunc?: Function) {
   const { events } = renderOpts
   const modelEvent = getModelEvent(renderOpts)
   const changeEvent = getChangeEvent(renderOpts)
   const isSameEvent = changeEvent === modelEvent
   const ons: { [type: string]: Function } = {}
   XEUtils.objectEach(events, (func: Function, key: string) => {
-    ons[key] = function (...args: any[]) {
+    ons[getOnName(key)] = function (...args: any[]) {
       func(params, ...args)
     }
   })
   if (inputFunc) {
-    ons[modelEvent] = function (targetEvnt: any) {
+    ons[getOnName(modelEvent)] = function (targetEvnt: any) {
       inputFunc(targetEvnt)
       if (events && events[modelEvent]) {
         events[modelEvent](params, targetEvnt)
@@ -109,7 +97,7 @@ function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Fu
     }
   }
   if (!isSameEvent && changeFunc) {
-    ons[changeEvent] = function (...args: any[]) {
+    ons[getOnName(changeEvent)] = function (...args: any[]) {
       changeFunc(...args)
       if (events && events[changeEvent]) {
         events[changeEvent](params, ...args)
@@ -119,7 +107,7 @@ function getOns (renderOpts: RenderOptions, params: RenderParams, inputFunc?: Fu
   return ons
 }
 
-function getEditOns (renderOpts: RenderOptions, params: ColumnEditRenderParams) {
+function getEditOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderEditParams) {
   const { $table, row, column } = params
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
@@ -130,14 +118,14 @@ function getEditOns (renderOpts: RenderOptions, params: ColumnEditRenderParams) 
   })
 }
 
-function getFilterOns (renderOpts: RenderOptions, params: ColumnFilterRenderParams, option: ColumnFilterParams, changeFunc: Function) {
+function getFilterOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderFilterParams, option: VxeTableDefines.FilterOption, changeFunc: Function) {
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
     option.data = value
   }, changeFunc)
 }
 
-function getItemOns (renderOpts: RenderOptions, params: FormItemRenderParams) {
+function getItemOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: FormItemContentRenderParams) {
   const { $form, data, property } = params
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
@@ -160,26 +148,24 @@ function matchCascaderData (index: number, list: any[], values: any[], labels: a
   }
 }
 
-function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: ColumnCellRenderParams) {
+function getSelectCellValue (renderOpts: VxeColumnPropTypes.EditRender, params: VxeGlobalRendererHandles.RenderCellParams) {
   const { options = [], optionGroups, props = {}, optionProps = {}, optionGroupProps = {} } = renderOpts
-  const { row, column } = params
+  const { $table, rowid, row, column } = params
   const { filterable, multiple } = props
-  const $table: any = params.$table
   const labelProp = optionProps.label || 'label'
   const valueProp = optionProps.value || 'value'
   const groupOptions = optionGroupProps.options || 'options'
   const cellValue = XEUtils.get(row, column.property)
   const colid = column.id
-  let rest: any
   let cellData: any
   if (filterable) {
-    const fullAllDataRowMap: Map<any, any> = $table.fullAllDataRowMap
-    const cacheCell = fullAllDataRowMap.has(row)
-    if (cacheCell) {
-      rest = fullAllDataRowMap.get(row)
+    const {internalData } = $table
+    const { fullAllDataRowIdData } = internalData
+    const rest: any = fullAllDataRowIdData[rowid]
+    if (rest) {
       cellData = rest.cellData
       if (!cellData) {
-        cellData = fullAllDataRowMap.get(row).cellData = {}
+        cellData = rest.cellData = {}
       }
     }
     if (rest && cellData[colid] && cellData[colid].value === cellValue) {
@@ -208,7 +194,7 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
   return null
 }
 
-function getCascaderCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams) {
+function getCascaderCellValue (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderCellParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const cellValue = XEUtils.get(row, column.property)
@@ -218,552 +204,223 @@ function getCascaderCellValue (renderOpts: RenderOptions, params: ColumnCellRend
   return (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `)
 }
 
-function getDatePickerCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams | ColumnExportCellRenderParams) {
+function getDatePickerCellValue (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderCellParams | VxeGlobalRendererHandles.ExportMethodParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const { rangeSeparator = '-' } = props
   let cellValue = XEUtils.get(row, column.property)
   switch (props.type) {
     case 'week':
-      cellValue = getFormatDate(cellValue, props, 'yyyywWW')
+      cellValue = getFormatDate(cellValue, props, 'YYYYwWW')
       break
     case 'month':
-      cellValue = getFormatDate(cellValue, props, 'yyyy-MM')
+      cellValue = getFormatDate(cellValue, props, 'YYYY-MM')
       break
     case 'year':
-      cellValue = getFormatDate(cellValue, props, 'yyyy')
+      cellValue = getFormatDate(cellValue, props, 'YYYY')
       break
     case 'dates':
-      cellValue = getFormatDates(cellValue, props, ', ', 'yyyy-MM-dd')
+      cellValue = getFormatDates(cellValue, props, ', ', 'YYYY-MM-DD')
       break
     case 'daterange':
-      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'yyyy-MM-dd')
+      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM-DD')
       break
     case 'datetimerange':
-      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'yyyy-MM-dd HH:ss:mm')
+      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM-DD HH:ss:mm')
       break
     case 'monthrange':
-      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'yyyy-MM')
+      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM')
       break
     default:
-      cellValue = getFormatDate(cellValue, props, 'yyyy-MM-dd')
+      cellValue = getFormatDate(cellValue, props, 'YYYY-MM-DD')
   }
   return cellValue
 }
 
-function getTimePickerCellValue (renderOpts: RenderOptions, params: ColumnCellRenderParams | ColumnEditRenderParams) {
+function getTimePickerCellValue (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderCellParams | VxeGlobalRendererHandles.RenderEditParams) {
   const { props = {} } = renderOpts
   const { row, column } = params
   const { isRange, format = 'hh:mm:ss', rangeSeparator = '-' } = props
   let cellValue = XEUtils.get(row, column.property)
   if (cellValue && isRange) {
-    cellValue = XEUtils.map(cellValue, (date) => XEUtils.toDateString(parseDate(date, props), format)).join(` ${rangeSeparator} `)
+    cellValue = XEUtils.map(cellValue, (date) => toDayDateString(parseDate(date, props), format)).join(` ${rangeSeparator} `)
   }
-  return XEUtils.toDateString(parseDate(cellValue, props), format)
+  return toDayDateString(parseDate(cellValue, props), format)
 }
 
 function createEditRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
+  return function (renderOpts: VxeColumnPropTypes.EditRender, params: VxeGlobalRendererHandles.RenderEditParams) {
     const { row, column } = params
-    const { attrs } = renderOpts
+    const { name, attrs } = renderOpts
     const cellValue = XEUtils.get(row, column.property)
     return [
-      h(renderOpts.name, {
-        attrs,
-        props: getCellEditFilterProps(renderOpts, params, cellValue, defaultProps),
-        on: getEditOns(renderOpts, params),
-        nativeOn: getNativeOns(renderOpts, params)
+      h(resolveComponent(name), {
+        ...attrs,
+        ...getCellEditFilterProps(renderOpts, params, cellValue, defaultProps),
+        ...getEditOns(renderOpts, params)
       })
     ]
   }
 }
 
-function defaultButtonEditRender (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
+function defaultButtonEditRender (renderOpts: VxeColumnPropTypes.EditRender, params: VxeGlobalRendererHandles.RenderEditParams) {
   const { attrs } = renderOpts
   return [
-    h('el-button', {
-      attrs,
-      props: getCellEditFilterProps(renderOpts, params, null),
-      on: getOns(renderOpts, params),
-      nativeOn: getNativeOns(renderOpts, params)
-    }, cellText(h, renderOpts.content))
+    h(resolveComponent('el-button'), {
+      ...attrs,
+      ...getCellEditFilterProps(renderOpts, params, null),
+      ...getOns(renderOpts, params)
+    }, cellText(renderOpts.content))
   ]
 }
 
-function defaultButtonsEditRender (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
-  return renderOpts.children.map((childRenderOpts: ColumnEditRenderOptions) => defaultButtonEditRender(h, childRenderOpts, params)[0])
+function defaultButtonsEditRender (renderOpts: VxeColumnPropTypes.EditRender, params: VxeGlobalRendererHandles.RenderEditParams) {
+  const { children } = renderOpts
+  if (children) {
+    return children.map((childRenderOpts: VxeColumnPropTypes.EditRender) => defaultButtonEditRender(childRenderOpts, params)[0])
+  }
+  return []
 }
 
 function createFilterRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
+  return function (renderOpts: VxeColumnPropTypes.FilterRender, params: VxeGlobalRendererHandles.RenderFilterParams) {
     const { column } = params
     const { name, attrs } = renderOpts
-    const nativeOn = getNativeOns(renderOpts, params)
     return [
       h('div', {
         class: 'vxe-table--filter-element-wrapper'
       }, column.filters.map((option, oIndex) => {
         const optionValue = option.data
-        return h(name, {
+        return h(resolveComponent(name), {
           key: oIndex,
-          attrs,
-          props: getCellEditFilterProps(renderOpts, params, optionValue, defaultProps),
-          on: getFilterOns(renderOpts, params, option, () => {
+          ...attrs,
+          ...getCellEditFilterProps(renderOpts, params, optionValue, defaultProps),
+          ...getFilterOns(renderOpts, params, option, () => {
             // 处理 change 事件相关逻辑
             handleConfirmFilter(params, !!option.data, option)
-          }),
-          nativeOn
+          })
         })
       }))
     ]
   }
 }
 
-function handleConfirmFilter (params: ColumnFilterRenderParams, checked: boolean, option: ColumnFilterParams) {
+function handleConfirmFilter (params: VxeGlobalRendererHandles.RenderFilterParams, checked: boolean, option: VxeTableDefines.FilterOption) {
   const { $panel } = params
-  $panel.changeOption({}, checked, option)
+  $panel.changeOption(null, checked, option)
 }
 
-function defaultFilterMethod (params: ColumnFilterMethodParams) {
+/**
+ * 模糊匹配
+ * @param params
+ */
+function defaultFuzzyFilterMethod (params: VxeGlobalRendererHandles.FilterMethodParams) {
   const { option, row, column } = params
   const { data } = option
-  const cellValue: string = XEUtils.get(row, column.property)
-  /* eslint-disable eqeqeq */
-  return cellValue == data
+  const cellValue = XEUtils.get(row, column.property)
+  return XEUtils.toString(cellValue).indexOf(data) > -1
 }
 
-function renderOptions (h: CreateElement, options: any[], optionProps: OptionProps) {
+/**
+ * 精确匹配
+ * @param params
+ */
+function defaultExactFilterMethod (params: VxeGlobalRendererHandles.FilterMethodParams) {
+  const { option, row, column } = params
+  const { data } = option
+  const cellValue = XEUtils.get(row, column.property)
+  /* eslint-disable eqeqeq */
+  return cellValue === data
+}
+
+function renderOptions (options: any[], optionProps: VxeGlobalRendererHandles.RenderOptionProps) {
   const labelProp = optionProps.label || 'label'
   const valueProp = optionProps.value || 'value'
   return XEUtils.map(options, (item, oIndex) => {
-    return h('el-option', {
+    return h(resolveComponent('el-option'), {
       key: oIndex,
-      props: {
-        value: item[valueProp],
-        label: item[labelProp],
-        disabled: item.disabled
-      }
+      value: item[valueProp],
+      label: item[labelProp],
+      disabled: item.disabled
     })
   })
 }
 
-function cellText (h: CreateElement, cellValue: any) {
+function cellText (cellValue: any): string[] {
   return ['' + (isEmptyValue(cellValue) ? '' : cellValue)]
 }
 
 function createFormItemRender (defaultProps?: { [key: string]: any }) {
-  return function (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
+  return function (renderOpts: FormItemRenderOptions, params: FormItemContentRenderParams) {
     const { data, property } = params
     const { name } = renderOpts
     const { attrs } = renderOpts
     const itemValue = XEUtils.get(data, property)
     return [
-      h(name, {
-        attrs,
-        props: getItemProps(renderOpts, params, itemValue, defaultProps),
-        on: getItemOns(renderOpts, params),
-        nativeOn: getNativeOns(renderOpts, params)
+      h(resolveComponent(name), {
+        ...attrs,
+        ...getItemProps(renderOpts, params, itemValue, defaultProps),
+        ...getItemOns(renderOpts, params)
       })
     ]
   }
 }
 
-function defaultButtonItemRender (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
+function defaultButtonItemRender (renderOpts: FormItemRenderOptions, params: FormItemContentRenderParams) {
   const { attrs } = renderOpts
   const props = getItemProps(renderOpts, params, null)
   return [
-    h('el-button', {
-      attrs,
-      props,
-      on: getOns(renderOpts, params),
-      nativeOn: getNativeOns(renderOpts, params)
-    }, cellText(h, renderOpts.content || props.content))
+    h(resolveComponent('el-button') as ComponentOptions, {
+      ...attrs,
+      ...props,
+      ...getOns(renderOpts, params)
+    }, {
+      default: () => cellText(renderOpts.content || props.content)
+    })
   ]
 }
 
-function defaultButtonsItemRender (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
-  return renderOpts.children.map((childRenderOpts: FormItemRenderOptions) => defaultButtonItemRender(h, childRenderOpts, params)[0])
+function defaultButtonsItemRender (renderOpts: FormItemRenderOptions, params: FormItemContentRenderParams) {
+  const { children } = renderOpts
+  if (children) {
+    return children.map((childRenderOpts: FormItemRenderOptions) => defaultButtonItemRender(childRenderOpts, params)[0])
+  }
+  return []
 }
 
 function createExportMethod (getExportCellValue: Function) {
-  return function (params: ColumnExportCellRenderParams) {
+  return function (params: VxeGlobalRendererHandles.ExportMethodParams) {
     const { row, column, options } = params
     return options && options.original ? XEUtils.get(row, column.property) : getExportCellValue(column.editRender || column.cellRender, params)
   }
 }
 
 function createFormItemRadioAndCheckboxRender () {
-  return function (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
+  return function (renderOpts: FormItemRenderOptions, params: FormItemContentRenderParams) {
     const { name, options = [], optionProps = {}, attrs } = renderOpts
     const { data, property } = params
     const labelProp = optionProps.label || 'label'
     const valueProp = optionProps.value || 'value'
     const itemValue = XEUtils.get(data, property)
     return [
-      h(`${name}Group`, {
-        attrs,
-        props: getItemProps(renderOpts, params, itemValue),
-        on: getItemOns(renderOpts, params),
-        nativeOn: getNativeOns(renderOpts, params)
-      }, options.map((option, oIndex) => {
-        return h(name, {
-          key: oIndex,
-          props: {
-            label: option[valueProp],
-            disabled: option.disabled
-          }
-        }, option[labelProp])
-      }))
+      h(resolveComponent(`${name}Group`) as ComponentOptions, {
+        ...attrs,
+        ...getItemProps(renderOpts, params, itemValue),
+        ...getItemOns(renderOpts, params)
+      }, {
+        default: () => {
+          return options.map((option, oIndex) => {
+            return h(resolveComponent(name) as ComponentOptions, {
+              key: oIndex,
+              label: option[valueProp],
+              disabled: option.disabled
+            }, {
+              default: () => cellText(option[labelProp])
+            })
+          })
+        }
+      })
     ]
-  }
-}
-
-/**
- * 渲染函数
- */
-const renderMap = {
-  ElAutocomplete: {
-    autofocus: 'input.el-input__inner',
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElInput: {
-    autofocus: 'input.el-input__inner',
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElInputNumber: {
-    autofocus: 'input.el-input__inner',
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElSelect: {
-    renderEdit (h: CreateElement, renderOpts: ColumnEditRenderOptions, params: ColumnEditRenderParams) {
-      const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
-      const { row, column } = params
-      const { attrs } = renderOpts
-      const cellValue = XEUtils.get(row, column.property)
-      const props = getCellEditFilterProps(renderOpts, params, cellValue)
-      const on = getEditOns(renderOpts, params)
-      const nativeOn = getNativeOns(renderOpts, params)
-      if (optionGroups) {
-        const groupOptions = optionGroupProps.options || 'options'
-        const groupLabel = optionGroupProps.label || 'label'
-        return [
-          h('el-select', {
-            attrs,
-            props,
-            on,
-            nativeOn
-          }, XEUtils.map(optionGroups, (group, gIndex) => {
-            return h('el-option-group', {
-              key: gIndex,
-              props: {
-                label: group[groupLabel]
-              }
-            }, renderOptions(h, group[groupOptions], optionProps))
-          }))
-        ]
-      }
-      return [
-        h('el-select', {
-          props,
-          attrs,
-          on,
-          nativeOn
-        }, renderOptions(h, options, optionProps))
-      ]
-    },
-    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
-      return cellText(h, getSelectCellValue(renderOpts, params))
-    },
-    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
-      const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
-      const groupOptions = optionGroupProps.options || 'options'
-      const groupLabel = optionGroupProps.label || 'label'
-      const { column } = params
-      const { attrs } = renderOpts
-      const nativeOn = getNativeOns(renderOpts, params)
-      return [
-        h('div', {
-          class: 'vxe-table--filter-element-wrapper'
-        }, optionGroups
-          ? column.filters.map((option, oIndex) => {
-            const optionValue = option.data
-            const props = getCellEditFilterProps(renderOpts, params, optionValue)
-            return h('el-select', {
-              key: oIndex,
-              attrs,
-              props,
-              on: getFilterOns(renderOpts, params, option, () => {
-              // 处理 change 事件相关逻辑
-                handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
-              }),
-              nativeOn
-            }, XEUtils.map(optionGroups, (group, gIndex) => {
-              return h('el-option-group', {
-                key: gIndex,
-                props: {
-                  label: group[groupLabel]
-                }
-              }, renderOptions(h, group[groupOptions], optionProps))
-            }))
-          })
-          : column.filters.map((option, oIndex) => {
-            const optionValue = option.data
-            const props = getCellEditFilterProps(renderOpts, params, optionValue)
-            return h('el-select', {
-              key: oIndex,
-              attrs,
-              props,
-              on: getFilterOns(renderOpts, params, option, () => {
-              // 处理 change 事件相关逻辑
-                handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
-              }),
-              nativeOn
-            }, renderOptions(h, options, optionProps))
-          }))
-      ]
-    },
-    filterMethod (params: ColumnFilterMethodParams) {
-      const { option, row, column } = params
-      const { data } = option
-      const { property, filterRender: renderOpts } = column
-      const { props = {} } = renderOpts
-      const cellValue = XEUtils.get(row, property)
-      if (props.multiple) {
-        if (XEUtils.isArray(cellValue)) {
-          return XEUtils.includeArrays(cellValue, data)
-        }
-        return data.indexOf(cellValue) > -1
-      }
-      /* eslint-disable eqeqeq */
-      return cellValue == data
-    },
-    renderItem (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
-      const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
-      const { data, property } = params
-      const { attrs } = renderOpts
-      const itemValue = XEUtils.get(data, property)
-      const props = getItemProps(renderOpts, params, itemValue)
-      const on = getItemOns(renderOpts, params)
-      const nativeOn = getNativeOns(renderOpts, params)
-      if (optionGroups) {
-        const groupOptions = optionGroupProps.options || 'options'
-        const groupLabel = optionGroupProps.label || 'label'
-        return [
-          h('el-select', {
-            attrs,
-            props,
-            on,
-            nativeOn
-          }, XEUtils.map(optionGroups, (group, gIndex) => {
-            return h('el-option-group', {
-              props: {
-                label: group[groupLabel]
-              },
-              key: gIndex
-            }, renderOptions(h, group[groupOptions], optionProps))
-          }))
-        ]
-      }
-      return [
-        h('el-select', {
-          attrs,
-          props,
-          on,
-          nativeOn
-        }, renderOptions(h, options, optionProps))
-      ]
-    },
-    renderItemContent (h: CreateElement, renderOpts: FormItemRenderOptions, params: FormItemRenderParams) {
-      const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
-      const { data, property } = params
-      const { attrs } = renderOpts
-      const itemValue = XEUtils.get(data, property)
-      const props = getItemProps(renderOpts, params, itemValue)
-      const on = getItemOns(renderOpts, params)
-      const nativeOn = getNativeOns(renderOpts, params)
-      if (optionGroups) {
-        const groupOptions = optionGroupProps.options || 'options'
-        const groupLabel = optionGroupProps.label || 'label'
-        return [
-          h('el-select', {
-            attrs,
-            props,
-            on,
-            nativeOn
-          }, XEUtils.map(optionGroups, (group, gIndex) => {
-            return h('el-option-group', {
-              props: {
-                label: group[groupLabel]
-              },
-              key: gIndex
-            }, renderOptions(h, group[groupOptions], optionProps))
-          }))
-        ]
-      }
-      return [
-        h('el-select', {
-          attrs,
-          props,
-          on,
-          nativeOn
-        }, renderOptions(h, options, optionProps))
-      ]
-    },
-    cellExportMethod: createExportMethod(getSelectCellValue)
-  },
-  ElCascader: {
-    renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
-      return cellText(h, getCascaderCellValue(renderOpts, params))
-    },
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender(),
-    cellExportMethod: createExportMethod(getCascaderCellValue)
-  },
-  ElDatePicker: {
-    renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
-      return cellText(h, getDatePickerCellValue(renderOpts, params))
-    },
-    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
-      const { column } = params
-      const { attrs } = renderOpts
-      const nativeOn = getNativeOns(renderOpts, params)
-      return [
-        h('div', {
-          class: 'vxe-table--filter-element-wrapper'
-        }, column.filters.map((option, oIndex) => {
-          const optionValue = option.data
-          return h(renderOpts.name, {
-            key: oIndex,
-            attrs,
-            props: getCellEditFilterProps(renderOpts, params, optionValue),
-            on: getFilterOns(renderOpts, params, option, () => {
-              // 处理 change 事件相关逻辑
-              handleConfirmFilter(params, !!option.data, option)
-            }),
-            nativeOn
-          })
-        }))
-      ]
-    },
-    filterMethod (params: ColumnFilterMethodParams) {
-      const { option, row, column } = params
-      const { data } = option
-      const { filterRender: renderOpts } = column
-      const { props = {} } = renderOpts
-      const cellValue = XEUtils.get(row, column.property)
-      if (data) {
-        switch (props.type) {
-          case 'daterange':
-            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd')
-          case 'datetimerange':
-            return equalDaterange(cellValue, data, props, 'yyyy-MM-dd HH:ss:mm')
-          case 'monthrange':
-            return equalDaterange(cellValue, data, props, 'yyyy-MM')
-          default:
-            return cellValue === data
-        }
-      }
-      return false
-    },
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender(),
-    cellExportMethod: createExportMethod(getDatePickerCellValue)
-  },
-  ElTimePicker: {
-    renderEdit: createEditRender(),
-    renderCell (h: CreateElement, renderOpts: ColumnCellRenderOptions, params: ColumnEditRenderParams) {
-      return [
-        getTimePickerCellValue(renderOpts, params)
-      ]
-    },
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender(),
-    cellExportMethod: createExportMethod(getTimePickerCellValue)
-  },
-  ElTimeSelect: {
-    renderEdit: createEditRender(),
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElRate: {
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElSwitch: {
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter (h: CreateElement, renderOpts: ColumnFilterRenderOptions, params: ColumnFilterRenderParams) {
-      const { column } = params
-      const { name, attrs } = renderOpts
-      const nativeOn = getNativeOns(renderOpts, params)
-      return [
-        h('div', {
-          class: 'vxe-table--filter-element-wrapper'
-        }, column.filters.map((option, oIndex) => {
-          const optionValue = option.data
-          return h(name, {
-            key: oIndex,
-            attrs,
-            props: getCellEditFilterProps(renderOpts, params, optionValue),
-            on: getFilterOns(renderOpts, params, option, () => {
-              // 处理 change 事件相关逻辑
-              handleConfirmFilter(params, XEUtils.isBoolean(option.data), option)
-            }),
-            nativeOn
-          })
-        }))
-      ]
-    },
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElSlider: {
-    renderDefault: createEditRender(),
-    renderEdit: createEditRender(),
-    renderFilter: createFilterRender(),
-    filterMethod: defaultFilterMethod,
-    renderItem: createFormItemRender(),
-    renderItemContent: createFormItemRender()
-  },
-  ElRadio: {
-    renderItem: createFormItemRadioAndCheckboxRender(),
-    renderItemContent: createFormItemRadioAndCheckboxRender()
-  },
-  ElCheckbox: {
-    renderItem: createFormItemRadioAndCheckboxRender(),
-    renderItemContent: createFormItemRadioAndCheckboxRender()
-  },
-  ElButton: {
-    renderDefault: defaultButtonEditRender,
-    renderItem: defaultButtonItemRender,
-    renderItemContent: defaultButtonItemRender
-  },
-  ElButtons: {
-    renderDefault: defaultButtonsEditRender,
-    renderItem: defaultButtonsItemRender,
-    renderItemContent: defaultButtonsItemRender
   }
 }
 
@@ -787,22 +444,22 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: InterceptorParams, e: any) {
+function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearFilterParams | VxeGlobalInterceptorHandles.InterceptorClearActivedParams | VxeGlobalInterceptorHandles.InterceptorClearAreasParams) {
+  const { $event } = params
   const bodyElem = document.body
-  const evnt = params.$event || e
   if (
     // 远程搜索
-    getEventTargetNode(evnt, bodyElem, 'el-autocomplete-suggestion').flag ||
+    getEventTargetNode($event, bodyElem, 'el-autocomplete-suggestion').flag ||
     // 下拉框
-    getEventTargetNode(evnt, bodyElem, 'el-select-dropdown').flag ||
+    getEventTargetNode($event, bodyElem, 'el-select-dropdown').flag ||
     // 级联
-    getEventTargetNode(evnt, bodyElem, 'el-cascader__dropdown').flag ||
-    getEventTargetNode(evnt, bodyElem, 'el-cascader-menus').flag ||
+    getEventTargetNode($event, bodyElem, 'el-cascader__dropdown').flag ||
+    getEventTargetNode($event, bodyElem, 'el-cascader-menus').flag ||
     // 日期
-    getEventTargetNode(evnt, bodyElem, 'el-time-panel').flag ||
-    getEventTargetNode(evnt, bodyElem, 'el-picker-panel').flag ||
+    getEventTargetNode($event, bodyElem, 'el-time-panel').flag ||
+    getEventTargetNode($event, bodyElem, 'el-picker-panel').flag ||
     // 颜色
-    getEventTargetNode(evnt, bodyElem, 'el-color-dropdown').flag
+    getEventTargetNode($event, bodyElem, 'el-color-dropdown').flag
   ) {
     return false
   }
@@ -813,9 +470,310 @@ function handleClearEvent (params: InterceptorParams, e: any) {
  */
 export const VXETablePluginElement = {
   install ({ interceptor, renderer }: typeof VXETable) {
-    renderer.mixin(renderMap)
+    renderer.mixin({
+      ElAutocomplete: {
+        autofocus: 'input.el-input__inner',
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter: createFilterRender(),
+        filterMethod: defaultExactFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElInput: {
+        autofocus: 'input.el-input__inner',
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter: createFilterRender(),
+        filterMethod: defaultFuzzyFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElInputNumber: {
+        autofocus: 'input.el-input__inner',
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter: createFilterRender(),
+        filterMethod: defaultFuzzyFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElSelect: {
+        renderEdit (renderOpts, params) {
+          const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
+          const { row, column } = params
+          const { attrs } = renderOpts
+          const cellValue = XEUtils.get(row, column.property)
+          const props = getCellEditFilterProps(renderOpts, params, cellValue)
+          const ons = getEditOns(renderOpts, params)
+          if (optionGroups) {
+            const groupOptions = optionGroupProps.options || 'options'
+            const groupLabel = optionGroupProps.label || 'label'
+            return [
+              h(resolveComponent('el-select') as ComponentOptions, {
+                ...attrs,
+                ...props,
+                ...ons
+              }, {
+                default: () => {
+                  return XEUtils.map(optionGroups, (group, gIndex) => {
+                    return h(resolveComponent('el-option-group') as ComponentOptions, {
+                      key: gIndex,
+                      label: group[groupLabel]
+                    }, {
+                      default: () => renderOptions(group[groupOptions], optionProps)
+                    })
+                  })
+                }
+              })
+            ]
+          }
+          return [
+            h(resolveComponent('el-select') as ComponentOptions, {
+              ...props,
+              ...attrs,
+              ...ons
+            }, {
+              default: () => renderOptions(options, optionProps)
+            })
+          ]
+        },
+        renderCell (renderOpts, params) {
+          return cellText(getSelectCellValue(renderOpts, params))
+        },
+        renderFilter (renderOpts, params) {
+          const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
+          const groupOptions = optionGroupProps.options || 'options'
+          const groupLabel = optionGroupProps.label || 'label'
+          const { column } = params
+          const { attrs } = renderOpts
+          return [
+            h('div', {
+              class: 'vxe-table--filter-element-wrapper'
+            }, optionGroups
+              ? column.filters.map((option, oIndex) => {
+                const optionValue = option.data
+                const props = getCellEditFilterProps(renderOpts, params, optionValue)
+                return h(resolveComponent('el-select') as ComponentOptions, {
+                  key: oIndex,
+                  ...attrs,
+                  ...props,
+                  ...getFilterOns(renderOpts, params, option, () => {
+                  // 处理 change 事件相关逻辑
+                    handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
+                  })
+                }, {
+                  default: () => {
+                    return XEUtils.map(optionGroups, (group, gIndex) => {
+                      return h(resolveComponent('el-option-group') as ComponentOptions, {
+                        key: gIndex,
+                        label: group[groupLabel]
+                      }, {
+                        default: () => renderOptions(group[groupOptions], optionProps)
+                      })
+                    })
+                  }
+                })
+              })
+              : column.filters.map((option, oIndex) => {
+                const optionValue = option.data
+                const props = getCellEditFilterProps(renderOpts, params, optionValue)
+                return h(resolveComponent('el-select') as ComponentOptions, {
+                  key: oIndex,
+                  ...attrs,
+                  ...props,
+                  ...getFilterOns(renderOpts, params, option, () => {
+                    // 处理 change 事件相关逻辑
+                    handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
+                  })
+                }, {
+                  default: () => renderOptions(options, optionProps)
+                })
+              }))
+          ]
+        },
+        filterMethod (params) {
+          const { option, row, column } = params
+          const { data } = option
+          const { property, filterRender: renderOpts } = column
+          const { props = {} } = renderOpts
+          const cellValue = XEUtils.get(row, property)
+          if (props.multiple) {
+            if (XEUtils.isArray(cellValue)) {
+              return XEUtils.includeArrays(cellValue, data)
+            }
+            return data.indexOf(cellValue) > -1
+          }
+          /* eslint-disable eqeqeq */
+          return cellValue == data
+        },
+        renderItemContent (renderOpts, params) {
+          const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
+          const { data, property } = params
+          const { attrs } = renderOpts
+          const itemValue = XEUtils.get(data, property)
+          const props = getItemProps(renderOpts, params, itemValue)
+          const ons = getItemOns(renderOpts, params)
+          if (optionGroups) {
+            const groupOptions = optionGroupProps.options || 'options'
+            const groupLabel = optionGroupProps.label || 'label'
+            return [
+              h(resolveComponent('el-select') as ComponentOptions, {
+                ...attrs,
+                ...props,
+                ...ons
+              }, {
+                default: () => {
+                  return XEUtils.map(optionGroups, (group, gIndex) => {
+                    return h(resolveComponent('el-option-group') as ComponentOptions, {
+                      label: group[groupLabel],
+                      key: gIndex
+                    }, {
+                      default: () => renderOptions(group[groupOptions], optionProps)
+                    })
+                  })
+                }
+              })
+            ]
+          }
+          return [
+            h(resolveComponent('el-select') as ComponentOptions, {
+              ...attrs,
+              ...props,
+              ...ons
+            }, {
+              default: () => renderOptions(options, optionProps)
+            })
+          ]
+        },
+        exportMethod: createExportMethod(getSelectCellValue)
+      },
+      ElCascader: {
+        renderEdit: createEditRender(),
+        renderCell (renderOpts, params) {
+          return cellText(getCascaderCellValue(renderOpts, params))
+        },
+        renderItemContent: createFormItemRender(),
+        exportMethod: createExportMethod(getCascaderCellValue)
+      },
+      ElDatePicker: {
+        renderEdit: createEditRender(),
+        renderCell (renderOpts, params) {
+          return cellText(getDatePickerCellValue(renderOpts, params))
+        },
+        renderFilter (renderOpts, params) {
+          const { column } = params
+          const { name, attrs } = renderOpts
+          return [
+            h('div', {
+              class: 'vxe-table--filter-element-wrapper'
+            }, column.filters.map((option, oIndex) => {
+              const optionValue = option.data
+              return h(resolveComponent(name), {
+                key: oIndex,
+                ...attrs,
+                ...getCellEditFilterProps(renderOpts, params, optionValue),
+                ...getFilterOns(renderOpts, params, option, () => {
+                  // 处理 change 事件相关逻辑
+                  handleConfirmFilter(params, !!option.data, option)
+                })
+              })
+            }))
+          ]
+        },
+        filterMethod (params) {
+          const { option, row, column } = params
+          const { data } = option
+          const { filterRender: renderOpts } = column
+          const { props = {} } = renderOpts
+          const cellValue = XEUtils.get(row, column.property)
+          if (data) {
+            switch (props.type) {
+              case 'daterange':
+                return equalDaterange(cellValue, data, props, 'YYYY-MM-DD')
+              case 'datetimerange':
+                return equalDaterange(cellValue, data, props, 'YYYY-MM-DD HH:ss:mm')
+              case 'monthrange':
+                return equalDaterange(cellValue, data, props, 'YYYY-MM')
+              default:
+                return cellValue === data
+            }
+          }
+          return false
+        },
+        renderItemContent: createFormItemRender(),
+        exportMethod: createExportMethod(getDatePickerCellValue)
+      },
+      ElTimePicker: {
+        renderEdit: createEditRender(),
+        renderCell (renderOpts, params) {
+          return [
+            getTimePickerCellValue(renderOpts, params)
+          ]
+        },
+        renderItemContent: createFormItemRender(),
+        exportMethod: createExportMethod(getTimePickerCellValue)
+      },
+      ElTimeSelect: {
+        renderEdit: createEditRender(),
+        renderItemContent: createFormItemRender()
+      },
+      ElRate: {
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter: createFilterRender(),
+        filterMethod: defaultExactFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElSwitch: {
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter (renderOpts, params) {
+          const { column } = params
+          const { name, attrs } = renderOpts
+          return [
+            h('div', {
+              class: 'vxe-table--filter-element-wrapper'
+            }, column.filters.map((option, oIndex) => {
+              const optionValue = option.data
+              return h(resolveComponent(name), {
+                key: oIndex,
+                ...attrs,
+                ...getCellEditFilterProps(renderOpts, params, optionValue),
+                ...getFilterOns(renderOpts, params, option, () => {
+                  // 处理 change 事件相关逻辑
+                  handleConfirmFilter(params, XEUtils.isBoolean(option.data), option)
+                })
+              })
+            }))
+          ]
+        },
+        filterMethod: defaultExactFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElSlider: {
+        renderDefault: createEditRender(),
+        renderEdit: createEditRender(),
+        renderFilter: createFilterRender(),
+        filterMethod: defaultExactFilterMethod,
+        renderItemContent: createFormItemRender()
+      },
+      ElRadio: {
+        renderItemContent: createFormItemRadioAndCheckboxRender()
+      },
+      ElCheckbox: {
+        renderItemContent: createFormItemRadioAndCheckboxRender()
+      },
+      ElButton: {
+        renderDefault: defaultButtonEditRender,
+        renderItemContent: defaultButtonItemRender
+      },
+      ElButtons: {
+        renderDefault: defaultButtonsEditRender,
+        renderItemContent: defaultButtonsItemRender
+      }
+    })
+
     interceptor.add('event.clearFilter', handleClearEvent)
     interceptor.add('event.clearActived', handleClearEvent)
+    interceptor.add('event.clearAreas', handleClearEvent)
   }
 }
 
