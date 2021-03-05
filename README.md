@@ -1,24 +1,24 @@
 # vxe-table-plugin-element
 
-[![gitee star](https://gitee.com/xuliangzhan_admin/vxe-table-plugin-element/badge/star.svg?theme=dark)](https://gitee.com/xuliangzhan_admin/vxe-table-plugin-element/stargazers)
+[![gitee star](https://gitee.com/x-extends/vxe-table-plugin-element/badge/star.svg?theme=dark)](https://gitee.com/x-extends/vxe-table-plugin-element/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-table-plugin-element.svg?style=flat-square)](https://www.npmjs.com/package/vxe-table-plugin-element)
 [![npm downloads](https://img.shields.io/npm/dm/vxe-table-plugin-element.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vxe-table-plugin-element)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-ui](https://github.com/ElemeFE/element) 组件库
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-plus](https://github.com/element-plus/element-plus) 组件库
 
 ## Installing
 
 ```shell
-npm install xe-utils vxe-table vxe-table-plugin-element element-ui
+npm install xe-utils vxe-table@next vxe-table-plugin-element@next element-plus@next
 ```
 
 ```javascript
-// ... 省略无关代码
+// ...
 import VXETable from 'vxe-table'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
-// ... 省略无关代码
+// ...
 
 VXETable.use(VXETablePluginElement)
 ```
