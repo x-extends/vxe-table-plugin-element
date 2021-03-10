@@ -5,7 +5,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/vxe-table-plugin-element.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vxe-table-plugin-element)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-plus](https://github.com/element-plus/element-plus) 组件库
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-ui](https://github.com/element-plus/element-ui)、[element-plus](https://github.com/element-plus/element-plus) 组件库
 
 ## Installing
 
