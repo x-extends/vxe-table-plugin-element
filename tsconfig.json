@@ -1,7 +1,6 @@
 {
   "files": [
-    "index.ts",
-    "depend.ts"
+    "index.ts"
   ],
   "compilerOptions": {
     "strict": true,
