@@ -1,5 +1,5 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
-import XEUtils from 'xe-utils/ctor'
+import XEUtils from 'xe-utils'
 import {
   VXETableCore,
   VxeTableDefines,
