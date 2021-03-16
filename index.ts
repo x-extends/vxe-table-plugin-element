@@ -1,14 +1,6 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import {
-  VXETableCore,
-  VxeTableDefines,
-  VxeColumnPropTypes,
-  VxeGlobalRendererHandles,
-  VxeGlobalInterceptorHandles,
-  FormItemRenderOptions,
-  FormItemContentRenderParams
-} from 'vxe-table/lib/vxe-table'
+import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemRenderOptions, FormItemContentRenderParams } from 'vxe-table'
 import dayjs from 'dayjs'
 
 function isEmptyValue (cellValue: any) {
