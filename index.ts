@@ -66,6 +66,23 @@ function getItemProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, param
   return XEUtils.assign({}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
+function formatText (cellValue: any) {
+  return '' + (isEmptyValue(cellValue) ? '' : cellValue)
+}
+
+function getCellLabelVNs (renderOpts: VxeColumnPropTypes.EditRender, params: VxeGlobalRendererHandles.RenderCellParams, cellLabel: any) {
+  const { placeholder } = renderOpts
+  return [
+    h('span', {
+      class: 'vxe-cell--label'
+    }, isEmptyValue(cellLabel) ? [
+      h('span', {
+        class: 'vxe-cell--placeholder'
+      }, formatText(placeholder))
+    ] : formatText(cellLabel))
+  ]
+}
+
 function getOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderParams, inputFunc?: Function, changeFunc?: Function) {
   const { events } = renderOpts
   const modelEvent = getModelEvent(renderOpts)
@@ -183,7 +200,7 @@ function getSelectCellValue (renderOpts: VxeColumnPropTypes.EditRender, params: 
     }
     return selectlabel
   }
-  return null
+  return ''
 }
 
 function getCascaderCellValue (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderCellParams) {
@@ -339,7 +356,7 @@ function renderOptions (options: any[], optionProps: VxeGlobalRendererHandles.Re
 }
 
 function cellText (cellValue: any): string[] {
-  return ['' + (isEmptyValue(cellValue) ? '' : cellValue)]
+  return [formatText(cellValue)]
 }
 
 function createFormItemRender (defaultProps?: { [key: string]: any }) {
@@ -530,7 +547,7 @@ export const VXETablePluginElement = {
           ]
         },
         renderCell (renderOpts, params) {
-          return cellText(getSelectCellValue(renderOpts, params))
+          return getCellLabelVNs(renderOpts, params, getSelectCellValue(renderOpts, params))
         },
         renderFilter (renderOpts, params) {
           const { options = [], optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
@@ -642,7 +659,7 @@ export const VXETablePluginElement = {
       ElCascader: {
         renderEdit: createEditRender(),
         renderCell (renderOpts, params) {
-          return cellText(getCascaderCellValue(renderOpts, params))
+          return getCellLabelVNs(renderOpts, params, getCascaderCellValue(renderOpts, params))
         },
         renderItemContent: createFormItemRender(),
         exportMethod: createExportMethod(getCascaderCellValue)
@@ -650,7 +667,7 @@ export const VXETablePluginElement = {
       ElDatePicker: {
         renderEdit: createEditRender(),
         renderCell (renderOpts, params) {
-          return cellText(getDatePickerCellValue(renderOpts, params))
+          return getCellLabelVNs(renderOpts, params, getDatePickerCellValue(renderOpts, params))
         },
         renderFilter (renderOpts, params) {
           const { column } = params
@@ -698,9 +715,7 @@ export const VXETablePluginElement = {
       ElTimePicker: {
         renderEdit: createEditRender(),
         renderCell (renderOpts, params) {
-          return [
-            getTimePickerCellValue(renderOpts, params)
-          ]
+          return getCellLabelVNs(renderOpts, params, getTimePickerCellValue(renderOpts, params))
         },
         renderItemContent: createFormItemRender(),
         exportMethod: createExportMethod(getTimePickerCellValue)
