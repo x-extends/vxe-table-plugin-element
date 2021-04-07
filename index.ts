@@ -3,6 +3,8 @@ import XEUtils from 'xe-utils'
 import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemRenderOptions, FormItemContentRenderParams } from 'vxe-table'
 import dayjs from 'dayjs'
 
+let vxetable: VXETableCore
+
 function isEmptyValue (cellValue: any) {
   return cellValue === null || cellValue === undefined || cellValue === ''
 }
@@ -75,10 +77,10 @@ function getCellLabelVNs (renderOpts: VxeColumnPropTypes.EditRender, params: Vxe
   return [
     h('span', {
       class: 'vxe-cell--label'
-    }, isEmptyValue(cellLabel) ? [
+    }, placeholder && isEmptyValue(cellLabel) ? [
       h('span', {
         class: 'vxe-cell--placeholder'
-      }, formatText(placeholder))
+      }, formatText(vxetable._t(placeholder)))
     ] : formatText(cellLabel))
   ]
 }
@@ -481,6 +483,8 @@ export const VXETablePluginElement = {
   install (vxetablecore: VXETableCore) {
     const { interceptor, renderer } = vxetablecore
 
+    vxetable = vxetablecore
+
     renderer.mixin({
       ElAutocomplete: {
         autofocus: 'input.el-input__inner',
@@ -786,7 +790,7 @@ export const VXETablePluginElement = {
   }
 }
 
-if (typeof window !== 'undefined' && window.VXETable) {
+if (typeof window !== 'undefined' && window.VXETable && window.VXETable.use) {
   window.VXETable.use(VXETablePluginElement)
 }
 
