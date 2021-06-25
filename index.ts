@@ -346,7 +346,7 @@ function defaultFuzzyFilterMethod (params: ColumnFilterMethodParams) {
   const { option, row, column } = params
   const { data } = option
   const cellValue = XEUtils.get(row, column.property)
-  return XEUtils.toString(cellValue).indexOf(data) > -1
+  return XEUtils.toValueString(cellValue).indexOf(data) > -1
 }
 
 /**
