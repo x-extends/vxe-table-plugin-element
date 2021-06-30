@@ -82,11 +82,13 @@ function getCellLabelVNs (h: CreateElement, renderOpts: ColumnEditRenderOptions,
   return [
     h('span', {
       class: 'vxe-cell--label'
-    }, placeholder && isEmptyValue(cellLabel) ? [
-      h('span', {
-        class: 'vxe-cell--placeholder'
-      }, formatText(placeholder))
-    ] : formatText(cellLabel))
+    }, placeholder && isEmptyValue(cellLabel)
+      ? [
+          h('span', {
+            class: 'vxe-cell--placeholder'
+          }, formatText(placeholder))
+        ]
+      : formatText(cellLabel))
   ]
 }
 
@@ -201,19 +203,21 @@ function getSelectCellValue (renderOpts: ColumnCellRenderOptions, params: Column
     }
   }
   if (!isEmptyValue(cellValue)) {
-    const selectlabel = XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups ? (value) => {
-      let selectItem: any
-      for (let index = 0; index < optionGroups.length; index++) {
-        selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
-        if (selectItem) {
-          break
+    const selectlabel = XEUtils.map(props.multiple ? cellValue : [cellValue], optionGroups
+      ? (value) => {
+          let selectItem: any
+          for (let index = 0; index < optionGroups.length; index++) {
+            selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
+            if (selectItem) {
+              break
+            }
+          }
+          return selectItem ? selectItem[labelProp] : value
         }
-      }
-      return selectItem ? selectItem[labelProp] : value
-    } : (value) => {
-      const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
-      return selectItem ? selectItem[labelProp] : value
-    }).join(', ')
+      : (value) => {
+          const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
+          return selectItem ? selectItem[labelProp] : value
+        }).join(', ')
     if (cellData && options && options.length) {
       cellData[colid] = { value: cellValue, label: selectlabel }
     }
@@ -573,26 +577,26 @@ export const VXETablePluginElement = {
               class: 'vxe-table--filter-element-wrapper'
             }, optionGroups
               ? column.filters.map((option, oIndex) => {
-                const optionValue = option.data
-                const props = getCellEditFilterProps(renderOpts, params, optionValue)
-                return h('el-select', {
-                  key: oIndex,
-                  attrs,
-                  props,
-                  on: getFilterOns(renderOpts, params, option, () => {
-                  // 处理 change 事件相关逻辑
-                    handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
-                  }),
-                  nativeOn
-                }, XEUtils.map(optionGroups, (group, gIndex) => {
-                  return h('el-option-group', {
-                    key: gIndex,
-                    props: {
-                      label: group[groupLabel]
-                    }
-                  }, renderOptions(h, group[groupOptions], optionProps))
-                }))
-              })
+                  const optionValue = option.data
+                  const props = getCellEditFilterProps(renderOpts, params, optionValue)
+                  return h('el-select', {
+                    key: oIndex,
+                    attrs,
+                    props,
+                    on: getFilterOns(renderOpts, params, option, () => {
+                      // 处理 change 事件相关逻辑
+                      handleConfirmFilter(params, props.multiple ? (option.data && option.data.length > 0) : !XEUtils.eqNull(option.data), option)
+                    }),
+                    nativeOn
+                  }, XEUtils.map(optionGroups, (group, gIndex) => {
+                    return h('el-option-group', {
+                      key: gIndex,
+                      props: {
+                        label: group[groupLabel]
+                      }
+                    }, renderOptions(h, group[groupOptions], optionProps))
+                  }))
+                })
               : column.filters.map((option, oIndex) => {
                 const optionValue = option.data
                 const props = getCellEditFilterProps(renderOpts, params, optionValue)
