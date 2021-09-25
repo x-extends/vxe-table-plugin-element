@@ -77,11 +77,13 @@ function getCellLabelVNs (renderOpts: VxeColumnPropTypes.EditRender, params: Vxe
   return [
     h('span', {
       class: 'vxe-cell--label'
-    }, placeholder && isEmptyValue(cellLabel) ? [
-      h('span', {
-        class: 'vxe-cell--placeholder'
-      }, formatText(vxetable._t(placeholder)))
-    ] : formatText(cellLabel))
+    }, placeholder && isEmptyValue(cellLabel)
+      ? [
+          h('span', {
+            class: 'vxe-cell--placeholder'
+          }, formatText(vxetable._t(placeholder)))
+        ]
+      : formatText(cellLabel))
   ]
 }
 
@@ -170,7 +172,7 @@ function getSelectCellValue (renderOpts: VxeColumnPropTypes.EditRender, params: 
   const colid = column.id
   let cellData: any
   if (filterable) {
-    const {internalData } = $table
+    const { internalData } = $table
     const { fullAllDataRowIdData } = internalData
     const rest: any = fullAllDataRowIdData[rowid]
     if (rest) {
@@ -184,19 +186,21 @@ function getSelectCellValue (renderOpts: VxeColumnPropTypes.EditRender, params: 
     }
   }
   if (!isEmptyValue(cellValue)) {
-    const selectlabel = XEUtils.map(multiple ? cellValue : [cellValue], optionGroups ? (value) => {
-      let selectItem: any
-      for (let index = 0; index < optionGroups.length; index++) {
-        selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
-        if (selectItem) {
-          break
+    const selectlabel = XEUtils.map(multiple ? cellValue : [cellValue], optionGroups
+      ? (value) => {
+          let selectItem: any
+          for (let index = 0; index < optionGroups.length; index++) {
+            selectItem = XEUtils.find(optionGroups[index][groupOptions], (item) => item[valueProp] === value)
+            if (selectItem) {
+              break
+            }
+          }
+          return selectItem ? selectItem[labelProp] : value
         }
-      }
-      return selectItem ? selectItem[labelProp] : value
-    } : (value) => {
-      const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
-      return selectItem ? selectItem[labelProp] : value
-    }).join(', ')
+      : (value) => {
+          const selectItem = XEUtils.find(options, (item) => item[valueProp] === value)
+          return selectItem ? selectItem[labelProp] : value
+        }).join(', ')
     if (cellData && options && options.length) {
       cellData[colid] = { value: cellValue, label: selectlabel }
     }
