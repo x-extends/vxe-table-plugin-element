@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "基于 vxe-table 表格的适配插件，用于兼容 element-plus 组件库",
   "scripts": {
     "lib": "gulp build"
@@ -50,11 +50,11 @@
     "prettier": "^2.1.2",
     "typescript": "^4.0.5",
     "vue": "^3.2.14",
-    "vxe-table": "^4.0.28",
-    "xe-utils": "^3.3.3"
+    "vxe-table": "^4.0.30",
+    "xe-utils": "^3.4.0"
   },
   "peerDependencies": {
-    "vxe-table": "^4.0.20"
+    "vxe-table": "^4.0.30"
   },
   "repository": {
     "type": "git",
