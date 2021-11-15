@@ -88,15 +88,21 @@ VXETable.use(VXETablePluginElement)
   height="600"
   :data="tableData"
   :edit-config="{trigger: 'click', mode: 'cell'}">
-  <vxe-column field="name" title="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-column>
-  <vxe-column field="age" title="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></vxe-column>
-  <vxe-column field="sex" title="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></vxe-column>
-  <vxe-column field="region" title="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></vxe-column>
-  <vxe-column field="date" title="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-column>
-  <vxe-column field="date1" title="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></vxe-column>
-  <vxe-column field="date2" title="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></vxe-column>
-  <vxe-column field="rate" title="ElRate" width="200" :edit-render="{name: 'ElRate', type: 'visible'}"></vxe-column>
-  <vxe-column field="flag" title="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-column>
+  <vxe-column field="name" title="Name" :edit-render="{}">
+    <template #edit="{ row }">
+      <el-input v-model="row.name"></el-input>
+    </template>
+  </vxe-column>
+  <vxe-column field="age" title="Age" :edit-render="{}">
+    <template #edit="{ row }">
+      <el-input-number v-model="row.age"></el-input-number>
+    </template>
+  </vxe-column>
+  <vxe-column field="date" title="Date" width="200" :edit-render="{}">
+    <template #edit="{ row }">
+      <el-date-picker v-model="row.date" type="date"></el-date-picker>
+    </template>
+  </vxe-column>
 </vxe-table>
 ```
 
@@ -105,17 +111,9 @@ export default {
   data () {
     return {
       tableData: [
-        { id: 100, name: 'test0', age: 28, sex: '1', region: ['shenzhen'], date: null, date1: null, date2: null, rate: 2, flag: true },
-        { id: 101, name: 'test1', age: 32, sex: '0', region: ['guangzhou'], date: null, date1: null, date2: null, rate: 2, flag: true },
-        { id: 102, name: 'test2', age: 36, sex: '1', region: ['shenzhen'], date: null, date1: null, date2: null, rate: 2, flag: true }
-      ],
-      sexList: [
-        { label: '男', value: '1' },
-        { label: '女', value: '0' }
-      ],
-      regionList: [
-        { label: '深圳', value: 'shenzhen' },
-        { label: '广州', value: 'guangzhou' }
+        { id: 100, name: 'test0', age: 28, sex: '1', date: null },
+        { id: 101, name: 'test1', age: 32, sex: '0', date: null },
+        { id: 102, name: 'test2', age: 36, sex: '1', date: null }
       ]
     }
   }
@@ -126,18 +124,23 @@ export default {
 
 ```html
 <vxe-table
-  border
   height="600"
   :data="tableData">
   <vxe-column field="name" title="Name"></vxe-column>
   <vxe-column field="age" title="Age"></vxe-column>
-  <vxe-column field="date" title="Date" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange'}}"></vxe-column>
+  <vxe-column field="date" title="Date" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange'}}">
+    <template #filter="{ $panel, column }">
+      <el-input type="type" v-for="(option, index) in column.filters" :key="index" v-model="option.data" @input="$panel.changeOption($event, !!option.data, option)"></el-input>
+    </template>
+  </vxe-column>
 </vxe-table>
 ```
 
 ```javascript
-export default {
-  data () {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup () {
     return {
       tableData: [
         { id: 100, name: 'test0', age: 28, date: null },
@@ -146,7 +149,7 @@ export default {
       ]
     }
   }
-}
+})
 ```
 
 ## License
