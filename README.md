@@ -10,7 +10,7 @@
 ## Installing
 
 ```shell
-npm install xe-utils vxe-table vxe-table-plugin-element element-ui
+npm install xe-utils vxe-table@3 vxe-table-plugin-element@1 element-ui
 ```
 
 ```javascript
