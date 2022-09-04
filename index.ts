@@ -269,7 +269,7 @@ function createEditRender (defaultProps?: { [key: string]: any }) {
     const { name, attrs } = renderOpts
     const cellValue = XEUtils.get(row, column.property)
     return [
-      h(resolveComponent(name), {
+      h(resolveComponent(name!), {
         ...attrs,
         ...getCellEditFilterProps(renderOpts, params, cellValue, defaultProps),
         ...getEditOns(renderOpts, params)
@@ -306,7 +306,7 @@ function createFilterRender (defaultProps?: { [key: string]: any }) {
         class: 'vxe-table--filter-element-wrapper'
       }, column.filters.map((option, oIndex) => {
         const optionValue = option.data
-        return h(resolveComponent(name), {
+        return h(resolveComponent(name!), {
           key: oIndex,
           ...attrs,
           ...getCellEditFilterProps(renderOpts, params, optionValue, defaultProps),
@@ -372,7 +372,7 @@ function createFormItemRender (defaultProps?: { [key: string]: any }) {
     const { attrs } = renderOpts
     const itemValue = XEUtils.get(data, property)
     return [
-      h(resolveComponent(name), {
+      h(resolveComponent(name!), {
         ...attrs,
         ...getItemProps(renderOpts, params, itemValue, defaultProps),
         ...getItemOns(renderOpts, params)
@@ -425,7 +425,7 @@ function createFormItemRadioAndCheckboxRender () {
       }, {
         default: () => {
           return options.map((option, oIndex) => {
-            return h(resolveComponent(name) as ComponentOptions, {
+            return h(resolveComponent(name!) as ComponentOptions, {
               key: oIndex,
               label: option[valueProp],
               disabled: option.disabled
@@ -691,7 +691,7 @@ export const VXETablePluginElement = {
               class: 'vxe-table--filter-element-wrapper'
             }, column.filters.map((option, oIndex) => {
               const optionValue = option.data
-              return h(resolveComponent(name), {
+              return h(resolveComponent(name!), {
                 key: oIndex,
                 ...attrs,
                 ...getCellEditFilterProps(renderOpts, params, optionValue),
@@ -756,7 +756,7 @@ export const VXETablePluginElement = {
               class: 'vxe-table--filter-element-wrapper'
             }, column.filters.map((option, oIndex) => {
               const optionValue = option.data
-              return h(resolveComponent(name), {
+              return h(resolveComponent(name!), {
                 key: oIndex,
                 ...attrs,
                 ...getCellEditFilterProps(renderOpts, params, optionValue),
