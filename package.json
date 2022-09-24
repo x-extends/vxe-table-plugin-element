@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-element",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "基于 vxe-table 表格的适配插件，用于兼容 element-plus 组件库",
   "scripts": {
     "lib": "gulp build"
@@ -23,7 +23,7 @@
     "@babel/runtime": "^7.12.5",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
-    "dayjs": "^1.10.4",
+    "dayjs": "^1.11.5",
     "del": "^6.0.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
@@ -36,25 +36,26 @@
     "eslint-plugin-standard": "^4.0.2",
     "eslint-plugin-typescript": "^0.14.0",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^7.0.1",
+    "gulp-autoprefixer": "^8.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
-    "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-replace": "^1.1.3",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "markdown-doctest": "^1.1.0",
     "prettier": "^2.1.2",
-    "typescript": "^4.0.5",
-    "vue": "^3.2.14",
-    "vxe-table": "^4.0.30",
-    "xe-utils": "^3.4.0"
+    "sass": "^1.55.0",
+    "typescript": "^4.6.4",
+    "vue": "^3.2.39",
+    "vxe-table": "^4.3.5",
+    "xe-utils": "^3.5.6"
   },
   "peerDependencies": {
-    "vxe-table": "^4.0.30"
+    "vxe-table": "^4.2.0"
   },
   "repository": {
     "type": "git",
