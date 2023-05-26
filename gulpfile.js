@@ -3,7 +3,7 @@ const del = require('del')
 const uglify = require('gulp-uglify')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
-const replace = require('gulp-replace')
+// const replace = require('gulp-replace')
 const dartSass = require('sass')
 const gulpSass = require('gulp-sass')
 const sass = gulpSass(dartSass)
@@ -56,10 +56,10 @@ gulp.task('build_umd', function () {
       plugins: [['@babel/transform-modules-umd', {
         globals: {
           [pack.name]: exportModuleName,
-          'vue': 'Vue',
+          vue: 'Vue',
           'vxe-table': 'VXETable',
           'xe-utils': 'XEUtils',
-          'dayjs': 'dayjs'
+          dayjs: 'dayjs'
         },
         exactGlobals: true
       }]]

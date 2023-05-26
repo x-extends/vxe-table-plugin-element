@@ -7,6 +7,10 @@
 
 基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 表格的适配插件，用于兼容 [element-plus](https://github.com/element-plus/element-plus) 组件库
 
+## Compatibility
+
+对应 vxe-table v4 版本  
+
 ## Installing
 
 ```shell
