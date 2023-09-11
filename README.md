@@ -24,6 +24,9 @@ import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
 // ...
 
+// or namespace
+// VXETable.use(VXETablePluginElement, { namespace: 'ep' })
+
 VXETable.use(VXETablePluginElement)
 ```
 
