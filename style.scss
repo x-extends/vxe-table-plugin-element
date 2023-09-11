@@ -1,3 +1,5 @@
+@use 'element-plus/theme-chalk/src/mixins/function.scss' as *;
+
 $vxe-table-validate-error-color: #f56c6c;
 
 %ResetBorder {
@@ -5,25 +7,25 @@ $vxe-table-validate-error-color: #f56c6c;
 }
 
 %SliderStyle {
-  .el-slider__runway {
+  .#{bem(slider,runway)} {
     margin: 8px 0;
-    .el-slider__button-wrapper {
+    .#{bem(slider,button,wrapper)} {
       z-index: auto;
     }
   }
 }
 
 %CompWidth {
-  & > .el-input,
-  & > .el-autocomplete,
-  & > .el-input-number,
-  & > .el-select,
-  & > .el-cascader,
-  & > .el-date-editor,
-  & > .el-slider {
+  & > .#{bem(input)},
+  & > .#{bem(autocomplete)},
+  & > .#{bem(input-number)},
+  & > .#{bem(select)},
+  & > .#{bem(cascader)},
+  & > .#{bem(date-editor)},
+  & > .#{bem(slider)} {
     width: 100%;
   }
-  & > .el-color-picker {
+  & > .#{bem(color-picker)} {
     vertical-align: middle;
   }
 }
@@ -34,15 +36,15 @@ $vxe-table-validate-error-color: #f56c6c;
 }
 .vxe-table--filter-element-wrapper {
   padding: 0.8em 1em;
-  & > .el-input,
-  & > .el-input-number,
-  & > .el-autocomplete,
-  & > .el-select,
-  & > .el-rate,
-  & > .el-slider {
+  & > .#{bem(input)},
+  & > .#{bem(input-number)},
+  & > .#{bem(autocomplete)},
+  & > .#{bem(select)},
+  & > .#{bem(rate)},
+  & > .#{bem(slider)} {
     width: 180px;
   }
-  & > .el-slider {
+  & > .#{bem(slider)} {
     @extend %SliderStyle;
   }
 }
@@ -50,7 +52,7 @@ $vxe-table-validate-error-color: #f56c6c;
   .vxe-cell,
   .vxe-tree-cell {
     @extend %CompWidth;
-    & > .el-slider {
+    & > .#{bem(slider)} {
       @extend %SliderStyle;
     }
   }
@@ -58,12 +60,12 @@ $vxe-table-validate-error-color: #f56c6c;
 .col--valid-error {
   & > .vxe-cell,
   & > .vxe-tree-cell {
-    & > .el-input .el-input__inner,
-    & > .el-autocomplete .el-input__inner,
-    & > .el-input-number .el-input__inner,
-    & > .el-select .el-input__inner,
-    & > .el-cascader .el-input__inner,
-    & > .el-date-picker .el-input__inner {
+    & > .#{bem(input)} .#{bem(input,inner)},
+    & > .#{bem(autocomplete)} .#{bem(input,inner)},
+    & > .#{bem(input-number)} .#{bem(input,inner)},
+    & > .#{bem(select)} .#{bem(input,inner)},
+    & > .#{bem(cascader)} .#{bem(input,inner)},
+    & > .#{bem(date-picker)} .#{bem(input,inner)} {
       border-color: $vxe-table-validate-error-color;
     }
   }
@@ -71,26 +73,26 @@ $vxe-table-validate-error-color: #f56c6c;
 .vxe-table.cell--highlight {
   .vxe-cell,
   .vxe-tree-cell {
-    & > .el-input:not(.el-date-editor),
-    & > .el-autocomplete,
-    & > .el-select,
-    & > .el-cascader {
-      .el-input__inner {
+    & > .#{bem(input)}:not(.#{bem(date-editor)}),
+    & > .#{bem(autocomplete)},
+    & > .#{bem(select)},
+    & > .#{bem(cascader)} {
+      .#{bem(input,inner)} {
         padding: 0;
         @extend %ResetBorder;
       }
     }
-    & > .el-input-number {
-      .el-input-number__decrease,
-      .el-input-number__increase {
+    & > .#{bem(input-number)} {
+      .#{bem(input-number,decrease)},
+      .#{bem(input-number,decrease)} {
         @extend %ResetBorder;
       }
-      .el-input__inner {
+      .#{bem(input,inner)} {
         @extend %ResetBorder;
       }
     }
-    & > .el-date-editor {
-      .el-input__inner {
+    & > .#{bem(date-editor)} {
+      .#{bem(input,inner)} {
         @extend %ResetBorder;
       }
     }

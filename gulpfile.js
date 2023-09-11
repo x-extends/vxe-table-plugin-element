@@ -18,7 +18,9 @@ const exportModuleName = 'VXETablePluginElement'
 
 gulp.task('build_style', function () {
   return gulp.src('style.scss')
-    .pipe(sass())
+    .pipe(sass({
+      includePaths: ['node_modules']
+    }))
     .pipe(prefixer({
       borwsers: ['last 1 version', '> 1%', 'not ie <= 8'],
       cascade: true,

@@ -2,8 +2,15 @@ import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
 import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemRenderOptions, FormItemContentRenderParams } from 'vxe-table'
 import dayjs from 'dayjs'
+interface ConfigProviderContext {
+  namespace?: string
+}
 
 let vxetable: VXETableCore
+
+const defaultOptions: ConfigProviderContext = {
+  namespace: 'el'
+}
 
 function isEmptyValue (cellValue: any) {
   return cellValue === null || cellValue === undefined || cellValue === ''
@@ -459,22 +466,23 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearFilterParams | VxeGlobalInterceptorHandles.InterceptorClearActivedParams | VxeGlobalInterceptorHandles.InterceptorClearAreasParams) {
+function handleClearEvent (vxeOptions: ConfigProviderContext, params: VxeGlobalInterceptorHandles.InterceptorClearFilterParams | VxeGlobalInterceptorHandles.InterceptorClearActivedParams | VxeGlobalInterceptorHandles.InterceptorClearAreasParams) {
   const { $event } = params
   const bodyElem = document.body
+  const { namespace } = vxeOptions
   if (
     // 远程搜索
-    getEventTargetNode($event, bodyElem, 'el-autocomplete-suggestion').flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-autocomplete-suggestion`).flag ||
     // 下拉框
-    getEventTargetNode($event, bodyElem, 'el-select-dropdown').flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-select-dropdown`).flag ||
     // 级联
-    getEventTargetNode($event, bodyElem, 'el-cascader__dropdown').flag ||
-    getEventTargetNode($event, bodyElem, 'el-cascader-menus').flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-cascader__dropdown`).flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-cascader-menus`).flag ||
     // 日期
-    getEventTargetNode($event, bodyElem, 'el-time-panel').flag ||
-    getEventTargetNode($event, bodyElem, 'el-picker-panel').flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-time-panel`).flag ||
+    getEventTargetNode($event, bodyElem, `${namespace}-picker-panel`).flag ||
     // 颜色
-    getEventTargetNode($event, bodyElem, 'el-color-dropdown').flag
+    getEventTargetNode($event, bodyElem, `${namespace}-color-dropdown`).flag
   ) {
     return false
   }
@@ -484,14 +492,16 @@ function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearF
  * 基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库
  */
 export const VXETablePluginElement = {
-  install (vxetablecore: VXETableCore) {
+  install (vxetablecore: VXETableCore, vxetableoptions?: ConfigProviderContext) {
     const { interceptor, renderer } = vxetablecore
-
+    const vxeOptions = Object.assign(defaultOptions, vxetableoptions)
+    const { namespace } = vxeOptions
+    
     vxetable = vxetablecore
 
     renderer.mixin({
       ElAutocomplete: {
-        autofocus: 'input.el-input__inner',
+        autofocus: `input.${namespace}-input__inner`,
         renderDefault: createEditRender(),
         renderEdit: createEditRender(),
         renderFilter: createFilterRender(),
@@ -499,7 +509,7 @@ export const VXETablePluginElement = {
         renderItemContent: createFormItemRender()
       },
       ElInput: {
-        autofocus: 'input.el-input__inner',
+        autofocus: `input.${namespace}-input__inner`,
         renderDefault: createEditRender(),
         renderEdit: createEditRender(),
         renderFilter: createFilterRender(),
@@ -507,7 +517,7 @@ export const VXETablePluginElement = {
         renderItemContent: createFormItemRender()
       },
       ElInputNumber: {
-        autofocus: 'input.el-input__inner',
+        autofocus: `input.${namespace}-input__inner`,
         renderDefault: createEditRender(),
         renderEdit: createEditRender(),
         renderFilter: createFilterRender(),
@@ -788,9 +798,9 @@ export const VXETablePluginElement = {
       }
     })
 
-    interceptor.add('event.clearFilter', handleClearEvent)
-    interceptor.add('event.clearActived', handleClearEvent)
-    interceptor.add('event.clearAreas', handleClearEvent)
+    interceptor.add('event.clearFilter', handleClearEvent.bind(null, vxeOptions))
+    interceptor.add('event.clearActived', handleClearEvent.bind(null, vxeOptions))
+    interceptor.add('event.clearAreas', handleClearEvent.bind(null, vxeOptions))
   }
 }
 
