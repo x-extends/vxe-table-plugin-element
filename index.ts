@@ -493,7 +493,7 @@ function handleClearEvent (params: InterceptorParams, e: any) {
 }
 
 declare module 'vxe-table' {
-  interface RendererMapOptions {
+  export interface RendererMapOptions {
     defaultFilterMethod?(params: ColumnFilterMethodParams): boolean;
   }
 }
@@ -502,8 +502,13 @@ declare module 'vxe-table' {
  * 基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库
  */
 export const VXETablePluginElement = {
-  install ({ interceptor, renderer }: typeof VXETable) {
-    renderer.mixin({
+  install (vxetable: typeof VXETable) {
+    // 检查版本
+    if (!/^(2|3)\./.test(vxetable.version)) {
+      console.error('[vxe-table-plugin-element] Version vxe-table 3.x is required')
+    }
+
+    vxetable.renderer.mixin({
       ElAutocomplete: {
         autofocus: 'input.el-input__inner',
         renderDefault: createEditRender(),
@@ -851,9 +856,9 @@ export const VXETablePluginElement = {
       }
     })
 
-    interceptor.add('event.clearFilter', handleClearEvent)
-    interceptor.add('event.clearActived', handleClearEvent)
-    interceptor.add('event.clearAreas', handleClearEvent)
+    vxetable.interceptor.add('event.clearFilter', handleClearEvent)
+    vxetable.interceptor.add('event.clearActived', handleClearEvent)
+    vxetable.interceptor.add('event.clearAreas', handleClearEvent)
   }
 }
 
