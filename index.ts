@@ -481,15 +481,16 @@ function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearF
 }
 
 /**
- * 基于 vxe-table 表格的适配插件，用于兼容 element-ui 组件库
+ * 基于 vxe-table 的表格适配插件，用于兼容 element-ui 组件库
  */
 export const VXETablePluginElement = {
-  install (vxetablecore: VXETableCore) {
-    const { interceptor, renderer } = vxetablecore
+  install (vxetable: VXETableCore) {
+    // 检查版本
+    if (!/^(4)\./.test(vxetable.version)) {
+      console.error('[vxe-table-plugin-element] Version vxe-table 4.x is required')
+    }
 
-    vxetable = vxetablecore
-
-    renderer.mixin({
+    vxetable.renderer.mixin({
       ElAutocomplete: {
         autofocus: 'input.el-input__inner',
         renderDefault: createEditRender(),
@@ -788,9 +789,9 @@ export const VXETablePluginElement = {
       }
     })
 
-    interceptor.add('event.clearFilter', handleClearEvent)
-    interceptor.add('event.clearActived', handleClearEvent)
-    interceptor.add('event.clearAreas', handleClearEvent)
+    vxetable.interceptor.add('event.clearFilter', handleClearEvent)
+    vxetable.interceptor.add('event.clearActived', handleClearEvent)
+    vxetable.interceptor.add('event.clearAreas', handleClearEvent)
   }
 }
 
