@@ -236,6 +236,9 @@ function getDatePickerCellValue (renderOpts: VxeGlobalRendererHandles.RenderOpti
     case 'daterange':
       cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM-DD')
       break
+    case 'datetime':
+      cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM-DD HH:ss:mm')
+      break
     case 'datetimerange':
       cellValue = getFormatDates(cellValue, props, ` ${rangeSeparator} `, 'YYYY-MM-DD HH:ss:mm')
       break
