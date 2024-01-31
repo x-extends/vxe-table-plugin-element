@@ -1,6 +1,6 @@
-import { h, resolveComponent, ComponentOptions } from 'vue'
+import { h, resolveComponent, type ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemRenderOptions, FormItemContentRenderParams } from 'vxe-table'
+import type { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemRenderOptions, FormItemContentRenderParams } from 'vxe-table'
 import dayjs from 'dayjs'
 
 let vxetable: VXETableCore
