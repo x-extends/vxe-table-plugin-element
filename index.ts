@@ -504,8 +504,8 @@ declare module 'vxe-table' {
 export const VXETablePluginElement = {
   install (vxetable: VXETableCore) {
     // 检查版本
-    if (!/^(2|3)\./.test(vxetable.version)) {
-      console.error('[vxe-table-plugin-element] Version vxe-table 3.x is required')
+    if (!/^(3)\./.test(vxetable.version)) {
+      console.error('[vxe-table-plugin-element 3.x] Version vxe-table 3.x is required')
     }
 
     vxetable.renderer.mixin({
