@@ -487,7 +487,7 @@ export const VXETablePluginElement = {
   install (vxetable: VXETableCore) {
     // 检查版本
     if (!/^(4)\./.test(vxetable.version)) {
-      console.error('[vxe-table-plugin-element] Version vxe-table 4.x is required')
+      console.error('[vxe-table-plugin-element 4.x] Version vxe-table 4.x is required')
     }
 
     vxetable.renderer.mixin({
