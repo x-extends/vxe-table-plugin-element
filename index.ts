@@ -486,7 +486,7 @@ function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearF
 export const VXETablePluginElement = {
   install (vxetable: VXETableCore) {
     // 检查版本
-    if (!/^(4)\./.test(vxetable.version)) {
+    if (!/^(4)\./.test(vxetable.version) && !/v4/i.test((vxetable as any).v)) {
       console.error('[vxe-table-plugin-element 4.x] Version vxe-table 4.x is required')
     }
 
