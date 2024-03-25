@@ -14,7 +14,7 @@
 ## Installing
 
 ```shell
-npm install xe-utils vxe-table@next vxe-table-plugin-element@next element-plus
+npm install vxe-table@next vxe-table-plugin-element@next element-plus
 ```
 
 ```javascript
