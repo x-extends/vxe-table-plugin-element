@@ -36,7 +36,7 @@ function getChangeEvent (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
 }
 
 function toDayStringDate (value: any, format: string) {
-  return dayjs(value, format).date
+  return dayjs(value, format)
 }
 
 function toDayDateString (date: any, format: string) {
