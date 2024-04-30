@@ -459,7 +459,7 @@ function getEventTargetNode (evnt: any, container: HTMLElement, className: strin
 /**
  * 事件兼容性处理
  */
-function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearFilterParams | VxeGlobalInterceptorHandles.InterceptorClearActivedParams | VxeGlobalInterceptorHandles.InterceptorClearAreasParams) {
+function handleClearEvent (params: VxeGlobalInterceptorHandles.InterceptorClearFilterParams | VxeGlobalInterceptorHandles.InterceptorClearEditParams | VxeGlobalInterceptorHandles.InterceptorClearAreasParams) {
   const { $event } = params
   const bodyElem = document.body
   if (
@@ -790,8 +790,10 @@ export const VXETablePluginElement = {
     })
 
     vxetable.interceptor.add('event.clearFilter', handleClearEvent)
-    vxetable.interceptor.add('event.clearActived', handleClearEvent)
+    vxetable.interceptor.add('event.clearEdit', handleClearEvent)
     vxetable.interceptor.add('event.clearAreas', handleClearEvent)
+    // 兼容老版本
+    vxetable.interceptor.add('event.clearActived', handleClearEvent)
   }
 }
 
