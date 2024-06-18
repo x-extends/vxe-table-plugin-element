@@ -1,6 +1,7 @@
 import { h, resolveComponent, ComponentOptions } from 'vue'
 import XEUtils from 'xe-utils'
-import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles, FormItemContentRenderParams } from 'vxe-table'
+import { VXETableCore, VxeTableDefines, VxeColumnPropTypes, VxeGlobalRendererHandles, VxeGlobalInterceptorHandles } from 'vxe-table'
+
 import dayjs from 'dayjs'
 
 let vxetable: VXETableCore
@@ -60,11 +61,11 @@ function equalDaterange (cellValue: any, data: any, props: { [key: string]: any 
   return cellValue >= getFormatDate(data[0], props, defaultFormat) && cellValue <= getFormatDate(data[1], props, defaultFormat)
 }
 
-function getCellEditFilterProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderEditParams | VxeGlobalRendererHandles.RenderFilterParams, value: any, defaultProps?: { [prop: string]: any }) {
+function getCellEditFilterProps (renderOpts: any, params: VxeGlobalRendererHandles.RenderEditParams | VxeGlobalRendererHandles.RenderFilterParams, value: any, defaultProps?: { [prop: string]: any }) {
   return XEUtils.assign({}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
-function getItemProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: FormItemContentRenderParams, value: any, defaultProps?: { [prop: string]: any }) {
+function getItemProps (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: any, value: any, defaultProps?: { [prop: string]: any }) {
   return XEUtils.assign({}, defaultProps, renderOpts.props, { [getModelProp(renderOpts)]: value })
 }
 
@@ -131,14 +132,14 @@ function getEditOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params:
   })
 }
 
-function getFilterOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: VxeGlobalRendererHandles.RenderFilterParams, option: VxeTableDefines.FilterOption, changeFunc: Function) {
+function getFilterOns (renderOpts: any, params: VxeGlobalRendererHandles.RenderFilterParams, option: VxeTableDefines.FilterOption, changeFunc: Function) {
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
     option.data = value
   }, changeFunc)
 }
 
-function getItemOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: FormItemContentRenderParams) {
+function getItemOns (renderOpts: VxeGlobalRendererHandles.RenderOptions, params: any) {
   const { $form, data, field } = params
   return getOns(renderOpts, params, (value: any) => {
     // 处理 model 值双向绑定
@@ -366,7 +367,7 @@ function cellText (cellValue: any): string[] {
 }
 
 function createFormItemRender (defaultProps?: { [key: string]: any }) {
-  return function (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions & { name: string }, params: FormItemContentRenderParams) {
+  return function (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions & { name: string }, params: any) {
     const { data, field } = params
     const { name } = renderOpts
     const { attrs } = renderOpts
@@ -381,7 +382,7 @@ function createFormItemRender (defaultProps?: { [key: string]: any }) {
   }
 }
 
-function defaultButtonItemRender (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: FormItemContentRenderParams) {
+function defaultButtonItemRender (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: any) {
   const { attrs } = renderOpts
   const props = getItemProps(renderOpts, params, null)
   return [
@@ -395,7 +396,7 @@ function defaultButtonItemRender (renderOpts: VxeGlobalRendererHandles.RenderIte
   ]
 }
 
-function defaultButtonsItemRender (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: FormItemContentRenderParams) {
+function defaultButtonsItemRender (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions, params: any) {
   const { children } = renderOpts
   if (children) {
     return children.map((childRenderOpts: VxeGlobalRendererHandles.RenderItemContentOptions) => defaultButtonItemRender(childRenderOpts, params)[0])
@@ -411,7 +412,7 @@ function createExportMethod (getExportCellValue: Function) {
 }
 
 function createFormItemRadioAndCheckboxRender () {
-  return function (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions & { name: string }, params: FormItemContentRenderParams) {
+  return function (renderOpts: VxeGlobalRendererHandles.RenderItemContentOptions & { name: string }, params: any) {
     const { name, options = [], optionProps = {}, attrs } = renderOpts
     const { data, field } = params
     const labelProp = optionProps.label || 'label'
