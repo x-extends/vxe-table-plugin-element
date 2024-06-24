@@ -10,7 +10,7 @@
 ## Compatibility
 
 对应 vxe-table v4 版本  
-如果您使用的是 vxe-table 4.7+ 最新版本，建议使用更强大的 [@vxe-ui/plugin-render-element](https://github.com/x-extends/vxe-ui-plugins) 适配器，代码完全兼容
+如果您使用的是 vxe-table 4.7+ 最新版本，建议使用更强大的 [@vxe-ui/plugin-render-element](https://vxeui.com/other4/#/plugin-render-element/grid/edit/el-input) 适配器，代码完全兼容
 
 ## Installing
 
