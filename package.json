@@ -52,7 +52,7 @@
     "sass": "^1.55.0",
     "typescript": "^4.6.4",
     "vue": "^3.4.27",
-    "vxe-table": "^4.6.17"
+    "vxe-table": "~4.6.25"
   },
   "peerDependencies": {
     "vxe-table": "^4.5.0"
