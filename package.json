@@ -50,8 +50,8 @@
     "markdown-doctest": "^1.1.0",
     "prettier": "^2.1.2",
     "sass": "^1.55.0",
-    "typescript": "^4.6.4",
-    "vue": "^3.4.27",
+    "typescript": "~4.7.4",
+    "vue": "~3.4.27",
     "vxe-table": "~4.6.25"
   },
   "peerDependencies": {

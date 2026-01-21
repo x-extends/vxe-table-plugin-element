@@ -1,4 +1,6 @@
-# vxe-table-plugin-element
+# vxe-table-plugin-element （该版本已停止维护）
+
+！！！您正在查看的是 vxe-table 4.0 ~ 4.6 版本的扩展插件，该插件于 2024-12-01 起停止维护，此后它将不再推出新功能、更新或修复补丁。最新版本为 vxe-table 4.7+，对应扩展插件库 [@vxe-ui/plugin-render-element](https://github.com/x-extends/vxe-ui-plugins/tree/main/plugin-render-element)，建议及时更新到新版本，避免出现 bug 与安全问题！！！
 
 [![gitee star](https://gitee.com/x-extends/vxe-table-plugin-element/badge/star.svg?theme=dark)](https://gitee.com/x-extends/vxe-table-plugin-element/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-table-plugin-element.svg?style=flat-square)](https://www.npmjs.com/package/vxe-table-plugin-element)
